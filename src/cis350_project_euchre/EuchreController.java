@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class EuchreController {
+public class EuchreController extends JPanel{
+	
+	
 
 }
