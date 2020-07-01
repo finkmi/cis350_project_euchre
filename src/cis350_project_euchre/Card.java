@@ -2,13 +2,6 @@ package cis350_project_euchre;
 
 public class Card {
 	
-	public enum SUIT {
-		CLUB,
-		DIAMOND,
-		HEART,
-		SPADE
-	}
-	
 	private int value;
 	private SUIT suit;
 	

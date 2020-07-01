@@ -6,14 +6,15 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
 
 	private JButton renegeBtn;
 	private JButton passBtn;
-	private JButton potentialTrumpBtn;
+	private JButton topKitty;
 
 	private ImageIcon club9;
 	private ImageIcon club10;
@@ -72,17 +73,18 @@ public class EuchreController extends JPanel {
 			hand[i].setVisible(true);
 			hand[i].addActionListener(listener);
 			handPanel.add(hand[i]);
+			hand[i].setIcon(club11);
 		}
 
 		renegeBtn = new JButton("Renege");
 		passBtn = new JButton("Pass");
-		potentialTrumpBtn = new JButton("Trump");
+		topKitty = new JButton("Trump");
 		renegeBtn.addActionListener(listener);
 		passBtn.addActionListener(listener);
-		potentialTrumpBtn.addActionListener(listener);
+		topKitty.addActionListener(listener);
 		centerPanel.add(renegeBtn);
 		centerPanel.add(passBtn);
-		centerPanel.add(potentialTrumpBtn);
+		centerPanel.add(topKitty);
 
 		add(panel);
 	}
