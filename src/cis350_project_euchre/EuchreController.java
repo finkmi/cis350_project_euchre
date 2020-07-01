@@ -40,6 +40,7 @@ public class EuchreController extends JPanel {
 	private ImageIcon spade12; // Queen
 	private ImageIcon spade13; // King
 	private ImageIcon spade14; // Ace
+	private ImageIcon black_joker;
 
 	public EuchreController() {
 
@@ -61,6 +62,7 @@ public class EuchreController extends JPanel {
 		ButtonListener listener = new ButtonListener();
 
 		model = new EuchreModel();
+		model.deal();
 
 		hand = new JButton[5];
 		
@@ -68,17 +70,19 @@ public class EuchreController extends JPanel {
 		int imageHeight = club9.getIconHeight();
 		
 		for (int i = 0; i <= 4; i++) {
-			hand[i] = new JButton();
+			hand[i] = new JButton(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
 			hand[i].setPreferredSize(new Dimension(imageWidth, imageHeight));
 			hand[i].setVisible(true);
 			hand[i].addActionListener(listener);
 			handPanel.add(hand[i]);
-			hand[i].setIcon(club11);
 		}
 
 		renegeBtn = new JButton("Renege");
 		passBtn = new JButton("Pass");
-		topKitty = new JButton("Trump");
+		topKitty = new JButton(getCardIcon(model.getTopKitty()));
+		//TODO: fix weird ass buttons
+		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));
+		topKitty.setVisible(true);
 		renegeBtn.addActionListener(listener);
 		passBtn.addActionListener(listener);
 		topKitty.addActionListener(listener);
@@ -124,6 +128,85 @@ public class EuchreController extends JPanel {
 		spade12 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/queen_of_spades.png");
 		spade13 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/king_of_spades.png");
 		spade14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_spades.png");
+		
+		black_joker = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/black_joker.png");
+	}
+	
+	private ImageIcon getCardIcon(Card card) {
+		
+		 switch (card.getSuit()) {
+		 	case CLUB:
+		 		switch(card.getValue()) {
+	 			case 9:
+	 				return club9;
+	 			case 10:
+	 				return club10;
+				case 11:
+					return club11;	
+				case 12:
+					return club12;	
+				case 13:
+					return club13;	
+				case 14:
+					return club14;	
+		 		}	 		
+		 		break;
+		 		
+		 	case DIAMOND:
+		 		switch(card.getValue()) {
+	 			case 9:
+	 				return diamond9;
+	 			case 10:
+	 				return diamond10;
+				case 11:
+					return diamond11;	
+				case 12:
+					return diamond12;	
+				case 13:
+					return diamond13;	
+				case 14:
+					return diamond14;	
+		 		}
+		 		break;
+		 		
+		 	case HEART:
+		 		switch(card.getValue()) {
+	 			case 9:
+	 				return heart9;
+	 			case 10:
+	 				return heart10;
+				case 11:
+					return heart11;	
+				case 12:
+					return heart12;	
+				case 13:
+					return heart13;	
+				case 14:
+					return heart14;	
+		 		}
+		 		break;
+		 		
+		 	case SPADE:
+		 		switch(card.getValue()) {
+	 			case 9:
+	 				return spade9;
+	 			case 10:
+	 				return spade10;
+				case 11:
+					return spade11;	
+				case 12:
+					return spade12;	
+				case 13:
+					return spade13;	
+				case 14:
+					return spade14;	
+		 		}
+		 		break;
+		 		
+	 		default:
+	 			break;	
+		 }
+		return black_joker;
 	}
 
 	private class ButtonListener implements ActionListener {

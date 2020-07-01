@@ -8,10 +8,12 @@ public class EuchreModel {
 	
 	private Player players[];
 	private int currentPlayer;
-	private int currentDealer;
+	private int firstPlayer;
 	private int team1Score, team2Score;
+	private int team1Tricks, team2Tricks;
 	
 	private ArrayList<Card> deck;
+	private ArrayList<Card> playedCards;
 	
 	private SUIT currentTrump;
 	
@@ -25,16 +27,15 @@ public class EuchreModel {
 			players[i] = new Player(i%2, i==0 ? false : true, difficulty);
 		}
 		
-		currentDealer = 0;
-		currentPlayer = 1;
+		firstPlayer = 0;
+		currentPlayer = 0;
 		team1Score = 0;
 		team2Score = 0;
 		
-		deck = new ArrayList();
+		playedCards = new ArrayList();
 		
-		for(int value = 0; value < 6; value++)
-			for(SUIT suit : SUIT.values()) 
-				deck.add(new Card(value,suit));
+		deck = new ArrayList();
+		fillDeck();
 	}
 	
 	public void deal() {
@@ -48,9 +49,49 @@ public class EuchreModel {
 				deck.remove(randCard);
 			}
 		}
-		
 		topKitty = deck.get(0);
 	}
 	
-
+	public void setTrump() {
+		currentTrump = topKitty.getSuit();
+		if(firstPlayer == 0)
+			currentPlayer = 3;
+		else
+			currentPlayer = firstPlayer - 1;
+		//TODO in controller add some variable to determine if trump is being selected
+	}
+	
+	public void swapWithTopKitty(int index) {
+		players[currentPlayer].setCardInHand(index, topKitty);
+	}
+	
+	public Player getPlayer(int index) {
+		return players[index];
+	}
+	
+	public Card getTopKitty() {
+		return topKitty;
+	}
+	
+	public void makeMove(int index) {
+		//Check for bot (bots only make valid moves)
+		//isValidMove()
+		playedCards.add(players[currentPlayer].getCardFromHand(index));
+		players[currentPlayer].removeCardFromHand(index);
+		
+		currentPlayer++;
+		if(currentPlayer >= 4)
+			currentPlayer = 0;			
+	}
+	
+	private void fillDeck() {
+		
+		deck.clear();
+		
+		for(int value = 9; value < 15; value++)
+			for(SUIT suit : SUIT.values()) 
+				deck.add(new Card(value,suit));
+	}
+	
+	
 }

@@ -1,16 +1,18 @@
 package cis350_project_euchre;
 
+import java.util.ArrayList;
+
 public class Player {
 	
 	private int team;
-	private Card[] hand;
+	private ArrayList<Card> hand;
 	private boolean isBot;
 	private int difficulty;
 	private boolean renegeable;
 	
 	public Player(int team) {
 		this.setTeam(team);
-		this.hand = new Card[5];
+		hand = new ArrayList();
 		this.difficulty = 0;
 		this.isBot = false;
 		this.renegeable = false;
@@ -18,17 +20,21 @@ public class Player {
 	
 	public Player(int team, boolean isBot, int difficulty) {
 		this.setTeam(team);
-		this.hand = new Card[5];
+		hand = new ArrayList();
 		this.difficulty = difficulty;
 		this.isBot = isBot;
 		this.renegeable = false;	}
 	
-	public void setCardInHand(int place, Card card) {
-		this.hand[place] = card;
+	public void setCardInHand(int index, Card card) {
+		hand.add(index, card);
 	}
 	
-	public Card getCardFromHand(int place) {
-		return this.hand[place];
+	public Card getCardFromHand(int index) {
+		return hand.get(index);
+	}
+	
+	public void removeCardFromHand(int index) {
+		hand.remove(index);
 	}
 
 	public int getTeam() {
