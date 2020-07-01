@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-	static final String FILEPATH = "/Users/michaelfink/workspace/";
+	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+//	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -44,21 +44,24 @@ public class EuchreController extends JPanel {
 
 	public EuchreController() {
 
-		JPanel panel = new JPanel();
-		JPanel centerPanel = new JPanel();
-		JPanel handPanel = new JPanel();
-		BorderLayout layout = new BorderLayout();
-		layout.setVgap(10); /* vertical gap between components in panel */
-		
+		JPanel panel = new JPanel();		
+		JPanel[][] panelArray = new JPanel[3][3];
+		for(int i=0; i<3; i++) {
+			for(int j=0; j<3; j++) {
+				panelArray[i][j] = new JPanel();
+				panel.add(panelArray[i][j]);
+			}
+		}
+				
 		createIcons();
 
-		panel.setLayout(layout);
-		handPanel.setLayout(new GridLayout(1, 5));
-		centerPanel.setLayout(new GridLayout(1, 3));
-
-		panel.add(handPanel, BorderLayout.SOUTH);
-		panel.add(centerPanel, BorderLayout.NORTH);
-
+		panel.setLayout(new GridLayout(3, 3, 10, 10));
+		panelArray[2][1].setLayout(new GridLayout(1, 5));
+		panelArray[2][2].setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		
 		ButtonListener listener = new ButtonListener();
 
 		model = new EuchreModel();
@@ -74,22 +77,36 @@ public class EuchreController extends JPanel {
 			hand[i].setPreferredSize(new Dimension(imageWidth, imageHeight));
 			hand[i].setVisible(true);
 			hand[i].addActionListener(listener);
-			handPanel.add(hand[i]);
+			panelArray[2][1].add(hand[i]);
 		}
 
 		renegeBtn = new JButton("Renege");
 		passBtn = new JButton("Pass");
 		topKitty = new JButton(getCardIcon(model.getTopKitty()));
 		//TODO: fix weird ass buttons
+		
 		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));
-		topKitty.setVisible(true);
+		renegeBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));
+		passBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));
+		
 		renegeBtn.addActionListener(listener);
+		c.gridx = 1;
+		c.gridy = 1;
+		panelArray[2][2].add(renegeBtn);
+		
 		passBtn.addActionListener(listener);
+		c.gridx = 2;
+		c.gridy = 1;
+		panelArray[2][2].add(passBtn);
+		
 		topKitty.addActionListener(listener);
-		centerPanel.add(renegeBtn);
-		centerPanel.add(passBtn);
-		centerPanel.add(topKitty);
-
+		c.weightx = 1;
+		c.gridx = 3;
+		c.gridy = 0;
+		c.gridheight = 3;
+		c.gridwidth = 2;
+		panelArray[2][2].add(topKitty);
+		
 		add(panel);
 	}
 
