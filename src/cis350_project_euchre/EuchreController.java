@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-//	static final String FILEPATH = "/Users/michaelfink/workspace/";
+//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -41,9 +41,12 @@ public class EuchreController extends JPanel {
 	private ImageIcon spade13; // King
 	private ImageIcon spade14; // Ace
 	private ImageIcon black_joker;
+	
+	private JLabel[] testing;
 
 	public EuchreController() {
 
+		/* Set up a panel with a 3x3 grid of JPanels */
 		JPanel panel = new JPanel();		
 		JPanel[][] panelArray = new JPanel[3][3];
 		for(int i=0; i<3; i++) {
@@ -54,11 +57,26 @@ public class EuchreController extends JPanel {
 		}
 				
 		createIcons();
+		int imageWidth = club9.getIconWidth();
+		int imageHeight = club9.getIconHeight();
 
 		panel.setLayout(new GridLayout(3, 3, 10, 10));
 		panelArray[2][1].setLayout(new GridLayout(1, 5));
 		panelArray[2][2].setLayout(new GridBagLayout());
 		
+		/* Handling layered pane for played cards */
+		/* Just use set testing[i].setIcon(black_joker) and the labels will appear */
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setPreferredSize(new Dimension(5*imageWidth,imageHeight));
+		testing = new JLabel[4];
+		panelArray[1][1].add(layeredPane);
+		int xorigin = (imageWidth * 5/2) - ((imageWidth+150)/2);
+		for(int i=0; i<4; i++) {
+			testing[i] = new JLabel();
+			layeredPane.add(testing[i], new Integer(i*50));
+			testing[i].setBounds(xorigin+(50*i), 00, imageWidth, imageHeight);
+		}
+				
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
@@ -68,9 +86,6 @@ public class EuchreController extends JPanel {
 		model.deal();
 
 		hand = new JButton[5];
-		
-		int imageWidth = club9.getIconWidth();
-		int imageHeight = club9.getIconHeight();
 		
 		for (int i = 0; i <= 4; i++) {
 			hand[i] = new JButton(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
@@ -83,7 +98,6 @@ public class EuchreController extends JPanel {
 		renegeBtn = new JButton("Renege");
 		passBtn = new JButton("Pass");
 		topKitty = new JButton(getCardIcon(model.getTopKitty()));
-		//TODO: fix weird ass buttons
 		
 		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));
 		renegeBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));
@@ -229,7 +243,38 @@ public class EuchreController extends JPanel {
 	private class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-
+			if(passBtn == e.getSource()) {
+//				System.out.println("passBtn pressed");
+			}
+			else if(renegeBtn == e.getSource()) {
+//				System.out.println("renegeBtn pressed");
+			}
+			else if(topKitty == e.getSource()) {
+//				System.out.println("topKitty pressed");
+			}
+			else if(hand[0] == e.getSource()) {
+//				System.out.println("Card1 pressed");
+//				testing[0].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(0)));
+//				hand[0].setVisible(false);
+			}
+			else if(hand[1] == e.getSource()) {
+//				System.out.println("Card2 pressed");
+//				testing[1].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(1)));
+//				hand[1].setVisible(false);
+			}
+			else if(hand[2] == e.getSource()) {
+//				System.out.println("Card3 pressed");
+//				testing[2].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(2)));
+//				hand[2].setVisible(false);
+			}
+			else if(hand[3] == e.getSource()) {
+//				System.out.println("Card4 pressed");
+//				testing[3].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(3)));
+//				hand[3].setVisible(false);
+			}
+			else if(hand[4] == e.getSource()) {
+//				System.out.println("Card5 pressed");
+			}
 		}
 
 	}

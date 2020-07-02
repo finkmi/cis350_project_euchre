@@ -13,7 +13,7 @@ public class EuchreView {
         
         frame.getContentPane().add(controller);
         frame.setResizable(true);
-        frame.setPreferredSize(new Dimension(800, 637));
+        //frame.setPreferredSize(new Dimension(800, 637));
         frame.pack();
         frame.setVisible(true);
     }
