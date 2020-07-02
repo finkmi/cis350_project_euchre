@@ -270,7 +270,73 @@ public class EuchreController extends JPanel {
 					model.botSelectTrump();
 					
 					if(model.getNumPasses() >= 4) {
-						
+						do {
+				            //Array that holds the names of all the options
+				            Object[] options = {"Custom", "Hard", "Medium", "Easy"};
+				            n = JOptionPane.showOptionDialog(null,
+				                    "Choose a difficulty","",
+				                    JOptionPane.YES_NO_CANCEL_OPTION,
+				                    JOptionPane.PLAIN_MESSAGE,
+				                    null,
+				                    options,
+				                    null);
+
+				            //If the user clicks the "Custom" option
+				            if(n == 0) {
+				                s = JOptionPane.showInputDialog(null,
+				                        "Enter grid size in form of 'Height x Width':");
+
+				                try {
+				                    //Parses the user input by an x and stores each
+				                    //element in an array
+				                    String[] gridSize = s.split("x");
+				                    height = Integer.parseInt(gridSize[0]);
+				                    width = Integer.parseInt(gridSize[1]);
+
+				                    //Grabs numMines from user input
+				                    numMines = Integer.parseInt(JOptionPane.showInputDialog
+				                            (null, "Enter desired # of mines"));
+				                    if(numMines > height * width)
+				                        throw new IllegalArgumentException();
+				                    //set the panel to the users specified size
+				                    panel = new MineSweeperPanel(height, width, numMines);
+				                    //attempts to set the frame size to fit
+				                    frame.setSize((34 * width), (35 * height) + 25);
+
+				                } catch (Exception e) {
+				                    s = null;
+
+				                }
+				            }
+
+				            //If the user clicks the "Medium" option set board to 16x16
+				            //set numMines to 40
+				            else if(n == JOptionPane.CANCEL_OPTION) {
+				                panel = new MineSweeperPanel(16, 16, 40);
+				                frame.setSize(550, 570);
+				                s = " ";
+
+				            }
+
+				            //If the user clicks "Hard" option set board to 16x30
+				            //set numMines to 99
+				            else if(n == JOptionPane.NO_OPTION) {
+				                panel = new MineSweeperPanel(16, 30, 99);
+				                frame.setSize(970, 570);
+				                s = " ";
+				            }
+
+				            //If the user clicks "Easy" option set board to 9x9
+				            //set numMines to 9
+				            else if (n == 3){
+				                panel = new MineSweeperPanel(9, 9, 10);
+				                frame.setSize(315,380);
+				                s = " ";
+				            }
+				            else
+				                System.exit(0);
+
+				        } while (s == null);
 					}
 				}
 				else if(renegeBtn == e.getSource()) {
