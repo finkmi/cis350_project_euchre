@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-	static final String FILEPATH = "/Users/michaelfink/workspace/";
+	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+//	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -41,6 +41,7 @@ public class EuchreController extends JPanel {
 	private ImageIcon spade13; // King
 	private ImageIcon spade14; // Ace
 	private ImageIcon black_joker;
+	private ImageIcon card_back;
 	
 	private JLabel[] testing;
 
@@ -161,6 +162,7 @@ public class EuchreController extends JPanel {
 		spade14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_spades.png");
 		
 		black_joker = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/black_joker.png");
+		card_back = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/card_back.png");
 	}
 	
 	private ImageIcon getCardIcon(Card card) {
