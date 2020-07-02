@@ -44,9 +44,14 @@ public class EuchreController extends JPanel {
 	private ImageIcon card_back;
 	
 	private JLabel[] testing;
+	private boolean trumpSelect;
+	private boolean kittyHasBeenPressed;
 
 	public EuchreController() {
 
+		trumpSelect = true;
+		kittyHasBeenPressed = false;
+		
 		/* Set up a panel with a 3x3 grid of JPanels */
 		JPanel panel = new JPanel();		
 		JPanel[][] panelArray = new JPanel[3][3];
@@ -122,7 +127,13 @@ public class EuchreController extends JPanel {
 		c.gridwidth = 2;
 		panelArray[2][2].add(topKitty);
 		
+		topKitty.setVisible(true);
+		renegeBtn.setVisible(false);
+		passBtn.setVisible(true);
+		
 		add(panel);
+		
+		
 	}
 
 	/******************************************************************
@@ -241,41 +252,53 @@ public class EuchreController extends JPanel {
 		 }
 		return black_joker;
 	}
+	
+	private void updateHand() {
+		for(int i=0; i<5; i++) {
+			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
+		}
+	}
 
 	private class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			if(passBtn == e.getSource()) {
-//				System.out.println("passBtn pressed");
-			}
-			else if(renegeBtn == e.getSource()) {
-//				System.out.println("renegeBtn pressed");
-			}
-			else if(topKitty == e.getSource()) {
-//				System.out.println("topKitty pressed");
-			}
-			else if(hand[0] == e.getSource()) {
-//				System.out.println("Card1 pressed");
-//				testing[0].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(0)));
-//				hand[0].setVisible(false);
-			}
-			else if(hand[1] == e.getSource()) {
-//				System.out.println("Card2 pressed");
-//				testing[1].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(1)));
-//				hand[1].setVisible(false);
-			}
-			else if(hand[2] == e.getSource()) {
-//				System.out.println("Card3 pressed");
-//				testing[2].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(2)));
-//				hand[2].setVisible(false);
-			}
-			else if(hand[3] == e.getSource()) {
-//				System.out.println("Card4 pressed");
-//				testing[3].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(3)));
-//				hand[3].setVisible(false);
-			}
-			else if(hand[4] == e.getSource()) {
-//				System.out.println("Card5 pressed");
+			if(model.getCurrentPlayer() == 0) {
+				if(passBtn == e.getSource()) {
+					model.playerPassed();
+					model.botSelectTrump();
+					model.botSelectTrump();
+					model.botSelectTrump();
+					
+					if(model.getNumPasses() >= 4) {
+						
+					}
+				}
+				else if(renegeBtn == e.getSource()) {
+	//				System.out.println("renegeBtn pressed");
+				}
+				else if(topKitty == e.getSource()) {
+					kittyHasBeenPressed = true;
+					model.setTrump();
+					topKitty.setEnabled(false);
+				}
+				for(int i=0; i<5; i++) {
+					if(hand[i] == e.getSource()) {
+						if(!trumpSelect) {
+							
+						}
+						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
+							model.swapWithTopKitty(i);
+							updateHand();
+							trumpSelect = false;
+							topKitty.setIcon(card_back);
+							passBtn.setVisible(false);
+							renegeBtn.setVisible(true);
+						}
+						else {
+							/* never enter here */
+						}
+					}
+				}
 			}
 		}
 
