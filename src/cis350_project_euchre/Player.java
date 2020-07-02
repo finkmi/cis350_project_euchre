@@ -25,8 +25,12 @@ public class Player {
 		this.isBot = isBot;
 		this.renegeable = false;	}
 	
-	public void setCardInHand(int index, Card card) {
+	public void addCardToHand(int index, Card card) {
 		hand.add(index, card);
+	}
+	
+	public void setCardInHand(int index, Card card) {
+		hand.set(index, card);
 	}
 	
 	public Card getCardFromHand(int index) {
@@ -51,6 +55,10 @@ public class Player {
 
 	public void setRenegeable(boolean renegeable) {
 		this.renegeable = renegeable;
+	}
+	
+	public boolean getIsBot() {
+		return isBot;
 	}
 	
 	

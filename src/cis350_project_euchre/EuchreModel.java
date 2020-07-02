@@ -44,29 +44,38 @@ public class EuchreModel {
 	public void deal() {
 		
 		int randCard;
-		
+		fillDeck();
 		for(int i = 0; i < 5; i++) {
 			for(int player = 0; player < 4; player++) {
 				randCard = (int)(Math.random() * deck.size());
-				players[player].setCardInHand(i, deck.get(randCard));
+				players[player].addCardToHand(i, deck.get(randCard));
 				deck.remove(randCard);
 			}
 		}
+		numPasses = 0;
 		topKitty = deck.get(0);
 	}
 	
-	public void setTrump() {
-		currentTrump = topKitty.getSuit();
+	public void setTrump(SUIT s) {
+		currentTrump = s;
+
+		//TODO in controller add some variable to determine if trump is being selected
+	}
+	
+	public void setCurrentPlayerDealer() {
 		if(firstPlayer == 0)
 			currentPlayer = 3;
 		else
 			currentPlayer = firstPlayer - 1;
-		//TODO in controller add some variable to determine if trump is being selected
+	}
+	
+	public void setCurrentPlayerFirst() {
+		currentPlayer = firstPlayer;
 	}
 	
 	public void swapWithTopKitty(int index) {
 		players[currentPlayer].setCardInHand(index, topKitty);
-		currentPlayer = firstPlayer;
+		setCurrentPlayerFirst();
 	}
 	
 	public Player getPlayer(int index) {
@@ -117,8 +126,45 @@ public class EuchreModel {
 				deck.add(new Card(value,suit));
 	}
 	
-	public void botSelectTrump() {
+	private void botSelectTrump() {
 		playerPassed();
+	}
+	
+	private void botSelectKitty() {
+		playerPassed();
+	}
+	
+	private void botSwapWithKitty() {
+		int randCard = (int)(Math.random() * 5);
+		swapWithTopKitty(randCard);
+	}
+	
+	private void botPlayCard() {
+		
+	}
+	
+	public void botPlay(BOTCODE code) {
+		switch(code) {
+		case TRUMP:
+			botSelectTrump();
+			break;
+		case PLAY:
+			botPlayCard();
+			break;
+		case SWAP:
+			botSwapWithKitty();
+			break;
+		case HITKITTY:
+			botSelectKitty();
+			break;
+		}
+	}
+	
+	public void incrementFirstPlayer() {
+		firstPlayer++;
+		if(firstPlayer >= 4)
+			firstPlayer = 0;
+		currentPlayer = firstPlayer;
 	}
 	
 	

@@ -46,11 +46,14 @@ public class EuchreController extends JPanel {
 	private JLabel[] testing;
 	private boolean trumpSelect;
 	private boolean kittyHasBeenPressed;
+	Timer timer;
 
 	public EuchreController() {
 
 		trumpSelect = true;
 		kittyHasBeenPressed = false;
+		Timer timer = new Timer(1000, new TimerListener());
+		timer.start();
 		
 		/* Set up a panel with a 3x3 grid of JPanels */
 		JPanel panel = new JPanel();		
@@ -258,6 +261,81 @@ public class EuchreController extends JPanel {
 			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
 		}
 	}
+	
+	private class TimerListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("" + model.getCurrentPlayer());
+			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {				
+				if(trumpSelect) {
+					if(kittyHasBeenPressed) {
+						model.botPlay(BOTCODE.SWAP);
+					}
+					else if(model.getNumPasses() < 4) {
+						model.botPlay(BOTCODE.HITKITTY);
+					}
+					else {
+						model.botPlay(BOTCODE.TRUMP);
+					}
+				} 
+				else {
+					model.botPlay(BOTCODE.PLAY);
+				}
+			}
+			else {
+				if(model.getNumPasses() >= 7) {
+            		model.deal();
+            		model.incrementFirstPlayer();
+            		updateHand();
+            	}
+				
+				else if(model.getNumPasses() >= 4) {
+					int n;
+			        //Array that holds the names of all the options
+					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
+		            n = JOptionPane.showOptionDialog(null,
+		                    "Pick the suit you would like, or pass","Choose a suit",
+		                    JOptionPane.DEFAULT_OPTION,
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    null,
+		                    options,
+		                    null);
+
+		            //If the user clicks the "Custom" option
+		            if(n == 0) {
+		                model.setTrump(SUIT.CLUB);
+		                model.setCurrentPlayerFirst();
+		            }
+
+		            //If the user clicks the "Medium" option set board to 16x16
+		            //set numMines to 40
+		            else if(n == 1) {
+		            	model.setTrump(SUIT.DIAMOND);
+		            	model.setCurrentPlayerFirst();
+		            }
+
+		            //If the user clicks "Hard" option set board to 16x30
+		            //set numMines to 99
+		            else if(n == 2) {
+		            	model.setTrump(SUIT.HEART);
+		            	model.setCurrentPlayerFirst();
+		            }
+
+		            //If the user clicks "Easy" option set board to 9x9
+		            //set numMines to 9
+		            else if (n == 3){
+		            	model.setTrump(SUIT.SPADE);
+		            	model.setCurrentPlayerFirst();
+		            }
+		            else {
+		            	model.playerPassed();
+//		            	for(int i=0; i<3; i++) {
+//		            		model.botPlay(BOTCODE.TRUMP);
+//		            	}
+		            }
+		        }
+			}
+		}
+	}
 
 	private class ButtonListener implements ActionListener {
 
@@ -265,86 +343,24 @@ public class EuchreController extends JPanel {
 			if(model.getCurrentPlayer() == 0) {
 				if(passBtn == e.getSource()) {
 					model.playerPassed();
-					model.botSelectTrump();
-					model.botSelectTrump();
-					model.botSelectTrump();
+//					for(int i=0; i<3; i++) {
+//	            		model.botPlay(BOTCODE.HITKITTY);
+//	            	}
 					
-					if(model.getNumPasses() >= 4) {
-						do {
-				            //Array that holds the names of all the options
-				            Object[] options = {"Custom", "Hard", "Medium", "Easy"};
-				            n = JOptionPane.showOptionDialog(null,
-				                    "Choose a difficulty","",
-				                    JOptionPane.YES_NO_CANCEL_OPTION,
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    null,
-				                    options,
-				                    null);
-
-				            //If the user clicks the "Custom" option
-				            if(n == 0) {
-				                s = JOptionPane.showInputDialog(null,
-				                        "Enter grid size in form of 'Height x Width':");
-
-				                try {
-				                    //Parses the user input by an x and stores each
-				                    //element in an array
-				                    String[] gridSize = s.split("x");
-				                    height = Integer.parseInt(gridSize[0]);
-				                    width = Integer.parseInt(gridSize[1]);
-
-				                    //Grabs numMines from user input
-				                    numMines = Integer.parseInt(JOptionPane.showInputDialog
-				                            (null, "Enter desired # of mines"));
-				                    if(numMines > height * width)
-				                        throw new IllegalArgumentException();
-				                    //set the panel to the users specified size
-				                    panel = new MineSweeperPanel(height, width, numMines);
-				                    //attempts to set the frame size to fit
-				                    frame.setSize((34 * width), (35 * height) + 25);
-
-				                } catch (Exception e) {
-				                    s = null;
-
-				                }
-				            }
-
-				            //If the user clicks the "Medium" option set board to 16x16
-				            //set numMines to 40
-				            else if(n == JOptionPane.CANCEL_OPTION) {
-				                panel = new MineSweeperPanel(16, 16, 40);
-				                frame.setSize(550, 570);
-				                s = " ";
-
-				            }
-
-				            //If the user clicks "Hard" option set board to 16x30
-				            //set numMines to 99
-				            else if(n == JOptionPane.NO_OPTION) {
-				                panel = new MineSweeperPanel(16, 30, 99);
-				                frame.setSize(970, 570);
-				                s = " ";
-				            }
-
-				            //If the user clicks "Easy" option set board to 9x9
-				            //set numMines to 9
-				            else if (n == 3){
-				                panel = new MineSweeperPanel(9, 9, 10);
-				                frame.setSize(315,380);
-				                s = " ";
-				            }
-				            else
-				                System.exit(0);
-
-				        } while (s == null);
-					}
 				}
 				else if(renegeBtn == e.getSource()) {
 	//				System.out.println("renegeBtn pressed");
 				}
 				else if(topKitty == e.getSource()) {
 					kittyHasBeenPressed = true;
-					model.setTrump();
+					model.setTrump(model.getTopKitty().getSuit());
+					model.setCurrentPlayerDealer();
+					model.botPlay(BOTCODE.SWAP);
+					trumpSelect = false;
+					topKitty.setIcon(card_back);
+					passBtn.setVisible(false);
+					renegeBtn.setVisible(true);
+					
 					topKitty.setEnabled(false);
 				}
 				for(int i=0; i<5; i++) {
@@ -365,7 +381,9 @@ public class EuchreController extends JPanel {
 						}
 					}
 				}
+				updateHand();
 			}
+			
 		}
 
 	}
