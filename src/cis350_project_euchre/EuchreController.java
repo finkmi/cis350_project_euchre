@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-//	static final String FILEPATH = "/Users/michaelfink/workspace/";
+//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -43,7 +43,9 @@ public class EuchreController extends JPanel {
 	private ImageIcon black_joker;
 	private ImageIcon card_back;
 	
-	private JLabel[] testing;
+	private JLabel[] playedCards;
+	private int numCardsPlayed;
+	
 	private boolean trumpSelect;
 	private boolean kittyHasBeenPressed;
 	Timer timer;
@@ -77,13 +79,14 @@ public class EuchreController extends JPanel {
 		/* Just use set testing[i].setIcon(black_joker) and the labels will appear */
 		JLayeredPane layeredPane = new JLayeredPane();
 		layeredPane.setPreferredSize(new Dimension(5*imageWidth,imageHeight));
-		testing = new JLabel[4];
+		playedCards = new JLabel[4];
+		numCardsPlayed = 0;
 		panelArray[1][1].add(layeredPane);
 		int xorigin = (imageWidth * 5/2) - ((imageWidth+150)/2);
 		for(int i=0; i<4; i++) {
-			testing[i] = new JLabel();
-			layeredPane.add(testing[i], new Integer(i*50));
-			testing[i].setBounds(xorigin+(50*i), 00, imageWidth, imageHeight);
+			playedCards[i] = new JLabel();
+			layeredPane.add(playedCards[i], new Integer(i*50));
+			playedCards[i].setBounds(xorigin+(50*i), 00, imageWidth, imageHeight);
 		}
 				
 		GridBagConstraints c = new GridBagConstraints();
@@ -257,24 +260,44 @@ public class EuchreController extends JPanel {
 	}
 	
 	private void updateHand() {
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<model.getPlayer(0).getHand().size(); i++) {
 			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
+		}
+	}
+	
+	private void updateTopKitty() {
+		if(trumpSelect)
+			topKitty.setIcon(getCardIcon(model.getTopKitty()));
+		else
+			topKitty.setIcon(card_back);
+	}
+	
+	private void updatePlayedCards() {
+		if(model.getPlayedCards().isEmpty())
+			return;
+		
+		for(Card card: model.getPlayedCards()) {
+			playedCards[model.getPlayedCards().indexOf(card)].setIcon(getCardIcon(card));
 		}
 	}
 	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("" + model.getCurrentPlayer());
+			updateHand();
+			updateTopKitty();
+			updatePlayedCards();
+			System.out.println("Current Player:" + model.getCurrentPlayer() + "\tgetNumPasses: " + model.getNumPasses());
 			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {				
 				if(trumpSelect) {
 					if(kittyHasBeenPressed) {
 						model.botPlay(BOTCODE.SWAP);
+						trumpSelect = false;
 					}
 					else if(model.getNumPasses() < 4) {
 						model.botPlay(BOTCODE.HITKITTY);
 					}
 					else {
-						model.botPlay(BOTCODE.TRUMP);
+						trumpSelect = !model.botPlay(BOTCODE.TRUMP);
 					}
 				} 
 				else {
@@ -282,13 +305,8 @@ public class EuchreController extends JPanel {
 				}
 			}
 			else {
-				if(model.getNumPasses() >= 7) {
-            		model.deal();
-            		model.incrementFirstPlayer();
-            		updateHand();
-            	}
+				if(model.getNumPasses() >= 4 && trumpSelect) {
 				
-				else if(model.getNumPasses() >= 4) {
 					int n;
 			        //Array that holds the names of all the options
 					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
@@ -304,6 +322,7 @@ public class EuchreController extends JPanel {
 		            if(n == 0) {
 		                model.setTrump(SUIT.CLUB);
 		                model.setCurrentPlayerFirst();
+		                trumpSelect = false;
 		            }
 
 		            //If the user clicks the "Medium" option set board to 16x16
@@ -311,6 +330,8 @@ public class EuchreController extends JPanel {
 		            else if(n == 1) {
 		            	model.setTrump(SUIT.DIAMOND);
 		            	model.setCurrentPlayerFirst();
+		                trumpSelect = false;
+
 		            }
 
 		            //If the user clicks "Hard" option set board to 16x30
@@ -318,6 +339,8 @@ public class EuchreController extends JPanel {
 		            else if(n == 2) {
 		            	model.setTrump(SUIT.HEART);
 		            	model.setCurrentPlayerFirst();
+		                trumpSelect = false;
+
 		            }
 
 		            //If the user clicks "Easy" option set board to 9x9
@@ -325,6 +348,8 @@ public class EuchreController extends JPanel {
 		            else if (n == 3){
 		            	model.setTrump(SUIT.SPADE);
 		            	model.setCurrentPlayerFirst();
+		                trumpSelect = false;
+
 		            }
 		            else {
 		            	model.playerPassed();
@@ -342,11 +367,7 @@ public class EuchreController extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if(model.getCurrentPlayer() == 0) {
 				if(passBtn == e.getSource()) {
-					model.playerPassed();
-//					for(int i=0; i<3; i++) {
-//	            		model.botPlay(BOTCODE.HITKITTY);
-//	            	}
-					
+					model.playerPassed();					
 				}
 				else if(renegeBtn == e.getSource()) {
 	//				System.out.println("renegeBtn pressed");
@@ -355,9 +376,6 @@ public class EuchreController extends JPanel {
 					kittyHasBeenPressed = true;
 					model.setTrump(model.getTopKitty().getSuit());
 					model.setCurrentPlayerDealer();
-					model.botPlay(BOTCODE.SWAP);
-					trumpSelect = false;
-					topKitty.setIcon(card_back);
 					passBtn.setVisible(false);
 					renegeBtn.setVisible(true);
 					
@@ -366,7 +384,8 @@ public class EuchreController extends JPanel {
 				for(int i=0; i<5; i++) {
 					if(hand[i] == e.getSource()) {
 						if(!trumpSelect) {
-							
+							model.makeMove(i);
+							hand[model.getPlayer(0).getHand().size()].setVisible(false);
 						}
 						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
 							model.swapWithTopKitty(i);

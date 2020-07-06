@@ -62,6 +62,10 @@ public class EuchreModel {
 		//TODO in controller add some variable to determine if trump is being selected
 	}
 	
+	public ArrayList<Card> getPlayedCards() {
+		return playedCards;
+	}
+	
 	public void setCurrentPlayerDealer() {
 		if(firstPlayer == 0)
 			currentPlayer = 3;
@@ -95,8 +99,7 @@ public class EuchreModel {
 	}
 	
 	public void makeMove(int index) {
-		//Check for bot (bots only make valid moves)
-		//isValidMove()
+		isValidMove(index);
 		playedCards.add(players[currentPlayer].getCardFromHand(index));
 		players[currentPlayer].removeCardFromHand(index);
 		
@@ -111,6 +114,10 @@ public class EuchreModel {
 			currentPlayer = 0;
 		}
 		numPasses++;
+		if(numPasses >= 8) {
+    		deal();
+    		incrementFirstPlayer();
+		}
 	}
 	
 	public int getNumPasses() {
@@ -126,8 +133,10 @@ public class EuchreModel {
 				deck.add(new Card(value,suit));
 	}
 	
-	private void botSelectTrump() {
+	/* return true if bot selcts trump and false if bot passes */
+	private boolean botSelectTrump() {
 		playerPassed();
+		return false;
 	}
 	
 	private void botSelectKitty() {
@@ -141,23 +150,33 @@ public class EuchreModel {
 	
 	private void botPlayCard() {
 		
+		for(Card card : players[currentPlayer].getHand())
+			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {
+				makeMove(players[currentPlayer].getHand().indexOf(card));
+				return;
+			}
+		
+		makeMove(0);
+		
 	}
 	
-	public void botPlay(BOTCODE code) {
+	/* return true if bot selcts trump and false otherwise(if bot passes) */
+
+	public boolean botPlay(BOTCODE code) {
 		switch(code) {
 		case TRUMP:
-			botSelectTrump();
-			break;
+			return botSelectTrump();
 		case PLAY:
 			botPlayCard();
-			break;
+			return false;
 		case SWAP:
 			botSwapWithKitty();
-			break;
+			return true;
 		case HITKITTY:
 			botSelectKitty();
-			break;
+			return false;
 		}
+		return false;
 	}
 	
 	public void incrementFirstPlayer() {
@@ -165,6 +184,25 @@ public class EuchreModel {
 		if(firstPlayer >= 4)
 			firstPlayer = 0;
 		currentPlayer = firstPlayer;
+	}
+	
+	private boolean isValidMove(int index) {
+		
+		if(playedCards.isEmpty())
+			return true;
+		
+		SUIT follow = playedCards.get(0).getSuit();
+		
+		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
+			for(Card possiblePlay : players[currentPlayer].getHand())
+			{
+				if(possiblePlay.getSuit() == follow) {
+					players[currentPlayer].setRenegeable(true);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	

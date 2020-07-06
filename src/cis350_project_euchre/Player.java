@@ -40,6 +40,10 @@ public class Player {
 	public void removeCardFromHand(int index) {
 		hand.remove(index);
 	}
+	
+	public ArrayList<Card> getHand() {
+		return hand;
+	}
 
 	public int getTeam() {
 		return team;
