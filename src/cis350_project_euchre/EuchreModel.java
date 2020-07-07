@@ -1,5 +1,4 @@
 package cis350_project_euchre;
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class EuchreModel {
@@ -42,8 +41,24 @@ public class EuchreModel {
 		fillDeck();
 	}
 	
+	public boolean clearPlayedCards() {
+		if(playedCards.size() == 4) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Clear Played Cards");
+			}
+			playedCards.clear();
+			//deal();
+			//incrementFirstPlayer();
+			//TODO: firstPlayer should be previous winner
+			return true;
+		}
+		return false;
+	}
+	
 	public void deal() {
-		
 		int randCard;
 		fillDeck();
 		for(int i = 0; i < 5; i++) {
@@ -146,11 +161,9 @@ public class EuchreModel {
 		else if(players[(firstPlayer + maxIndex)%4].getTeam() == 1) {
 			team1Tricks++;
 		}		
-		
-		playedCards.clear();
 	}
 	
-	private boolean evalScore() {
+	private void evalScore() {
 		if((team0Tricks == 3 && team1Tricks >= 1)) {
 			if(trumpSelectingTeam == 0) {
 				team0Score += 1;
@@ -158,7 +171,7 @@ public class EuchreModel {
 			else {
 				team0Score += 2;
 			}
-			return true;
+			team0Tricks = team1Tricks = 0;
 		}
 		else if((team0Tricks >= 1 && team1Tricks == 3)) {
 			if(trumpSelectingTeam == 1) {
@@ -166,8 +179,8 @@ public class EuchreModel {
 			}
 			else {
 				team1Score += 2;
-			}			
-			return true;
+			}	
+			team0Tricks = team1Tricks = 0;
 		}
 		else if(team0Tricks + team1Tricks == 5) {
 			if(team0Tricks == 5) {
@@ -177,6 +190,7 @@ public class EuchreModel {
 				else {
 					team0Score += 4;
 				}
+				team0Tricks = team1Tricks = 0;
 			}
 			else if(team1Tricks == 5) {
 				if(trumpSelectingTeam == 1) {
@@ -185,10 +199,9 @@ public class EuchreModel {
 				else {
 					team1Score += 4;
 				}
+				team0Tricks = team1Tricks = 0;
 			}
-			return true;
 		}
-		return false;
 	}
 	
 	public void makeMove(int index) {
@@ -199,11 +212,7 @@ public class EuchreModel {
 		if(playedCards.size() >= 4) {
 			/* 4 cards have been played */
 			evalTricks();
-			if(evalScore()) {
-				deal();
-				incrementFirstPlayer();
-			}
-			
+			evalScore();			
 		}
 		
 		currentPlayer++;

@@ -54,8 +54,6 @@ public class EuchreController extends JPanel {
 
 		trumpSelect = true;
 		kittyHasBeenPressed = false;
-		Timer timer = new Timer(1000, new TimerListener());
-		timer.start();
 		
 		/* Set up a panel with a 3x3 grid of JPanels */
 		JPanel panel = new JPanel();		
@@ -138,7 +136,8 @@ public class EuchreController extends JPanel {
 		passBtn.setVisible(true);
 		
 		add(panel);
-		
+		Timer timer = new Timer(1000, new TimerListener());
+		timer.start();
 		
 	}
 
@@ -273,25 +272,37 @@ public class EuchreController extends JPanel {
 	}
 	
 	private void updatePlayedCards() {
-		if(model.getPlayedCards().isEmpty())
-			return;
-		
 		for(Card card: model.getPlayedCards()) {
 			playedCards[model.getPlayedCards().indexOf(card)].setIcon(getCardIcon(card));
+			System.out.println("" + card.getValue() + " of "+ card.getSuit());
 		}
+		if(model.clearPlayedCards()) {
+			for(int i=0; i<4; i++) {
+				playedCards[i].setIcon(null);
+			}
+			updateHand();
+			updateTopKitty();
+			//TODO: Update score!!!
+		} 
+	}
+	
+	private void updateButtonsAfterTrumpSelect() {
+		passBtn.setVisible(false);
+		renegeBtn.setVisible(true);
+		topKitty.setEnabled(false);
 	}
 	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			updateHand();
-			updateTopKitty();
-			updatePlayedCards();
+			
+			
 			System.out.println("Current Player:" + model.getCurrentPlayer() + "\tgetNumPasses: " + model.getNumPasses());
 			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {				
 				if(trumpSelect) {
 					if(kittyHasBeenPressed) {
 						model.botPlay(BOTCODE.SWAP);
 						trumpSelect = false;
+						updateTopKitty();
 					}
 					else if(model.getNumPasses() < 4) {
 						model.botPlay(BOTCODE.HITKITTY);
@@ -302,6 +313,7 @@ public class EuchreController extends JPanel {
 				} 
 				else {
 					model.botPlay(BOTCODE.PLAY);
+					updatePlayedCards();
 				}
 			}
 			else {
@@ -323,6 +335,7 @@ public class EuchreController extends JPanel {
 		                model.setTrump(SUIT.CLUB);
 		                model.setCurrentPlayerFirst();
 		                trumpSelect = false;
+		                updateButtonsAfterTrumpSelect();
 		            }
 
 		            //If the user clicks the "Medium" option set board to 16x16
@@ -331,7 +344,7 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.DIAMOND);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-
+		                updateButtonsAfterTrumpSelect();
 		            }
 
 		            //If the user clicks "Hard" option set board to 16x30
@@ -340,7 +353,7 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.HEART);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-
+		                updateButtonsAfterTrumpSelect();
 		            }
 
 		            //If the user clicks "Easy" option set board to 9x9
@@ -349,7 +362,7 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.SPADE);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-
+		                updateButtonsAfterTrumpSelect();
 		            }
 		            else {
 		            	model.playerPassed();
@@ -378,7 +391,6 @@ public class EuchreController extends JPanel {
 					model.setCurrentPlayerDealer();
 					passBtn.setVisible(false);
 					renegeBtn.setVisible(true);
-					
 					topKitty.setEnabled(false);
 				}
 				for(int i=0; i<5; i++) {
@@ -386,6 +398,7 @@ public class EuchreController extends JPanel {
 						if(!trumpSelect) {
 							model.makeMove(i);
 							hand[model.getPlayer(0).getHand().size()].setVisible(false);
+							updatePlayedCards();
 						}
 						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
 							model.swapWithTopKitty(i);
@@ -394,6 +407,7 @@ public class EuchreController extends JPanel {
 							topKitty.setIcon(card_back);
 							passBtn.setVisible(false);
 							renegeBtn.setVisible(true);
+							updateTopKitty();
 						}
 						else {
 							/* never enter here */
