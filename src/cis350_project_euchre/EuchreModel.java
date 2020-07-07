@@ -9,13 +9,14 @@ public class EuchreModel {
 	private Player players[];
 	private int currentPlayer;
 	private int firstPlayer;
-	private int team1Score, team2Score;
-	private int team1Tricks, team2Tricks;
+	private int team0Score, team1Score;
+	private int team0Tricks, team1Tricks;
 	
 	private ArrayList<Card> deck;
 	private ArrayList<Card> playedCards;
 	
 	private SUIT currentTrump;
+	private int trumpSelectingTeam;
 	
 	private Card topKitty;
 	
@@ -32,8 +33,8 @@ public class EuchreModel {
 		
 		firstPlayer = 0;
 		currentPlayer = 0;
+		team0Score = 0;
 		team1Score = 0;
-		team2Score = 0;
 		
 		playedCards = new ArrayList();
 		
@@ -58,8 +59,7 @@ public class EuchreModel {
 	
 	public void setTrump(SUIT s) {
 		currentTrump = s;
-
-		//TODO in controller add some variable to determine if trump is being selected
+		trumpSelectingTeam = players[currentPlayer].getTeam();
 	}
 	
 	public ArrayList<Card> getPlayedCards() {
@@ -98,10 +98,113 @@ public class EuchreModel {
 		return topKitty;
 	}
 	
+	private SUIT sameColor(SUIT suit) {
+		switch(suit) {
+		case CLUB:
+			return SUIT.SPADE;
+		case SPADE:
+			return SUIT.CLUB;
+		case HEART:
+			return SUIT.DIAMOND;
+		case DIAMOND:
+			return SUIT.HEART;
+		default:
+			return SUIT.SPADE;
+		}
+	}
+	
+	private void evalTricks() {
+		int[] modifiedValues = new int[4];
+		SUIT followSuit = playedCards.get(0).getSuit();
+		int maxIndex = 0;
+		for(int i=0; i<4; i++) {
+			modifiedValues[i] = playedCards.get(i).getValue();
+			if(playedCards.get(i).getSuit() == followSuit) {
+				modifiedValues[i] *= 2;
+			}
+			if(playedCards.get(i).getSuit() == currentTrump) {		
+				modifiedValues[i] *= 4;
+			}	
+			if(playedCards.get(i).getValue() == 11) {
+				if(playedCards.get(i).getSuit() == currentTrump) {
+					modifiedValues[i] = 100;
+				}
+				else if(playedCards.get(i).getSuit() == sameColor(currentTrump)) {
+					modifiedValues[i] = 99;
+				}
+			}
+		}
+		
+		for(int i=1; i<4; i++) {
+			if(modifiedValues[i] > modifiedValues[maxIndex])
+				maxIndex = i;
+		}
+		
+		if(players[(firstPlayer + maxIndex)%4].getTeam() == 0) {
+			team0Tricks++;
+		}
+		else if(players[(firstPlayer + maxIndex)%4].getTeam() == 1) {
+			team1Tricks++;
+		}		
+		
+		playedCards.clear();
+	}
+	
+	private boolean evalScore() {
+		if((team0Tricks == 3 && team1Tricks >= 1)) {
+			if(trumpSelectingTeam == 0) {
+				team0Score += 1;
+			}
+			else {
+				team0Score += 2;
+			}
+			return true;
+		}
+		else if((team0Tricks >= 1 && team1Tricks == 3)) {
+			if(trumpSelectingTeam == 1) {
+				team1Score += 1;
+			}
+			else {
+				team1Score += 2;
+			}			
+			return true;
+		}
+		else if(team0Tricks + team1Tricks == 5) {
+			if(team0Tricks == 5) {
+				if(trumpSelectingTeam == 0) {
+					team0Score += 2;
+				}
+				else {
+					team0Score += 4;
+				}
+			}
+			else if(team1Tricks == 5) {
+				if(trumpSelectingTeam == 1) {
+					team1Score += 2;
+				}
+				else {
+					team1Score += 4;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	public void makeMove(int index) {
 		isValidMove(index);
 		playedCards.add(players[currentPlayer].getCardFromHand(index));
 		players[currentPlayer].removeCardFromHand(index);
+		
+		if(playedCards.size() >= 4) {
+			/* 4 cards have been played */
+			evalTricks();
+			if(evalScore()) {
+				deal();
+				incrementFirstPlayer();
+			}
+			
+		}
 		
 		currentPlayer++;
 		if(currentPlayer >= 4)

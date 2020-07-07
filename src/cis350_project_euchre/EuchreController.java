@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-	static final String FILEPATH = "/Users/michaelfink/workspace/";
+	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+//	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
