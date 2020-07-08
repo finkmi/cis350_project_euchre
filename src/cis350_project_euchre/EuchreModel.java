@@ -31,8 +31,8 @@ public class EuchreModel {
 			players[i] = new Player(i%2, i==0 ? false : true, difficulty);
 		}
 		
-		firstPlayer = 0;
-		currentPlayer = 0;
+		
+		dealer = 3;
 		team0Score = 0;
 		team1Score = 0;
 		
@@ -75,6 +75,7 @@ public class EuchreModel {
 		}
 		numPasses = 0;
 		topKitty = deck.get(0);
+		incrementDealer();
 	}
 	
 	public void setTrump(SUIT s) {
@@ -168,7 +169,7 @@ public class EuchreModel {
 		}		
 	}
 	
-	private void evalScore() {
+	private boolean evalScore() {
 		boolean reset = true;
 		if((team0Tricks == 3 && team1Tricks >= 1)) {
 			if(trumpSelectingTeam == 0) {
@@ -211,27 +212,25 @@ public class EuchreModel {
 		else
 			reset = false;
 		
-		if(reset) {
-			deal();
-			incrementDealer();
-		}
-			
+		return reset;		
 	}
 	
-	public void makeMove(int index) {
+	//return whether or not score changed assuming false
+	public boolean makeMove(int index) {
 		isValidMove(index);
 		playedCards.add(players[currentPlayer].getCardFromHand(index));
 		players[currentPlayer].removeCardFromHand(index);
 		
+		currentPlayer++;
+		if(currentPlayer >= 4)
+			currentPlayer = 0;	
+		
 		if(playedCards.size() >= 4) {
 			/* 4 cards have been played */
 			evalTricks();
-			evalScore();			
+			return evalScore();			
 		}
-		
-		currentPlayer++;
-		if(currentPlayer >= 4)
-			currentPlayer = 0;			
+		return false;
 	}
 	
 	public void playerPassed() {
@@ -242,7 +241,6 @@ public class EuchreModel {
 		numPasses++;
 		if(numPasses >= 8) {
     		deal();
-    		incrementDealer();
 		}
 	}
 	
@@ -274,27 +272,34 @@ public class EuchreModel {
 		swapWithTopKitty(randCard);
 	}
 	
-	private void botPlayCard() {
+	private boolean botPlayCard() {
 		
 		for(Card card : players[currentPlayer].getHand())
 			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {
-				makeMove(players[currentPlayer].getHand().indexOf(card));
-				return;
+				if(makeMove(players[currentPlayer].getHand().indexOf(card))) {
+					deal();
+					return true;
+				}
+				return false;
 			}
 		
-		makeMove(0);
+		if(makeMove(0)) {
+			deal();
+			return true;
+		}
+		
+		return false;
 		
 	}
 	
 	/* return true if bot selcts trump and false otherwise(if bot passes) */
-
+	//TODO: change return to integer codes 
 	public boolean botPlay(BOTCODE code) {
 		switch(code) {
 		case TRUMP:
 			return botSelectTrump();
 		case PLAY:
-			botPlayCard();
-			return false;
+			return botPlayCard();
 		case SWAP:
 			botSwapWithKitty();
 			return true;
@@ -313,10 +318,10 @@ public class EuchreModel {
 	}
 	
 	public void incrementDealer() {
+		firstPlayer = currentPlayer = (dealer + 1) % 4;
 		dealer++;
 		if(dealer >= 4)
 			dealer = 0;
-		firstPlayer = currentPlayer = (dealer + 1) % 4;
 	}
 	
 	private boolean isValidMove(int index) {

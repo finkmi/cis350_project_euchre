@@ -280,9 +280,8 @@ public class EuchreController extends JPanel {
 			if(model.getPlayedCards().size() == 4)
 				System.out.println("" + card.getValue() + " of "+ card.getSuit());
 		}
-		if(model.clearPlayedCards()) {
+		if(model.clearPlayedCards() || model.getPlayedCards().size() == 0) {
 			clearFlag = true;
-			
 		} 
 	}
 	
@@ -308,6 +307,11 @@ public class EuchreController extends JPanel {
 		System.out.println("Score1: " + model.getScore(1));	
 	}
 	
+	private void setHandVisible() {
+		for(JButton cards : hand)
+			cards.setVisible(true);
+	}
+	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(clearFlag) {
@@ -315,7 +319,7 @@ public class EuchreController extends JPanel {
 				clearFlag = false;
 			}
 //			System.out.println("Current Player:" + model.getCurrentPlayer() + "\tgetNumPasses: " + model.getNumPasses());
-			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {				
+			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {
 				if(trumpSelect) {
 					if(kittyHasBeenPressed) {
 						model.botPlay(BOTCODE.SWAP);
@@ -330,8 +334,10 @@ public class EuchreController extends JPanel {
 					}
 				} 
 				else {
-					model.botPlay(BOTCODE.PLAY);
+					if (model.botPlay(BOTCODE.PLAY))
+						setHandVisible();
 					updatePlayedCards();
+					
 				}
 			}
 			else {
@@ -414,8 +420,14 @@ public class EuchreController extends JPanel {
 				for(int i=0; i<5; i++) {
 					if(hand[i] == e.getSource()) {
 						if(!trumpSelect) {
-							model.makeMove(i);
-							hand[model.getPlayer(0).getHand().size()].setVisible(false);
+							if(model.makeMove(i)) {
+								model.deal();
+								setHandVisible();
+							}
+							else {
+								hand[model.getPlayer(0).getHand().size()].setVisible(false);
+								hand[model.getPlayer(0).getHand().size()].setIcon(card_back);
+							}
 							updatePlayedCards();
 						}
 						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
