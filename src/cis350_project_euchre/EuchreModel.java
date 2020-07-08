@@ -257,57 +257,57 @@ public class EuchreModel {
 				deck.add(new Card(value,suit));
 	}
 	
-	/* return true if bot selcts trump and false if bot passes */
-	private boolean botSelectTrump() {
+	/* return true if bot selects trump and false if bot passes */
+	private BOTCODE botSelectTrump() {
 		playerPassed();
-		return false;
+		return BOTCODE.TRUMP_NOTSELECTED;
 	}
 	
-	private void botSelectKitty() {
+	private BOTCODE botSelectKitty() {
 		playerPassed();
+		return BOTCODE.HITKITTY_NOHIT;
 	}
 	
-	private void botSwapWithKitty() {
+	private BOTCODE botSwapWithKitty() {
 		int randCard = (int)(Math.random() * 5);
 		swapWithTopKitty(randCard);
+		return BOTCODE.SWAP_SUCCESSFUL;
 	}
 	
-	private boolean botPlayCard() {
+	private BOTCODE botPlayCard() {
 		
 		for(Card card : players[currentPlayer].getHand())
 			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {
 				if(makeMove(players[currentPlayer].getHand().indexOf(card))) {
 					deal();
-					return true;
+					return BOTCODE.PLAY_ALLCARDSPLAYED;
 				}
-				return false;
+				return BOTCODE.PLAY_NOTALLCARDSPLAYED;
 			}
 		
 		if(makeMove(0)) {
 			deal();
-			return true;
+			return BOTCODE.PLAY_ALLCARDSPLAYED;
 		}
 		
-		return false;
+		return BOTCODE.PLAY_NOTALLCARDSPLAYED;
 		
 	}
 	
 	/* return true if bot selcts trump and false otherwise(if bot passes) */
 	//TODO: change return to integer codes 
-	public boolean botPlay(BOTCODE code) {
+	public BOTCODE botPlay(BOTCODE code) {
 		switch(code) {
 		case TRUMP:
 			return botSelectTrump();
 		case PLAY:
 			return botPlayCard();
 		case SWAP:
-			botSwapWithKitty();
-			return true;
+			return botSwapWithKitty();
 		case HITKITTY:
-			botSelectKitty();
-			return false;
+			return botSelectKitty();
 		}
-		return false;
+		return BOTCODE.DEFAULT;
 	}
 	
 	public void incrementFirstPlayer() {

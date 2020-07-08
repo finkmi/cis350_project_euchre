@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-	static final String FILEPATH = "/Users/michaelfink/workspace/";
+	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+//	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -330,11 +330,11 @@ public class EuchreController extends JPanel {
 						model.botPlay(BOTCODE.HITKITTY);
 					}
 					else {
-						trumpSelect = !model.botPlay(BOTCODE.TRUMP);
+						trumpSelect = !(BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP));
 					}
 				} 
 				else {
-					if (model.botPlay(BOTCODE.PLAY))
+					if (BOTCODE.PLAY_ALLCARDSPLAYED == model.botPlay(BOTCODE.PLAY))
 						setHandVisible();
 					updatePlayedCards();
 					
@@ -390,9 +390,6 @@ public class EuchreController extends JPanel {
 		            }
 		            else {
 		            	model.playerPassed();
-//		            	for(int i=0; i<3; i++) {
-//		            		model.botPlay(BOTCODE.TRUMP);
-//		            	}
 		            }
 		        }
 			}
