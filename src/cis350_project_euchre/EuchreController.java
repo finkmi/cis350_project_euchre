@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class EuchreController extends JPanel {
 
-	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-//	static final String FILEPATH = "/Users/michaelfink/workspace/";
+//	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
+	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	private JButton[] hand;
 
 	private EuchreModel model;
@@ -45,6 +45,8 @@ public class EuchreController extends JPanel {
 	
 	private JLabel[] playedCards;
 	private int numCardsPlayed;
+	
+	private boolean clearFlag = false;
 	
 	private boolean trumpSelect;
 	private boolean kittyHasBeenPressed;
@@ -259,6 +261,7 @@ public class EuchreController extends JPanel {
 	}
 	
 	private void updateHand() {
+		System.out.println("" + model.getPlayer(0).getHand().size());
 		for(int i=0; i<model.getPlayer(0).getHand().size(); i++) {
 			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
 		}
@@ -274,16 +277,22 @@ public class EuchreController extends JPanel {
 	private void updatePlayedCards() {
 		for(Card card: model.getPlayedCards()) {
 			playedCards[model.getPlayedCards().indexOf(card)].setIcon(getCardIcon(card));
-			System.out.println("" + card.getValue() + " of "+ card.getSuit());
+			if(model.getPlayedCards().size() == 4)
+				System.out.println("" + card.getValue() + " of "+ card.getSuit());
 		}
 		if(model.clearPlayedCards()) {
-			for(int i=0; i<4; i++) {
-				playedCards[i].setIcon(null);
-			}
-			updateHand();
-			updateTopKitty();
-			//TODO: Update score!!!
+			clearFlag = true;
+			
 		} 
+	}
+	
+	private void clearPlayedCardsIcons() {
+		for(int i=0; i<4; i++) {
+			playedCards[i].setIcon(null);
+		}
+		updateHand();
+		updateTopKitty();
+		updateScore();
 	}
 	
 	private void updateButtonsAfterTrumpSelect() {
@@ -292,11 +301,20 @@ public class EuchreController extends JPanel {
 		topKitty.setEnabled(false);
 	}
 	
+	private void updateScore() {
+		System.out.println("Tricks0: " + model.getNumTricks(0));
+		System.out.println("Tricks1: " + model.getNumTricks(1));
+		System.out.println("Score0: " + model.getScore(0));
+		System.out.println("Score1: " + model.getScore(1));	
+	}
+	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
-			
-			System.out.println("Current Player:" + model.getCurrentPlayer() + "\tgetNumPasses: " + model.getNumPasses());
+			if(clearFlag) {
+				clearPlayedCardsIcons();
+				clearFlag = false;
+			}
+//			System.out.println("Current Player:" + model.getCurrentPlayer() + "\tgetNumPasses: " + model.getNumPasses());
 			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {				
 				if(trumpSelect) {
 					if(kittyHasBeenPressed) {

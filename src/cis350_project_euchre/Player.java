@@ -41,6 +41,10 @@ public class Player {
 		hand.remove(index);
 	}
 	
+	public void clearHand() {
+		hand.clear();
+	}
+	
 	public ArrayList<Card> getHand() {
 		return hand;
 	}

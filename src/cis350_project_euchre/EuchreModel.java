@@ -8,6 +8,7 @@ public class EuchreModel {
 	private Player players[];
 	private int currentPlayer;
 	private int firstPlayer;
+	private int dealer;
 	private int team0Score, team1Score;
 	private int team0Tricks, team1Tricks;
 	
@@ -41,17 +42,17 @@ public class EuchreModel {
 		fillDeck();
 	}
 	
+	public int getNumTricks(int team) {
+		return team == 0 ? team0Tricks : team1Tricks;
+	}
+	
+	public int getScore(int team) {
+		return team == 0 ? team0Score : team1Score;
+	}
+	
 	public boolean clearPlayedCards() {
-		if(playedCards.size() == 4) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Clear Played Cards");
-			}
+		if(playedCards.size() >= 4) {
 			playedCards.clear();
-			//deal();
-			//incrementFirstPlayer();
 			//TODO: firstPlayer should be previous winner
 			return true;
 		}
@@ -61,6 +62,10 @@ public class EuchreModel {
 	public void deal() {
 		int randCard;
 		fillDeck();
+		
+		for(Player p : players)
+			p.clearHand();
+		
 		for(int i = 0; i < 5; i++) {
 			for(int player = 0; player < 4; player++) {
 				randCard = (int)(Math.random() * deck.size());
@@ -142,10 +147,10 @@ public class EuchreModel {
 			}	
 			if(playedCards.get(i).getValue() == 11) {
 				if(playedCards.get(i).getSuit() == currentTrump) {
-					modifiedValues[i] = 100;
+					modifiedValues[i] = 1000;
 				}
 				else if(playedCards.get(i).getSuit() == sameColor(currentTrump)) {
-					modifiedValues[i] = 99;
+					modifiedValues[i] = 999;
 				}
 			}
 		}
@@ -164,6 +169,7 @@ public class EuchreModel {
 	}
 	
 	private void evalScore() {
+		boolean reset = true;
 		if((team0Tricks == 3 && team1Tricks >= 1)) {
 			if(trumpSelectingTeam == 0) {
 				team0Score += 1;
@@ -202,6 +208,14 @@ public class EuchreModel {
 				team0Tricks = team1Tricks = 0;
 			}
 		}
+		else
+			reset = false;
+		
+		if(reset) {
+			deal();
+			incrementDealer();
+		}
+			
 	}
 	
 	public void makeMove(int index) {
@@ -228,7 +242,7 @@ public class EuchreModel {
 		numPasses++;
 		if(numPasses >= 8) {
     		deal();
-    		incrementFirstPlayer();
+    		incrementDealer();
 		}
 	}
 	
@@ -298,12 +312,24 @@ public class EuchreModel {
 		currentPlayer = firstPlayer;
 	}
 	
+	public void incrementDealer() {
+		dealer++;
+		if(dealer >= 4)
+			dealer = 0;
+		firstPlayer = currentPlayer = (dealer + 1) % 4;
+	}
+	
 	private boolean isValidMove(int index) {
 		
 		if(playedCards.isEmpty())
 			return true;
 		
 		SUIT follow = playedCards.get(0).getSuit();
+		//left bauer follow logic
+		if(playedCards.get(0).getValue() == 11 && 
+				currentTrump == sameColor(playedCards.get(0).getSuit()))
+			follow = currentTrump;
+			
 		
 		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
 			for(Card possiblePlay : players[currentPlayer].getHand())
