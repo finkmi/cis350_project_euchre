@@ -134,7 +134,7 @@ public class EuchreModel {
 		}
 	}
 	
-	private void evalTricks() {
+	public void evalTricks() {
 		int[] modifiedValues = new int[4];
 		SUIT followSuit = playedCards.get(0).getSuit();
 		int maxIndex = 0;
@@ -163,13 +163,16 @@ public class EuchreModel {
 		
 		if(players[(firstPlayer + maxIndex)%4].getTeam() == 0) {
 			team0Tricks++;
+			
 		}
 		else if(players[(firstPlayer + maxIndex)%4].getTeam() == 1) {
 			team1Tricks++;
-		}		
+		}
+		
+		firstPlayer = currentPlayer = ((firstPlayer + maxIndex)%4);
 	}
 	
-	private boolean evalScore() {
+	public boolean evalScore() {
 		boolean reset = true;
 		if((team0Tricks == 3 && team1Tricks >= 1)) {
 			if(trumpSelectingTeam == 0) {
@@ -216,7 +219,7 @@ public class EuchreModel {
 	}
 	
 	//return whether or not score changed assuming false
-	public boolean makeMove(int index) {
+	public void makeMove(int index) {
 		isValidMove(index);
 		playedCards.add(players[currentPlayer].getCardFromHand(index));
 		players[currentPlayer].removeCardFromHand(index);
@@ -224,13 +227,6 @@ public class EuchreModel {
 		currentPlayer++;
 		if(currentPlayer >= 4)
 			currentPlayer = 0;	
-		
-		if(playedCards.size() >= 4) {
-			/* 4 cards have been played */
-			evalTricks();
-			return evalScore();			
-		}
-		return false;
 	}
 	
 	public void playerPassed() {
@@ -239,9 +235,6 @@ public class EuchreModel {
 			currentPlayer = 0;
 		}
 		numPasses++;
-		if(numPasses >= 8) {
-    		deal();
-		}
 	}
 	
 	public int getNumPasses() {
@@ -278,23 +271,21 @@ public class EuchreModel {
 		
 		for(Card card : players[currentPlayer].getHand())
 			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {
-				if(makeMove(players[currentPlayer].getHand().indexOf(card))) {
-					deal();
-					return BOTCODE.PLAY_ALLCARDSPLAYED;
-				}
-				return BOTCODE.PLAY_NOTALLCARDSPLAYED;
+				makeMove(players[currentPlayer].getHand().indexOf(card));
+				if(playedCards.size() >= 4) {
+					return BOTCODE.PLAY_TRICKFINISHED;
+				}				
+				return BOTCODE.PLAY_TRICKNOTFINISHED;
 			}
 		
-		if(makeMove(0)) {
-			deal();
-			return BOTCODE.PLAY_ALLCARDSPLAYED;
-		}
-		
-		return BOTCODE.PLAY_NOTALLCARDSPLAYED;
-		
+		makeMove(0);
+		if(playedCards.size() >= 4) {
+			return BOTCODE.PLAY_TRICKFINISHED;
+		}				
+		return BOTCODE.PLAY_TRICKNOTFINISHED;		
 	}
 	
-	/* return true if bot selcts trump and false otherwise(if bot passes) */
+	/* return true if bot selects trump and false otherwise(if bot passes) */
 	//TODO: change return to integer codes 
 	public BOTCODE botPlay(BOTCODE code) {
 		switch(code) {
@@ -310,10 +301,8 @@ public class EuchreModel {
 		return BOTCODE.DEFAULT;
 	}
 	
-	public void incrementFirstPlayer() {
-		firstPlayer++;
-		if(firstPlayer >= 4)
-			firstPlayer = 0;
+	public void setFirstPlayer(int index) {
+		
 		currentPlayer = firstPlayer;
 	}
 	

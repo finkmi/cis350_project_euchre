@@ -41,12 +41,12 @@ public enum BOTCODE {
 	/**
 	 * Tells the controller if a trick has been played after bot play
 	 */
-	PLAY_ALLCARDSPLAYED,
+	PLAY_TRICKFINISHED,
 	
 	/**
 	 * Tells the controller if a trick hasn't completed after bot play
 	 */
-	PLAY_NOTALLCARDSPLAYED,
+	PLAY_TRICKNOTFINISHED,
 	
 	/**
 	 * Tells the controller a bot swapped their card with the kitty

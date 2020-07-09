@@ -51,6 +51,8 @@ public class EuchreController extends JPanel {
 	private boolean trumpSelect;
 	private boolean kittyHasBeenPressed;
 	Timer timer;
+	
+	private int currentPlayer;
 
 	public EuchreController() {
 
@@ -294,10 +296,11 @@ public class EuchreController extends JPanel {
 		updateScore();
 	}
 	
-	private void updateButtonsAfterTrumpSelect() {
-		passBtn.setVisible(false);
-		renegeBtn.setVisible(true);
-		topKitty.setEnabled(false);
+	private void updateButtons() {
+		passBtn.setVisible(trumpSelect);
+		renegeBtn.setVisible(!trumpSelect);
+		topKitty.setEnabled(trumpSelect);
+		updateTopKitty();
 	}
 	
 	private void updateScore() {
@@ -331,11 +334,29 @@ public class EuchreController extends JPanel {
 					}
 					else {
 						trumpSelect = !(BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP));
+						if(model.getNumPasses() >= 8) {
+		            		model.deal();
+		            		updateHand();
+		            		updateTopKitty();
+		            		setHandVisible();
+		            		trumpSelect = true;
+		            		kittyHasBeenPressed = false;
+		        		}
 					}
 				} 
 				else {
-					if (BOTCODE.PLAY_ALLCARDSPLAYED == model.botPlay(BOTCODE.PLAY))
-						setHandVisible();
+					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {
+						model.evalTricks();
+						if(model.evalScore()) {
+							model.deal();
+							setHandVisible();
+							System.out.println("In trump selection mode");
+							trumpSelect = true;
+							kittyHasBeenPressed = false;
+							updateButtons();
+						}
+					}
+					currentPlayer = model.getCurrentPlayer();
 					updatePlayedCards();
 					
 				}
@@ -359,7 +380,7 @@ public class EuchreController extends JPanel {
 		                model.setTrump(SUIT.CLUB);
 		                model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-		                updateButtonsAfterTrumpSelect();
+		                updateButtons();
 		            }
 
 		            //If the user clicks the "Medium" option set board to 16x16
@@ -368,7 +389,7 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.DIAMOND);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-		                updateButtonsAfterTrumpSelect();
+		                updateButtons();
 		            }
 
 		            //If the user clicks "Hard" option set board to 16x30
@@ -377,7 +398,7 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.HEART);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-		                updateButtonsAfterTrumpSelect();
+		                updateButtons();
 		            }
 
 		            //If the user clicks "Easy" option set board to 9x9
@@ -386,10 +407,18 @@ public class EuchreController extends JPanel {
 		            	model.setTrump(SUIT.SPADE);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
-		                updateButtonsAfterTrumpSelect();
+		                updateButtons();
 		            }
 		            else {
 		            	model.playerPassed();
+		            	if(model.getNumPasses() >= 8) {
+		            		model.deal();
+		            		updateHand();
+		            		updateTopKitty();
+		            		setHandVisible();
+		            		trumpSelect = true;
+		            		kittyHasBeenPressed = false;
+		        		}
 		            }
 		        }
 			}
@@ -417,14 +446,24 @@ public class EuchreController extends JPanel {
 				for(int i=0; i<5; i++) {
 					if(hand[i] == e.getSource()) {
 						if(!trumpSelect) {
-							if(model.makeMove(i)) {
-								model.deal();
-								setHandVisible();
+							model.makeMove(i);
+							if(model.getPlayedCards().size() >= 4) {
+								/* TODO: Getting current player from the prev trick winner... need to update visuals */
+								model.evalTricks();
+								if(model.evalScore()) {
+									model.deal();
+									setHandVisible();
+									System.out.println("In trump selection mode");
+									trumpSelect = true;
+									kittyHasBeenPressed = false;
+									updateButtons();
+								}
 							}
-							else {
+							if(model.getPlayer(0).getHand().size() != 5) {
 								hand[model.getPlayer(0).getHand().size()].setVisible(false);
 								hand[model.getPlayer(0).getHand().size()].setIcon(card_back);
 							}
+							currentPlayer = model.getCurrentPlayer();
 							updatePlayedCards();
 						}
 						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
