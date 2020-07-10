@@ -62,33 +62,78 @@ public class EuchreModel {
 					difficulty);
 		}
 		
+		/* Set trump to null to begin with */
+		currentTrump = null;
+		
 		/* Set the number of passes to 0, as no one has passed yet */
 		numPasses = 0;
 		
 		/* Set the dealer to the player in index 3 */
 		dealer = 3;
+		currentPlayer = 0;
+		firstPlayer = 1;
 		
 		/* Initialize both scores to 0 */
 		team0Score = 0;
 		team1Score = 0;
 		
 		/* Instantiate the arraylist for played cards */
-		playedCards = new ArrayList();
+		playedCards = new ArrayList<Card>();
 		
 		/* Instantiate the arrayList for the deck, and fill the deck */
-		deck = new ArrayList();
+		deck = new ArrayList<Card>();
 		fillDeck();
 	}
 	
+	
+	
+	
+	
+	/********************* Getters & Setters *************************/
+	
+	/******************************************************************
+	 * Return the player at the index specified in the players array.
+	 * 
+	 * @param index The index of the desired player within the players
+	 * 				array.
+	 * @return The player at the specified index.
+	 *****************************************************************/
+	public Player getPlayer(int index) { return players[index];}
+	
+	/******************************************************************
+	 * Get the index of the currentPlayer.
+	 * 
+	 * @return An integer representing the index of the currentPlayer.
+	 *****************************************************************/
+	public int getCurrentPlayer() {	return currentPlayer;}
+	
+	/******************************************************************
+	 * Sets the dealer as the current player. This is done to allow the
+	 * dealer to choose a card to swap with the flipped over card in 
+	 * the event that someone orders the card up as trump.
+	 *****************************************************************/
+	public void setCurrentPlayerDealer() {
+		/* Handle the wrap-around case where firstPlayer=0, dealer=3 */
+		if(firstPlayer == 0)
+			currentPlayer = 3;
+		/* Otherwise, dealer is one less than firstPlayer */
+		else
+			currentPlayer = firstPlayer - 1;
+	}
+	
+	/******************************************************************
+	 * Set the currentPlayer to be the same as the firstPlayer. This 
+	 * needs to be done at the start of each trick.
+	 *****************************************************************/
+	public void setCurrentPlayerFirst() {currentPlayer = firstPlayer;}
+		
 	/******************************************************************
 	 * Get the number of tricks won be a given team.
 	 * 
 	 * @param team The team to check the number of tricks for.
 	 * @return The number of tricks the given team has won this hand.
 	 *****************************************************************/
-	public int getNumTricks(int team) {
-		return team == 0 ? team0Tricks : team1Tricks;
-	}
+	public int getNumTricks(int team) { return team == 0 ? team0Tricks : team1Tricks;}
 	
 	/******************************************************************
 	 * Get the score of a given team.
@@ -96,25 +141,63 @@ public class EuchreModel {
 	 * @param team The team to check the score for.
 	 * @return The score of the given team.
 	 *****************************************************************/
-	public int getScore(int team) {
-		return team == 0 ? team0Score : team1Score;
+	public int getScore(int team) { return team == 0 ? team0Score : team1Score;}
+	
+	/*****************************************************************
+	 * Set both teams scores and tricks back to zero
+	 ****************************************************************/
+	public void resetScore() {
+		team0Score = 0;
+		team1Score = 0;
+		team0Tricks = 0;
+		team1Tricks = 0;
 	}
 	
 	/******************************************************************
-	 * Clear the played cards arrayList. The arrayList should only 
-	 * only clear if it is full (i.e. all cards for this trick have
-	 * been played).
+	 * Sets the trump to the specified suit. Also determines the team
+	 * that selected trump for scoring purposes.
 	 * 
-	 * @return true if the playedCards are cleared, false otherwise.
+	 * @param s The suit that trump should be set to.
 	 *****************************************************************/
-	public boolean clearPlayedCards() {
-		/* If all cards for this trick have been played, clear */
-		if(playedCards.size() >= 4) {
-			playedCards.clear();
-			return true;
-		}
-		return false;
+ 	public void setTrump(SUIT s) {
+		currentTrump = s;
+		trumpSelectingTeam = players[currentPlayer].getTeam();
 	}
+ 	
+ 	/******************************************************************
+	 * Gets the current trump
+	 *****************************************************************/
+	public SUIT getTrump() { return currentTrump;}
+ 	
+	/******************************************************************
+	 * Get the current number of times a player has passed on picking
+	 * up trump.
+	 * 
+	 * @return The number of times a player has passed on picking up
+	 * 		   trump.
+	 *****************************************************************/
+	public int getNumPasses() {	return numPasses;}
+	
+	/******************************************************************
+	 * Get the arrayList of cards that have been played in the current
+	 * trick.
+	 * 
+	 * @return The arrayList of playedCards this trick.
+	 *****************************************************************/
+	public ArrayList<Card> getPlayedCards() { return playedCards;}
+	
+	/******************************************************************
+	 * Get the topKitty card.
+	 * 
+	 * @return The card object of the topKitty.
+	 *****************************************************************/
+	public Card getTopKitty() {	return topKitty;}
+	
+	
+	
+	
+	
+	/********************** Public Methods ***************************/
 	
 	/******************************************************************
 	 * Handles the dealing logic of the Euchre game.
@@ -158,46 +241,58 @@ public class EuchreModel {
 	}
 	
 	/******************************************************************
-	 * Sets the trump to the specified suit. Also determines the team
-	 * that selected trump for scoring purposes.
+	 * Increments the dealer by one and wraps if greater than 3 to 
+	 * start back from 0.
+	 *****************************************************************/
+	public void incrementDealer() {
+		firstPlayer = currentPlayer = (dealer + 1) % 4;
+		dealer++;
+		if(dealer >= 4)
+			dealer = 0;
+	}
+	
+	/******************************************************************
+	 * Checks if the currentPlayer is also the dealer.
 	 * 
-	 * @param s The suit that trump should be set to.
+	 * @return True if the currentPlayer is the dealer, else false.
 	 *****************************************************************/
-	public void setTrump(SUIT s) {
-		currentTrump = s;
-		trumpSelectingTeam = players[currentPlayer].getTeam();
+	public boolean isCurrentPlayerDealer() {
+		return((currentPlayer == firstPlayer-1) ||
+				(currentPlayer == 0 && firstPlayer == 3));
 	}
 	
 	/******************************************************************
-	 * Get the arrayList of cards that have been played in the current
-	 * trick.
+	 * Play a card based on the index given. Plays the card at the 
+	 * given index in the current players hand. After playing, removes
+	 * the card from the players hand and increments the current player
+	 * so that the next person can play.
 	 * 
-	 * @return The arrayList of playedCards this trick.
+	 * @param index The index of the card within the current players
+	 * 				hand that should be played.
 	 *****************************************************************/
-	public ArrayList<Card> getPlayedCards() {
-		return playedCards;
+	public void makeMove(int index) {
+		/* Check if the move is valid */
+		//TODO: Set renegeable if not valid
+		isValidMove(index);
+		/* Add the played card from the users hand to playedCards */
+		playedCards.add(players[currentPlayer].getCardFromHand(index));
+		/* Remove the played card from the players hand */
+		players[currentPlayer].removeCardFromHand(index);
+		
+		/* Increment the current player appropriately */
+		currentPlayer = (currentPlayer+1) % 4;	
 	}
 	
 	/******************************************************************
-	 * Sets the dealer as the current player. This is done to allow the
-	 * dealer to choose a card to swap with the flipped over card in 
-	 * the event that someone orders the card up as trump.
+	 * This function handles the player passing on calling trump (used
+	 * for both passing on the kitty and passing on selecting a suit
+	 * for trump).
 	 *****************************************************************/
-	public void setCurrentPlayerDealer() {
-		/* Handle the wrap-around case where firstPlayer=0, dealer=3 */
-		if(firstPlayer == 0)
-			currentPlayer = 3;
-		/* Otherwise, dealer is one less than firstPlayer */
-		else
-			currentPlayer = firstPlayer - 1;
-	}
-	
-	/******************************************************************
-	 * Set the currentPlayer to be the same as the firstPlayer. This 
-	 * needs to be done at the start of each trick.
-	 *****************************************************************/
-	public void setCurrentPlayerFirst() {
-		currentPlayer = firstPlayer;
+	public void playerPassed() {
+		/* Increment the current player appropriately */
+		currentPlayer = (currentPlayer+1) % 4;
+		/* Increment the number of passes */
+		numPasses++;
 	}
 	
 	/******************************************************************
@@ -217,71 +312,19 @@ public class EuchreModel {
 	}
 	
 	/******************************************************************
-	 * Return the player at the index specified in the players array.
+	 * Clear the played cards arrayList. The arrayList should only 
+	 * only clear if it is full (i.e. all cards for this trick have
+	 * been played).
 	 * 
-	 * @param index The index of the desired player within the players
-	 * 				array.
-	 * @return The player at the specified index.
+	 * @return true if the playedCards are cleared, false otherwise.
 	 *****************************************************************/
-	public Player getPlayer(int index) {
-		return players[index];
-	}
-	
-	/******************************************************************
-	 * Get the index of the currentPlayer.
-	 * 
-	 * @return An integer representing the index of the currentPlayer.
-	 *****************************************************************/
-	public int getCurrentPlayer() {
-		return currentPlayer;
-	}
-	
-	/******************************************************************
-	 * Checks if the currentPlayer is also the dealer.
-	 * 
-	 * @return True if the currentPlayer is the dealer, else false.
-	 *****************************************************************/
-	public boolean isCurrentPlayerDealer() {
-		return((currentPlayer == firstPlayer-1) ||
-				(currentPlayer == 0 && firstPlayer == 3));
-	}
-	
-	/******************************************************************
-	 * Get the topKitty card.
-	 * 
-	 * @return The card object of the topKitty.
-	 *****************************************************************/
-	public Card getTopKitty() {
-		return topKitty;
-	}
-	
-	/******************************************************************
-	 * Based on the input suit, determine the other suit that is the 
-	 * same color. For example, if clubs was passed in as suit, spades
-	 * would be returned because it is the same color (black) as clubs.
-	 * 
-	 * @param suit The suit that you want the returned suit to be the
-	 * 			   same color as.
-	 * @return The suit that is the same color as the inputted suit.
-	 *****************************************************************/
-	private SUIT sameColor(SUIT suit) {
-		switch(suit) {
-		/* If the suit is clubs, return spades */
-		case CLUB:
-			return SUIT.SPADE;
-		/* If the suit is spades, return clubs */
-		case SPADE:
-			return SUIT.CLUB;
-		/* If the suit is hearts, return diamonds */
-		case HEART:
-			return SUIT.DIAMOND;
-		/* If the suit is diamonds, return hearts */
-		case DIAMOND:
-			return SUIT.HEART;
-		/* Default should never be hit, but if it is, return spades */
-		default:
-			return SUIT.SPADE;
+	public boolean clearPlayedCards() {
+		/* If all cards for this trick have been played, clear */
+		if(playedCards.size() >= 4) {
+			playedCards.clear();
+			return true;
 		}
+		return false;
 	}
 	
 	/******************************************************************
@@ -369,7 +412,7 @@ public class EuchreModel {
 		boolean reset = true;
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-		if((team0Tricks == 3 && team1Tricks >= 1)) {
+		if((team0Tricks >= 3 && team1Tricks >= 1)) {
 			/* If team 0 won more tricks and selected trump, they get
 			 * 1 point */
 			if(trumpSelectingTeam == 0) {
@@ -385,7 +428,7 @@ public class EuchreModel {
 		}
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-		else if((team0Tricks >= 1 && team1Tricks == 3)) {
+		else if((team0Tricks >= 1 && team1Tricks >= 3)) {
 			/* If team 1 won more tricks and selected trump, they get
 			 * 1 point */
 			if(trumpSelectingTeam == 1) {
@@ -440,48 +483,93 @@ public class EuchreModel {
 	}
 	
 	/******************************************************************
-	 * Play a card based on the index given. Plays the card at the 
-	 * given index in the current players hand. After playing, removes
-	 * the card from the players hand and increments the current player
-	 * so that the next person can play.
+	 * Handles which private method to call based on the code sent by
+	 * the controller
 	 * 
-	 * @param index The index of the card within the current players
-	 * 				hand that should be played.
-	 *****************************************************************/
-	public void makeMove(int index) {
-		/* Check if the move is valid */
-		//TODO: Set renegeable if not valid
-		isValidMove(index);
-		/* Add the played card from the users hand to playedCards */
-		playedCards.add(players[currentPlayer].getCardFromHand(index));
-		/* Remove the played card from the players hand */
-		players[currentPlayer].removeCardFromHand(index);
+	 * @param code describing what action the bot should take
+	 * @return the BOTCODE describing what the resulting action of the
+	 * bot play was
+	 */
+	public BOTCODE botPlay(BOTCODE code) {
+		switch(code) {
+		case TRUMP:
+			return botSelectTrump();
+		case PLAY:
+			return botPlayCard();
+		case SWAP:
+			return botSwapWithKitty();
+		case HITKITTY:
+			return botSelectKitty();
+		}
+		return BOTCODE.DEFAULT;
+	}
+	
+	
+	
+	
+
+	/********************** Private Methods ***************************/
+	
+	/*******************************************************************
+	 * Checks if the card at the index is a valid play based on the 
+	 * first card played. Used to determine if the opposing team can
+	 * renege on the trick.
+	 * 
+	 * @param index of the card to be played
+	 * @return True if the move was valid and False if not
+	 ******************************************************************/
+	private boolean isValidMove(int index) {
 		
-		/* Increment the current player appropriately */
-		currentPlayer = (currentPlayer+1) % 4;	
+		if(playedCards.isEmpty())
+			return true;
+		
+		SUIT follow = playedCards.get(0).getSuit();
+		
+		//left bauer follow logic
+		if(playedCards.get(0).getValue() == 11 && 
+				currentTrump == sameColor(playedCards.get(0).getSuit()))
+			follow = currentTrump;
+			
+		
+		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
+			for(Card possiblePlay : players[currentPlayer].getHand())
+			{
+				if(possiblePlay.getSuit() == follow) {
+					players[currentPlayer].setRenegeable(true);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	/******************************************************************
-	 * This function handles the player passing on calling trump (used
-	 * for both passing on the kitty and passing on selecting a suit
-	 * for trump).
-	 *****************************************************************/
-	public void playerPassed() {
-		/* Increment the current player appropriately */
-		currentPlayer = (currentPlayer+1) % 4;
-		/* Increment the number of passes */
-		numPasses++;
-	}
-	
-	/******************************************************************
-	 * Get the current number of times a player has passed on picking
-	 * up trump.
+	 * Based on the input suit, determine the other suit that is the 
+	 * same color. For example, if clubs was passed in as suit, spades
+	 * would be returned because it is the same color (black) as clubs.
 	 * 
-	 * @return The number of times a player has passed on picking up
-	 * 		   trump.
+	 * @param suit The suit that you want the returned suit to be the
+	 * 			   same color as.
+	 * @return The suit that is the same color as the inputted suit.
 	 *****************************************************************/
-	public int getNumPasses() {
-		return numPasses;
+	private SUIT sameColor(SUIT suit) {
+		switch(suit) {
+		/* If the suit is clubs, return spades */
+		case CLUB:
+			return SUIT.SPADE;
+		/* If the suit is spades, return clubs */
+		case SPADE:
+			return SUIT.CLUB;
+		/* If the suit is hearts, return diamonds */
+		case HEART:
+			return SUIT.DIAMOND;
+		/* If the suit is diamonds, return hearts */
+		case DIAMOND:
+			return SUIT.HEART;
+		/* Default should never be hit, but if it is, return spades */
+		default:
+			return SUIT.SPADE;
+		}
 	}
 	
 	/******************************************************************
@@ -574,58 +662,5 @@ public class EuchreModel {
 		/* If not all cards in trick have been played, 
 		 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
 		return BOTCODE.PLAY_TRICKNOTFINISHED;		
-	}
-	
-	/* return true if bot selects trump and false otherwise(if bot passes) */
-	public BOTCODE botPlay(BOTCODE code) {
-		switch(code) {
-		case TRUMP:
-			return botSelectTrump();
-		case PLAY:
-			return botPlayCard();
-		case SWAP:
-			return botSwapWithKitty();
-		case HITKITTY:
-			return botSelectKitty();
-		}
-		return BOTCODE.DEFAULT;
-	}
-	
-	public void setFirstPlayer(int index) {
-		
-		currentPlayer = firstPlayer;
-	}
-	
-	public void incrementDealer() {
-		firstPlayer = currentPlayer = (dealer + 1) % 4;
-		dealer++;
-		if(dealer >= 4)
-			dealer = 0;
-	}
-	
-	private boolean isValidMove(int index) {
-		
-		if(playedCards.isEmpty())
-			return true;
-		
-		SUIT follow = playedCards.get(0).getSuit();
-		//left bauer follow logic
-		if(playedCards.get(0).getValue() == 11 && 
-				currentTrump == sameColor(playedCards.get(0).getSuit()))
-			follow = currentTrump;
-			
-		
-		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
-			for(Card possiblePlay : players[currentPlayer].getHand())
-			{
-				if(possiblePlay.getSuit() == follow) {
-					players[currentPlayer].setRenegeable(true);
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	
+	}	
 }
