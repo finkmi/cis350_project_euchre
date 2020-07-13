@@ -41,7 +41,7 @@ class EuchreModelTest {
 	// Ensure that setCurrentPlayerDealer function is functional
 	void test_setCurrentPlayerDealer() {
 		EuchreModel model = new EuchreModel();
-		
+		model.deal();
 		assertEquals(model.getCurrentPlayer(), 0);
 		model.setCurrentPlayerDealer();
 		assertEquals(model.getCurrentPlayer(), 3);
@@ -53,7 +53,7 @@ class EuchreModelTest {
 		EuchreModel model = new EuchreModel();
 		
 		assertEquals(model.getCurrentPlayer(), 0);
-		model.setCurrentPlayerDealer();
+		model.setCurrentPlayerFirst();
 		assertEquals(model.getCurrentPlayer(), 1);
 	}
 	
@@ -122,12 +122,15 @@ class EuchreModelTest {
 	@Test
 	// ensure we can clear played cards
 	void test_clearPlayedCards() {
-EuchreModel model = new EuchreModel();
+		EuchreModel model = new EuchreModel();
 		
 		assertEquals(model.getPlayedCards().size(), 0);
 		model.deal();
 		model.makeMove(0);
 		assertEquals(model.getPlayedCards().size(), 1);
+		model.makeMove(0);
+		model.makeMove(0);
+		model.makeMove(0);
 		model.clearPlayedCards();
 		assertEquals(model.getPlayedCards().size(), 0);		
 	}
@@ -143,21 +146,83 @@ EuchreModel model = new EuchreModel();
 
 	}
 	
-//	@Test
-//	//
-//	void test_() {
-//		EuchreModel model = new EuchreModel();
-//
-//	}
-//	
-//	@Test
-//	//
-//	void test_() {
-//		EuchreModel model = new EuchreModel();
-//
-//	}
-//	
-	
-	
+	@Test
+	//Ensure that dealing fills the player hand
+	void test_deal1() {
+		EuchreModel model = new EuchreModel();
+		
+		assertEquals(model.getPlayer(model.getCurrentPlayer()).getHand().size(),0);
+		model.deal();
+		assertEquals(model.getPlayer(model.getCurrentPlayer()).getHand().size(),5);
 
+	}
+	
+	@Test
+	//Ensure that dealing resets the number of passes
+	void test_deal2() {
+		EuchreModel model = new EuchreModel();
+		
+		model.deal();
+		model.playerPassed();
+		assertEquals(model.getNumPasses(), 1);
+		model.deal();
+		assertEquals(model.getNumPasses(), 0);
+
+	}
+		
+	@Test
+	//Ensure that as the first player you are not also the dealer
+	void test_isCurrentPlayerDealer() {
+		EuchreModel model = new EuchreModel();
+		model.setCurrentPlayerFirst();
+		
+		assertFalse(model.isCurrentPlayerDealer());
+		
+
+	}
+	
+	@Test
+	//Ensure that making a move adds to the played cards arraylist
+	void test_makeMove() {
+		EuchreModel model = new EuchreModel();
+		model.deal();
+		assertEquals(model.getPlayedCards().size(), 0);
+		model.makeMove(0);
+		assertEquals(model.getPlayedCards().size(), 1);
+	}
+	
+	@Test
+	//Ensure that passing increments the num passes
+	void test_playerPassed1() {
+		EuchreModel model = new EuchreModel();
+		assertEquals(model.getNumPasses(), 0);
+		model.playerPassed();
+		assertEquals(model.getNumPasses(), 1);
+	}
+	
+	@Test
+	//Ensure that passing increments the currentPlayer
+	void test_playerPassed2() {
+		EuchreModel model = new EuchreModel();
+		assertEquals(model.getCurrentPlayer(), 0);
+		model.playerPassed();
+		assertEquals(model.getCurrentPlayer(), 1);
+	}
+	
+	@Test
+	//
+	void test_swapWithTopKitty() {
+		EuchreModel model = new EuchreModel();
+		model.deal();
+		Card testCard = model.getTopKitty();
+		model.swapWithTopKitty(0);
+		assertEquals(model.getPlayer(0).getCardFromHand(0), testCard);	
+	}
+	
+	@Test
+	//Ensure that the default code for botplay works
+	void test_botPlayDefault() {
+		EuchreModel model = new EuchreModel();
+		assertEquals(model.botPlay(BOTCODE.DEFAULT), BOTCODE.DEFAULT);
+	}
 }

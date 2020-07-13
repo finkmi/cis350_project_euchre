@@ -18,14 +18,14 @@ class CardTest {
 		assertEquals(card1.getValue(), 9);
 		assertEquals(card1.getSuit(), SUIT.CLUB);
 		
-		assertEquals(card1.getValue(), 10);
-		assertEquals(card1.getSuit(), SUIT.DIAMOND);
+		assertEquals(card2.getValue(), 10);
+		assertEquals(card2.getSuit(), SUIT.DIAMOND);
 		
-		assertEquals(card1.getValue(), 11);
-		assertEquals(card1.getSuit(), SUIT.HEART);
+		assertEquals(card3.getValue(), 11);
+		assertEquals(card3.getSuit(), SUIT.HEART);
 		
-		assertEquals(card1.getValue(), 12);
-		assertEquals(card1.getSuit(), SUIT.SPADE);
+		assertEquals(card4.getValue(), 12);
+		assertEquals(card4.getSuit(), SUIT.SPADE);
 	}
 
 }

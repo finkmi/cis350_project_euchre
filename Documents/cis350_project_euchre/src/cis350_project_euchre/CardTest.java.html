@@ -1,32 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CardTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">CardTest.java</span></div><h1>CardTest.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CardTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 13, 2020 11:57:50 AM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">CardTest.java</span></div><h1>CardTest.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-<span class="nc" id="L7">class CardTest {</span>
+<span class="fc" id="L7">class CardTest {</span>
 
 	@Test
 	/* Tests that a card of each differnt suit and varying values can be constructed */
 	void test_cardConstructor() {
-<span class="nc" id="L12">		Card card1 = new Card(9, SUIT.CLUB);</span>
-<span class="nc" id="L13">		Card card2 = new Card(10, SUIT.DIAMOND);</span>
-<span class="nc" id="L14">		Card card3 = new Card(11, SUIT.HEART);</span>
-<span class="nc" id="L15">		Card card4 = new Card(12, SUIT.SPADE);</span>
+<span class="fc" id="L12">		Card card1 = new Card(9, SUIT.CLUB);</span>
+<span class="fc" id="L13">		Card card2 = new Card(10, SUIT.DIAMOND);</span>
+<span class="fc" id="L14">		Card card3 = new Card(11, SUIT.HEART);</span>
+<span class="fc" id="L15">		Card card4 = new Card(12, SUIT.SPADE);</span>
 
 		
-<span class="nc" id="L18">		assertEquals(card1.getValue(), 9);</span>
-<span class="nc" id="L19">		assertEquals(card1.getSuit(), SUIT.CLUB);</span>
+<span class="fc" id="L18">		assertEquals(card1.getValue(), 9);</span>
+<span class="fc" id="L19">		assertEquals(card1.getSuit(), SUIT.CLUB);</span>
 		
-<span class="nc" id="L21">		assertEquals(card1.getValue(), 10);</span>
-<span class="nc" id="L22">		assertEquals(card1.getSuit(), SUIT.DIAMOND);</span>
+<span class="fc" id="L21">		assertEquals(card2.getValue(), 10);</span>
+<span class="fc" id="L22">		assertEquals(card2.getSuit(), SUIT.DIAMOND);</span>
 		
-<span class="nc" id="L24">		assertEquals(card1.getValue(), 11);</span>
-<span class="nc" id="L25">		assertEquals(card1.getSuit(), SUIT.HEART);</span>
+<span class="fc" id="L24">		assertEquals(card3.getValue(), 11);</span>
+<span class="fc" id="L25">		assertEquals(card3.getSuit(), SUIT.HEART);</span>
 		
-<span class="nc" id="L27">		assertEquals(card1.getValue(), 12);</span>
-<span class="nc" id="L28">		assertEquals(card1.getSuit(), SUIT.SPADE);</span>
-<span class="nc" id="L29">	}</span>
+<span class="fc" id="L27">		assertEquals(card4.getValue(), 12);</span>
+<span class="fc" id="L28">		assertEquals(card4.getSuit(), SUIT.SPADE);</span>
+<span class="fc" id="L29">	}</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 13, 2020 11:57:50 AM)</div></body></html>

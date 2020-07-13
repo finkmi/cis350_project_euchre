@@ -1,164 +1,229 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>EuchreModelTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">EuchreModelTest.java</span></div><h1>EuchreModelTest.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>EuchreModelTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 13, 2020 11:57:50 AM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">EuchreModelTest.java</span></div><h1>EuchreModelTest.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-<span class="nc" id="L7">class EuchreModelTest {</span>
+<span class="fc" id="L7">class EuchreModelTest {</span>
 
 	@Test
 	// Ensures that there are 4 players 1 of which is human the rest of which are bots
 	// and ensures that they are on the correct teams
 	void test_constructorMakesAllPlayers() {
-<span class="nc" id="L13">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L13">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L15">		assertFalse(model.getPlayer(0).getIsBot());</span>
-<span class="nc" id="L16">		assertTrue(model.getPlayer(1).getIsBot());</span>
-<span class="nc" id="L17">		assertTrue(model.getPlayer(2).getIsBot());</span>
-<span class="nc" id="L18">		assertTrue(model.getPlayer(3).getIsBot());</span>
+<span class="fc" id="L15">		assertFalse(model.getPlayer(0).getIsBot());</span>
+<span class="fc" id="L16">		assertTrue(model.getPlayer(1).getIsBot());</span>
+<span class="fc" id="L17">		assertTrue(model.getPlayer(2).getIsBot());</span>
+<span class="fc" id="L18">		assertTrue(model.getPlayer(3).getIsBot());</span>
 
-<span class="nc" id="L20">		assertEquals(model.getPlayer(0).getTeam(), 0);</span>
-<span class="nc" id="L21">		assertEquals(model.getPlayer(2).getTeam(), 0);</span>
-<span class="nc" id="L22">		assertEquals(model.getPlayer(0).getTeam(), model.getPlayer(2).getTeam());</span>
+<span class="fc" id="L20">		assertEquals(model.getPlayer(0).getTeam(), 0);</span>
+<span class="fc" id="L21">		assertEquals(model.getPlayer(2).getTeam(), 0);</span>
+<span class="fc" id="L22">		assertEquals(model.getPlayer(0).getTeam(), model.getPlayer(2).getTeam());</span>
 
-<span class="nc" id="L24">		assertEquals(model.getPlayer(1).getTeam(), 1);</span>
-<span class="nc" id="L25">		assertEquals(model.getPlayer(3).getTeam(), 1);</span>
-<span class="nc" id="L26">		assertEquals(model.getPlayer(1).getTeam(), model.getPlayer(3).getTeam());</span>
-<span class="nc" id="L27">	}</span>
+<span class="fc" id="L24">		assertEquals(model.getPlayer(1).getTeam(), 1);</span>
+<span class="fc" id="L25">		assertEquals(model.getPlayer(3).getTeam(), 1);</span>
+<span class="fc" id="L26">		assertEquals(model.getPlayer(1).getTeam(), model.getPlayer(3).getTeam());</span>
+<span class="fc" id="L27">	}</span>
 	
 	@Test
 	// Ensures the getCurrentPlayer method is functional
 	void test_getCurrentPlayer() {
-<span class="nc" id="L32">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L32">		EuchreModel model = new EuchreModel();</span>
 
-<span class="nc" id="L34">		assertEquals(model.getCurrentPlayer(), 0);</span>
-<span class="nc" id="L35">		model.playerPassed();</span>
-<span class="nc" id="L36">		assertEquals(model.getCurrentPlayer(), 1);</span>
+<span class="fc" id="L34">		assertEquals(model.getCurrentPlayer(), 0);</span>
+<span class="fc" id="L35">		model.playerPassed();</span>
+<span class="fc" id="L36">		assertEquals(model.getCurrentPlayer(), 1);</span>
 
-<span class="nc" id="L38">	}</span>
+<span class="fc" id="L38">	}</span>
 	
 	@Test
 	// Ensure that setCurrentPlayerDealer function is functional
 	void test_setCurrentPlayerDealer() {
-<span class="nc" id="L43">		EuchreModel model = new EuchreModel();</span>
-		
-<span class="nc" id="L45">		assertEquals(model.getCurrentPlayer(), 0);</span>
-<span class="nc" id="L46">		model.setCurrentPlayerDealer();</span>
-<span class="nc" id="L47">		assertEquals(model.getCurrentPlayer(), 3);</span>
-<span class="nc" id="L48">	}</span>
+<span class="fc" id="L43">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L44">		model.deal();</span>
+<span class="fc" id="L45">		assertEquals(model.getCurrentPlayer(), 0);</span>
+<span class="fc" id="L46">		model.setCurrentPlayerDealer();</span>
+<span class="fc" id="L47">		assertEquals(model.getCurrentPlayer(), 3);</span>
+<span class="fc" id="L48">	}</span>
 	
 	@Test
 	// Ensure that setCurrentPlayerFirst is functional
 	void test_setCurrentPlayerFirst() {
-<span class="nc" id="L53">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L53">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L55">		assertEquals(model.getCurrentPlayer(), 0);</span>
-<span class="nc" id="L56">		model.setCurrentPlayerDealer();</span>
-<span class="nc" id="L57">		assertEquals(model.getCurrentPlayer(), 1);</span>
-<span class="nc" id="L58">	}</span>
+<span class="fc" id="L55">		assertEquals(model.getCurrentPlayer(), 0);</span>
+<span class="fc" id="L56">		model.setCurrentPlayerFirst();</span>
+<span class="fc" id="L57">		assertEquals(model.getCurrentPlayer(), 1);</span>
+<span class="fc" id="L58">	}</span>
 	
 	@Test
 	// Ensures we can get the number of tricks from model for both teams
 	void test_getNumTricks() {
-<span class="nc" id="L63">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L63">		EuchreModel model = new EuchreModel();</span>
 
-<span class="nc" id="L65">		assertEquals(model.getNumTricks(0), 0);</span>
-<span class="nc" id="L66">		assertEquals(model.getNumTricks(1), 0);</span>
-<span class="nc" id="L67">	}</span>
+<span class="fc" id="L65">		assertEquals(model.getNumTricks(0), 0);</span>
+<span class="fc" id="L66">		assertEquals(model.getNumTricks(1), 0);</span>
+<span class="fc" id="L67">	}</span>
 	
 	@Test
 	//Ensures we can get the score from model for both teams
 	void test_getScore() {
-<span class="nc" id="L72">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L72">		EuchreModel model = new EuchreModel();</span>
 
-<span class="nc" id="L74">		assertEquals(model.getScore(0), 0);</span>
-<span class="nc" id="L75">		assertEquals(model.getScore(1), 0);</span>
-<span class="nc" id="L76">	}</span>
+<span class="fc" id="L74">		assertEquals(model.getScore(0), 0);</span>
+<span class="fc" id="L75">		assertEquals(model.getScore(1), 0);</span>
+<span class="fc" id="L76">	}</span>
 	
 	@Test
 	// Ensures we can reset scores to zero
 	void test_resetScore() {
-<span class="nc" id="L81">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L81">		EuchreModel model = new EuchreModel();</span>
 
-<span class="nc" id="L83">		assertEquals(model.getScore(0), 0);</span>
-<span class="nc" id="L84">		assertEquals(model.getScore(1), 0);</span>
-<span class="nc" id="L85">		model.resetScore();</span>
-<span class="nc" id="L86">		assertEquals(model.getScore(0), 0);</span>
-<span class="nc" id="L87">		assertEquals(model.getScore(1), 0);</span>
-<span class="nc" id="L88">	}</span>
+<span class="fc" id="L83">		assertEquals(model.getScore(0), 0);</span>
+<span class="fc" id="L84">		assertEquals(model.getScore(1), 0);</span>
+<span class="fc" id="L85">		model.resetScore();</span>
+<span class="fc" id="L86">		assertEquals(model.getScore(0), 0);</span>
+<span class="fc" id="L87">		assertEquals(model.getScore(1), 0);</span>
+<span class="fc" id="L88">	}</span>
 	
 	@Test
 	//Test trump getters/setters
 	void test_getAndSetTrump() {
-<span class="nc" id="L93">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L93">		EuchreModel model = new EuchreModel();</span>
 
-<span class="nc" id="L95">		assertNull(model.getTrump());</span>
-<span class="nc" id="L96">		model.setTrump(SUIT.CLUB);</span>
-<span class="nc" id="L97">		assertEquals(model.getTrump(), SUIT.CLUB);</span>
-<span class="nc" id="L98">	}</span>
+<span class="fc" id="L95">		assertNull(model.getTrump());</span>
+<span class="fc" id="L96">		model.setTrump(SUIT.CLUB);</span>
+<span class="fc" id="L97">		assertEquals(model.getTrump(), SUIT.CLUB);</span>
+<span class="fc" id="L98">	}</span>
 	
 	@Test
 	//test getNumPasses functionality and that playerPassed() increments
 	void test_getAndIncrementPasses() {
-<span class="nc" id="L103">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L103">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L105">		assertEquals(model.getNumPasses(), 0);</span>
-<span class="nc" id="L106">		model.playerPassed();</span>
-<span class="nc" id="L107">		assertEquals(model.getNumPasses(), 1);</span>
-<span class="nc" id="L108">	}</span>
+<span class="fc" id="L105">		assertEquals(model.getNumPasses(), 0);</span>
+<span class="fc" id="L106">		model.playerPassed();</span>
+<span class="fc" id="L107">		assertEquals(model.getNumPasses(), 1);</span>
+<span class="fc" id="L108">	}</span>
 	
 	@Test
 	// Ensure that making a move adds cards to playedcards as well as testing
 	// the getter method
 	void test_getPlayedCards() {
-<span class="nc" id="L114">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L114">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L116">		assertEquals(model.getPlayedCards().size(), 0);</span>
-<span class="nc" id="L117">		model.deal();</span>
-<span class="nc" id="L118">		model.makeMove(0);</span>
-<span class="nc" id="L119">		assertEquals(model.getPlayedCards().size(), 1);</span>
-<span class="nc" id="L120">	}</span>
+<span class="fc" id="L116">		assertEquals(model.getPlayedCards().size(), 0);</span>
+<span class="fc" id="L117">		model.deal();</span>
+<span class="fc" id="L118">		model.makeMove(0);</span>
+<span class="fc" id="L119">		assertEquals(model.getPlayedCards().size(), 1);</span>
+<span class="fc" id="L120">	}</span>
 	
 	@Test
 	// ensure we can clear played cards
 	void test_clearPlayedCards() {
-<span class="nc" id="L125">EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L125">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L127">		assertEquals(model.getPlayedCards().size(), 0);</span>
-<span class="nc" id="L128">		model.deal();</span>
-<span class="nc" id="L129">		model.makeMove(0);</span>
-<span class="nc" id="L130">		assertEquals(model.getPlayedCards().size(), 1);</span>
-<span class="nc" id="L131">		model.clearPlayedCards();</span>
-<span class="nc" id="L132">		assertEquals(model.getPlayedCards().size(), 0);		</span>
-<span class="nc" id="L133">	}</span>
+<span class="fc" id="L127">		assertEquals(model.getPlayedCards().size(), 0);</span>
+<span class="fc" id="L128">		model.deal();</span>
+<span class="fc" id="L129">		model.makeMove(0);</span>
+<span class="fc" id="L130">		assertEquals(model.getPlayedCards().size(), 1);</span>
+<span class="fc" id="L131">		model.makeMove(0);</span>
+<span class="fc" id="L132">		model.makeMove(0);</span>
+<span class="fc" id="L133">		model.makeMove(0);</span>
+<span class="fc" id="L134">		model.clearPlayedCards();</span>
+<span class="fc" id="L135">		assertEquals(model.getPlayedCards().size(), 0);		</span>
+<span class="fc" id="L136">	}</span>
 	
 	@Test
 	//Ensure that dealing sets the top kitty and test the getter
 	void test_getTopKitty() {
-<span class="nc" id="L138">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L141">		EuchreModel model = new EuchreModel();</span>
 		
-<span class="nc" id="L140">		assertNull(model.getTopKitty());</span>
-<span class="nc" id="L141">		model.deal();</span>
-<span class="nc" id="L142">		assertNotNull(model.getTopKitty());</span>
+<span class="fc" id="L143">		assertNull(model.getTopKitty());</span>
+<span class="fc" id="L144">		model.deal();</span>
+<span class="fc" id="L145">		assertNotNull(model.getTopKitty());</span>
 
-<span class="nc" id="L144">	}</span>
+<span class="fc" id="L147">	}</span>
 	
-//	@Test
-//	//
-//	void test_() {
-//		EuchreModel model = new EuchreModel();
-//
-//	}
-//	
-//	@Test
-//	//
-//	void test_() {
-//		EuchreModel model = new EuchreModel();
-//
-//	}
-//	
-	
-	
+	@Test
+	//Ensure that dealing fills the player hand
+	void test_deal1() {
+<span class="fc" id="L152">		EuchreModel model = new EuchreModel();</span>
+		
+<span class="fc" id="L154">		assertEquals(model.getPlayer(model.getCurrentPlayer()).getHand().size(),0);</span>
+<span class="fc" id="L155">		model.deal();</span>
+<span class="fc" id="L156">		assertEquals(model.getPlayer(model.getCurrentPlayer()).getHand().size(),5);</span>
 
+<span class="fc" id="L158">	}</span>
+	
+	@Test
+	//Ensure that dealing resets the number of passes
+	void test_deal2() {
+<span class="fc" id="L163">		EuchreModel model = new EuchreModel();</span>
+		
+<span class="fc" id="L165">		model.deal();</span>
+<span class="fc" id="L166">		model.playerPassed();</span>
+<span class="fc" id="L167">		assertEquals(model.getNumPasses(), 1);</span>
+<span class="fc" id="L168">		model.deal();</span>
+<span class="fc" id="L169">		assertEquals(model.getNumPasses(), 0);</span>
+
+<span class="fc" id="L171">	}</span>
+		
+	@Test
+	//Ensure that as the first player you are not also the dealer
+	void test_isCurrentPlayerDealer() {
+<span class="fc" id="L176">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L177">		model.setCurrentPlayerFirst();</span>
+		
+<span class="fc" id="L179">		assertFalse(model.isCurrentPlayerDealer());</span>
+		
+
+<span class="fc" id="L182">	}</span>
+	
+	@Test
+	//Ensure that making a move adds to the played cards arraylist
+	void test_makeMove() {
+<span class="fc" id="L187">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L188">		model.deal();</span>
+<span class="fc" id="L189">		assertEquals(model.getPlayedCards().size(), 0);</span>
+<span class="fc" id="L190">		model.makeMove(0);</span>
+<span class="fc" id="L191">		assertEquals(model.getPlayedCards().size(), 1);</span>
+<span class="fc" id="L192">	}</span>
+	
+	@Test
+	//Ensure that passing increments the num passes
+	void test_playerPassed1() {
+<span class="fc" id="L197">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L198">		assertEquals(model.getNumPasses(), 0);</span>
+<span class="fc" id="L199">		model.playerPassed();</span>
+<span class="fc" id="L200">		assertEquals(model.getNumPasses(), 1);</span>
+<span class="fc" id="L201">	}</span>
+	
+	@Test
+	//Ensure that passing increments the currentPlayer
+	void test_playerPassed2() {
+<span class="fc" id="L206">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L207">		assertEquals(model.getCurrentPlayer(), 0);</span>
+<span class="fc" id="L208">		model.playerPassed();</span>
+<span class="fc" id="L209">		assertEquals(model.getCurrentPlayer(), 1);</span>
+<span class="fc" id="L210">	}</span>
+	
+	@Test
+	//
+	void test_swapWithTopKitty() {
+<span class="fc" id="L215">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L216">		model.deal();</span>
+<span class="fc" id="L217">		Card testCard = model.getTopKitty();</span>
+<span class="fc" id="L218">		model.swapWithTopKitty(0);</span>
+<span class="fc" id="L219">		assertEquals(model.getPlayer(0).getCardFromHand(0), testCard);	</span>
+<span class="fc" id="L220">	}</span>
+	
+	@Test
+	//Ensure that the default code for botplay works
+	void test_botPlayDefault() {
+<span class="fc" id="L225">		EuchreModel model = new EuchreModel();</span>
+<span class="fc" id="L226">		assertEquals(model.botPlay(BOTCODE.DEFAULT), BOTCODE.DEFAULT);</span>
+<span class="fc" id="L227">	}</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 13, 2020 11:57:50 AM)</div></body></html>
