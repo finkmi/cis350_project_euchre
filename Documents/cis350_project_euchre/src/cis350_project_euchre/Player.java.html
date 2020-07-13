@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+
+import java.util.ArrayList;
+
+/**********************************************************************
+ * Represents a player in the Euchre game.
+ * 
+ * @author Michael Fink, Charlie Dorn
+ *********************************************************************/
+public class Player {
+	
+	/** The team of a given player (represented by 0 and 1). */
+	private int team;
+	
+	/** The cards currently in a players hand. */
+	private ArrayList&lt;Card&gt; hand;
+	
+	/** Specifies if the player is a bot or a human player. */
+	private boolean isBot;
+	
+	/** Specifies the difficulty of a bot if isBot is true. */
+	private int difficulty;
+	
+	/** Specifies if the user has made an illegal move or not. */
+	private boolean renegeable;
+	
+	/******************************************************************
+	 * Constructor for a player. This constructor makes the assumption
+	 * that the player is not a bot, and therefore only takes a team
+	 * (0 or 1) as input.
+	 * 
+	 * @param team The team the player is on (0 or 1).
+	 *****************************************************************/
+<span class="nc" id="L34">	public Player(int team) {</span>
+		/* Set the team of the new player, and instantiate the hand */
+<span class="nc" id="L36">		setTeam(team);</span>
+<span class="nc" id="L37">		hand = new ArrayList();</span>
+		
+		/* This player is not a bot, and has made no illegal moves */
+<span class="nc" id="L40">		difficulty = 0;</span>
+<span class="nc" id="L41">		isBot = false;</span>
+<span class="nc" id="L42">		renegeable = false;</span>
+<span class="nc" id="L43">	}</span>
+	
+	/******************************************************************
+	 * Constructor for a player. This constructor takes the team, and
+	 * the status of isBot as well as a difficulty level for a bot.
+	 * 
+	 * @param team The team the player is on (0 or 1).
+	 * @param isBot True if the player is a bot, else false.
+	 * @param difficulty Integer representing the difficulty level
+	 * 					 of the bot.
+	 *****************************************************************/
+<span class="fc" id="L54">	public Player(int team, boolean isBot, int difficulty) {</span>
+		/* Set the team of the new player, and instantiate the hand */
+<span class="fc" id="L56">		this.setTeam(team);</span>
+<span class="fc" id="L57">		hand = new ArrayList();</span>
+		
+		/* Set bot statuses accordingly, and renegable set to false */
+<span class="fc" id="L60">		this.difficulty = difficulty;</span>
+<span class="fc" id="L61">		this.isBot = isBot;</span>
+<span class="fc" id="L62">		this.renegeable = false;	</span>
+<span class="fc" id="L63">	}</span>
+	
+	/******************************************************************
+	 * Adds a card to the users hand arrayList at the specified index.
+	 * 
+	 * @param index The spot in the hand to place this card.
+	 * @param card The card to be placed in the hand.
+	 *****************************************************************/
+	public void addCardToHand(int index, Card card) {
+<span class="fc" id="L72">		hand.add(index, card);</span>
+<span class="fc" id="L73">	}</span>
+	
+	/******************************************************************
+	 * Changes a card already in the users hand at a specific index to 
+	 * the new card.
+	 * 
+	 * @param index The spot in the hand to swap with this card.
+	 * @param card The card to be set in the hand.
+	 *****************************************************************/
+	public void setCardInHand(int index, Card card) {
+<span class="fc" id="L83">		hand.set(index, card);</span>
+<span class="fc" id="L84">	}</span>
+	
+	/******************************************************************
+	 * Returns the card in the players hand at the given index.
+	 * 
+	 * @param index The index within the hand that the card should be 
+	 *  			retrieved from.
+	 * @return The card at the specified index in the hand.
+	 *****************************************************************/
+	public Card getCardFromHand(int index) {
+<span class="fc" id="L94">		return hand.get(index);</span>
+	}
+	
+	/******************************************************************
+	 * Removes the card at the given index from the players hand.
+	 * 
+	 * @param index The index within the hand that the card should be
+	 * 				removed from.
+	 *****************************************************************/
+	public void removeCardFromHand(int index) {
+<span class="fc" id="L104">		hand.remove(index);</span>
+<span class="fc" id="L105">	}</span>
+	
+	/******************************************************************
+	 * Removes all cards from the players hand, making the hand empty.
+	 *****************************************************************/
+	public void clearHand() {
+<span class="fc" id="L111">		hand.clear();</span>
+<span class="fc" id="L112">	}</span>
+	
+	/******************************************************************
+	 * Gets the entire arrayList for this players hand.
+	 * 
+	 * @return The players hand.
+	 *****************************************************************/
+	public ArrayList&lt;Card&gt; getHand() {
+<span class="fc" id="L120">		return hand;</span>
+	}
+
+	/******************************************************************
+	 * Gets the team of the given player.
+	 * 
+	 * @return The integer representing the team (0 or 1).
+	 *****************************************************************/
+	public int getTeam() {
+<span class="fc" id="L129">		return team;</span>
+	}
+
+	/******************************************************************
+	 * Sets the team of the current player.
+	 * 
+	 * @param team An integer representing the team (0 or 1).
+	 *****************************************************************/
+	public void setTeam(int team) {
+<span class="fc" id="L138">		this.team = team;</span>
+<span class="fc" id="L139">	}</span>
+
+	/******************************************************************
+	 * Gets the status of the renegable boolean. Used to determine if 
+	 * the player has made an invalid move, thus someone could call 
+	 * them out for renege-ing.
+	 * 
+	 * @return True if the player has made an invalid move, else false.
+	 *****************************************************************/
+	public boolean isRenegeable() {
+<span class="nc" id="L149">		return renegeable;</span>
+	}
+
+	/******************************************************************
+	 * Sets the status of the renegeable boolean. Used to determine if 
+	 * the player has made an invalid move, thus someone could call 
+	 * them out for renege-ing.
+	 * 
+	 * @param renegeable True if the player made an invalid move, else
+	 * 					 false.
+	 *****************************************************************/
+	public void setRenegeable(boolean renegeable) {
+<span class="fc" id="L161">		this.renegeable = renegeable;</span>
+<span class="fc" id="L162">	}</span>
+	
+	/******************************************************************
+	 * Gets the status of isBot for the given player.
+	 * 
+	 * @return True if this player is a bot, else false. 
+	 *****************************************************************/
+	public boolean getIsBot() {
+<span class="fc" id="L170">		return isBot;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>

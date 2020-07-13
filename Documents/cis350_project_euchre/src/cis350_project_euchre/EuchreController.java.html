@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>EuchreController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">EuchreController.java</span></div><h1>EuchreController.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class EuchreController extends JPanel {
+
+	static final String FILEPATH = &quot;C:/Users/charl/eclipse-workspace/&quot;;
+//	static final String FILEPATH = &quot;/Users/michaelfink/workspace/&quot;;
+	private JButton[] hand;
+
+	private EuchreModel model;
+
+	private JButton renegeBtn;
+	private JButton passBtn;
+	private JButton topKitty;
+
+	private ImageIcon club9;
+	private ImageIcon club10;
+	private ImageIcon club11; // Jack
+	private ImageIcon club12; // Queen
+	private ImageIcon club13; // King
+	private ImageIcon club14; // Ace
+	private ImageIcon diamond9;
+	private ImageIcon diamond10;
+	private ImageIcon diamond11; // Jack
+	private ImageIcon diamond12; // Queen
+	private ImageIcon diamond13; // King
+	private ImageIcon diamond14; // Ace
+	private ImageIcon heart9;
+	private ImageIcon heart10;
+	private ImageIcon heart11; // Jack
+	private ImageIcon heart12; // Queen
+	private ImageIcon heart13; // King
+	private ImageIcon heart14; // Ace
+	private ImageIcon spade9;
+	private ImageIcon spade10;
+	private ImageIcon spade11; // Jack
+	private ImageIcon spade12; // Queen
+	private ImageIcon spade13; // King
+	private ImageIcon spade14; // Ace
+	private ImageIcon black_joker;
+	private ImageIcon card_back;
+	
+	private JLabel[] playedCards;
+	private int numCardsPlayed;
+	
+<span class="fc" id="L49">	private boolean clearFlag = false;</span>
+	
+	private boolean trumpSelect;
+	private boolean kittyHasBeenPressed;
+	Timer timer;
+	
+	private int currentPlayer;
+
+<span class="fc" id="L57">	public EuchreController() {</span>
+
+<span class="fc" id="L59">		trumpSelect = true;</span>
+<span class="fc" id="L60">		kittyHasBeenPressed = false;</span>
+		
+		/* Set up a panel with a 3x3 grid of JPanels */
+<span class="fc" id="L63">		JPanel panel = new JPanel();		</span>
+<span class="fc" id="L64">		JPanel[][] panelArray = new JPanel[3][3];</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">		for(int i=0; i&lt;3; i++) {</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">			for(int j=0; j&lt;3; j++) {</span>
+<span class="fc" id="L67">				panelArray[i][j] = new JPanel();</span>
+<span class="fc" id="L68">				panel.add(panelArray[i][j]);</span>
+			}
+		}
+				
+<span class="fc" id="L72">		createIcons();</span>
+<span class="fc" id="L73">		int imageWidth = club9.getIconWidth();</span>
+<span class="fc" id="L74">		int imageHeight = club9.getIconHeight();</span>
+
+<span class="fc" id="L76">		panel.setLayout(new GridLayout(3, 3, 10, 10));</span>
+<span class="fc" id="L77">		panelArray[2][1].setLayout(new GridLayout(1, 5));</span>
+<span class="fc" id="L78">		panelArray[2][2].setLayout(new GridBagLayout());</span>
+		
+		/* Handling layered pane for played cards */
+		/* Just use set testing[i].setIcon(black_joker) and the labels will appear */
+<span class="fc" id="L82">		JLayeredPane layeredPane = new JLayeredPane();</span>
+<span class="fc" id="L83">		layeredPane.setPreferredSize(new Dimension(5*imageWidth,imageHeight));</span>
+<span class="fc" id="L84">		playedCards = new JLabel[4];</span>
+<span class="fc" id="L85">		numCardsPlayed = 0;</span>
+<span class="fc" id="L86">		panelArray[1][1].add(layeredPane);</span>
+<span class="fc" id="L87">		int xorigin = (imageWidth * 5/2) - ((imageWidth+150)/2);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		for(int i=0; i&lt;4; i++) {</span>
+<span class="fc" id="L89">			playedCards[i] = new JLabel();</span>
+<span class="fc" id="L90">			layeredPane.add(playedCards[i], new Integer(i*50));</span>
+<span class="fc" id="L91">			playedCards[i].setBounds(xorigin+(50*i), 00, imageWidth, imageHeight);</span>
+		}
+				
+<span class="fc" id="L94">		GridBagConstraints c = new GridBagConstraints();</span>
+		
+		
+<span class="fc" id="L97">		ButtonListener listener = new ButtonListener();</span>
+
+<span class="fc" id="L99">		model = new EuchreModel();</span>
+<span class="fc" id="L100">		model.deal();</span>
+
+<span class="fc" id="L102">		hand = new JButton[5];</span>
+		
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		for (int i = 0; i &lt;= 4; i++) {</span>
+<span class="fc" id="L105">			hand[i] = new JButton(getCardIcon(model.getPlayer(0).getCardFromHand(i)));</span>
+<span class="fc" id="L106">			hand[i].setPreferredSize(new Dimension(imageWidth, imageHeight));</span>
+<span class="fc" id="L107">			hand[i].setVisible(true);</span>
+<span class="fc" id="L108">			hand[i].addActionListener(listener);</span>
+<span class="fc" id="L109">			panelArray[2][1].add(hand[i]);</span>
+		}
+
+<span class="fc" id="L112">		renegeBtn = new JButton(&quot;Renege&quot;);</span>
+<span class="fc" id="L113">		passBtn = new JButton(&quot;Pass&quot;);</span>
+<span class="fc" id="L114">		topKitty = new JButton(getCardIcon(model.getTopKitty()));</span>
+		
+<span class="fc" id="L116">		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));</span>
+<span class="fc" id="L117">		renegeBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));</span>
+<span class="fc" id="L118">		passBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));</span>
+		
+<span class="fc" id="L120">		renegeBtn.addActionListener(listener);</span>
+<span class="fc" id="L121">		c.gridx = 1;</span>
+<span class="fc" id="L122">		c.gridy = 1;</span>
+<span class="fc" id="L123">		panelArray[2][2].add(renegeBtn);</span>
+		
+<span class="fc" id="L125">		passBtn.addActionListener(listener);</span>
+<span class="fc" id="L126">		c.gridx = 2;</span>
+<span class="fc" id="L127">		c.gridy = 1;</span>
+<span class="fc" id="L128">		panelArray[2][2].add(passBtn);</span>
+		
+<span class="fc" id="L130">		topKitty.addActionListener(listener);</span>
+<span class="fc" id="L131">		c.weightx = 1;</span>
+<span class="fc" id="L132">		c.gridx = 3;</span>
+<span class="fc" id="L133">		c.gridy = 0;</span>
+<span class="fc" id="L134">		c.gridheight = 3;</span>
+<span class="fc" id="L135">		c.gridwidth = 2;</span>
+<span class="fc" id="L136">		panelArray[2][2].add(topKitty);</span>
+		
+<span class="fc" id="L138">		topKitty.setVisible(true);</span>
+<span class="fc" id="L139">		renegeBtn.setVisible(false);</span>
+<span class="fc" id="L140">		passBtn.setVisible(true);</span>
+		
+<span class="fc" id="L142">		add(panel);</span>
+<span class="fc" id="L143">		Timer timer = new Timer(1000, new TimerListener());</span>
+<span class="fc" id="L144">		timer.start();</span>
+		
+<span class="fc" id="L146">	}</span>
+
+	/******************************************************************
+	 * Creates all card icons from resource file
+	 */
+	private void createIcons() {
+		/* Sets Images for clubs */
+<span class="fc" id="L153">		club9 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/9_of_clubs.png&quot;);</span>
+<span class="fc" id="L154">		club10 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/10_of_clubs.png&quot;);</span>
+<span class="fc" id="L155">		club11 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/jack_of_clubs.png&quot;);</span>
+<span class="fc" id="L156">		club12 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/queen_of_clubs.png&quot;);</span>
+<span class="fc" id="L157">		club13 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/king_of_clubs.png&quot;);</span>
+<span class="fc" id="L158">		club14 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/ace_of_clubs.png&quot;);</span>
+
+		/* Set Images for diamonds */
+<span class="fc" id="L161">		diamond9 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/9_of_diamonds.png&quot;);</span>
+<span class="fc" id="L162">		diamond10 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/10_of_diamonds.png&quot;);</span>
+<span class="fc" id="L163">		diamond11 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/jack_of_diamonds.png&quot;);</span>
+<span class="fc" id="L164">		diamond12 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/queen_of_diamonds.png&quot;);</span>
+<span class="fc" id="L165">		diamond13 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/king_of_diamonds.png&quot;);</span>
+<span class="fc" id="L166">		diamond14 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/ace_of_diamonds.png&quot;);</span>
+
+		/* Set Images for hearts */
+<span class="fc" id="L169">		heart9 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/9_of_hearts.png&quot;);</span>
+<span class="fc" id="L170">		heart10 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/10_of_hearts.png&quot;);</span>
+<span class="fc" id="L171">		heart11 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/jack_of_hearts.png&quot;);</span>
+<span class="fc" id="L172">		heart12 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/queen_of_hearts.png&quot;);</span>
+<span class="fc" id="L173">		heart13 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/king_of_hearts.png&quot;);</span>
+<span class="fc" id="L174">		heart14 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/ace_of_hearts.png&quot;);</span>
+
+		/* Set Images for spades */
+<span class="fc" id="L177">		spade9 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/9_of_spades.png&quot;);</span>
+<span class="fc" id="L178">		spade10 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/10_of_spades.png&quot;);</span>
+<span class="fc" id="L179">		spade11 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/jack_of_spades.png&quot;);</span>
+<span class="fc" id="L180">		spade12 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/queen_of_spades.png&quot;);</span>
+<span class="fc" id="L181">		spade13 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/king_of_spades.png&quot;);</span>
+<span class="fc" id="L182">		spade14 = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/ace_of_spades.png&quot;);</span>
+		
+<span class="fc" id="L184">		black_joker = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/black_joker.png&quot;);</span>
+<span class="fc" id="L185">		card_back = new ImageIcon(FILEPATH + &quot;/cis350_project_euchre/cardImages/card_back.png&quot;);</span>
+<span class="fc" id="L186">	}</span>
+	
+	private ImageIcon getCardIcon(Card card) {
+		
+<span class="pc bpc" id="L190" title="1 of 5 branches missed.">		 switch (card.getSuit()) {</span>
+		 	case CLUB:
+<span class="pc bpc" id="L192" title="1 of 7 branches missed.">		 		switch(card.getValue()) {</span>
+	 			case 9:
+<span class="fc" id="L194">	 				return club9;</span>
+	 			case 10:
+<span class="fc" id="L196">	 				return club10;</span>
+				case 11:
+<span class="fc" id="L198">					return club11;	</span>
+				case 12:
+<span class="fc" id="L200">					return club12;	</span>
+				case 13:
+<span class="fc" id="L202">					return club13;	</span>
+				case 14:
+<span class="fc" id="L204">					return club14;	</span>
+		 		}	 		
+<span class="nc" id="L206">		 		break;</span>
+		 		
+		 	case DIAMOND:
+<span class="pc bpc" id="L209" title="1 of 7 branches missed.">		 		switch(card.getValue()) {</span>
+	 			case 9:
+<span class="fc" id="L211">	 				return diamond9;</span>
+	 			case 10:
+<span class="fc" id="L213">	 				return diamond10;</span>
+				case 11:
+<span class="fc" id="L215">					return diamond11;	</span>
+				case 12:
+<span class="fc" id="L217">					return diamond12;	</span>
+				case 13:
+<span class="fc" id="L219">					return diamond13;	</span>
+				case 14:
+<span class="fc" id="L221">					return diamond14;	</span>
+		 		}
+<span class="nc" id="L223">		 		break;</span>
+		 		
+		 	case HEART:
+<span class="pc bpc" id="L226" title="1 of 7 branches missed.">		 		switch(card.getValue()) {</span>
+	 			case 9:
+<span class="fc" id="L228">	 				return heart9;</span>
+	 			case 10:
+<span class="fc" id="L230">	 				return heart10;</span>
+				case 11:
+<span class="fc" id="L232">					return heart11;	</span>
+				case 12:
+<span class="fc" id="L234">					return heart12;	</span>
+				case 13:
+<span class="fc" id="L236">					return heart13;	</span>
+				case 14:
+<span class="fc" id="L238">					return heart14;	</span>
+		 		}
+<span class="nc" id="L240">		 		break;</span>
+		 		
+		 	case SPADE:
+<span class="pc bpc" id="L243" title="1 of 7 branches missed.">		 		switch(card.getValue()) {</span>
+	 			case 9:
+<span class="fc" id="L245">	 				return spade9;</span>
+	 			case 10:
+<span class="fc" id="L247">	 				return spade10;</span>
+				case 11:
+<span class="fc" id="L249">					return spade11;	</span>
+				case 12:
+<span class="fc" id="L251">					return spade12;	</span>
+				case 13:
+<span class="fc" id="L253">					return spade13;	</span>
+				case 14:
+<span class="fc" id="L255">					return spade14;	</span>
+		 		}
+<span class="nc" id="L257">		 		break;</span>
+		 		
+	 		default:
+	 			break;	
+		 }
+<span class="nc" id="L262">		return black_joker;</span>
+	}
+	
+	private void updateHand() {
+<span class="fc" id="L266">		System.out.println(&quot;&quot; + model.getPlayer(0).getHand().size());</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">		for(int i=0; i&lt;model.getPlayer(0).getHand().size(); i++) {</span>
+<span class="fc" id="L268">			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));</span>
+		}
+<span class="fc" id="L270">	}</span>
+	
+	private void updateTopKitty() {
+<span class="fc bfc" id="L273" title="All 2 branches covered.">		if(trumpSelect)</span>
+<span class="fc" id="L274">			topKitty.setIcon(getCardIcon(model.getTopKitty()));</span>
+		else
+<span class="fc" id="L276">			topKitty.setIcon(card_back);</span>
+<span class="fc" id="L277">	}</span>
+	
+	private void updatePlayedCards() {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">		for(Card card: model.getPlayedCards()) {</span>
+<span class="fc" id="L281">			playedCards[model.getPlayedCards().indexOf(card)].setIcon(getCardIcon(card));</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">			if(model.getPlayedCards().size() == 4)</span>
+<span class="fc" id="L283">				System.out.println(&quot;&quot; + card.getValue() + &quot; of &quot;+ card.getSuit());</span>
+		}
+<span class="pc bpc" id="L285" title="1 of 4 branches missed.">		if(model.clearPlayedCards() || model.getPlayedCards().size() == 0) {</span>
+<span class="fc" id="L286">			clearFlag = true;</span>
+		} 
+<span class="fc" id="L288">	}</span>
+	
+	private void clearPlayedCardsIcons() {
+<span class="fc bfc" id="L291" title="All 2 branches covered.">		for(int i=0; i&lt;4; i++) {</span>
+<span class="fc" id="L292">			playedCards[i].setIcon(null);</span>
+		}
+<span class="fc" id="L294">		updateHand();</span>
+<span class="fc" id="L295">		updateTopKitty();</span>
+<span class="fc" id="L296">		updateScore();</span>
+<span class="fc" id="L297">	}</span>
+	
+	private void updateButtons() {
+<span class="fc" id="L300">		passBtn.setVisible(trumpSelect);</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">		renegeBtn.setVisible(!trumpSelect);</span>
+<span class="fc" id="L302">		topKitty.setEnabled(trumpSelect);</span>
+<span class="fc" id="L303">		updateTopKitty();</span>
+<span class="fc" id="L304">	}</span>
+	
+	private void updateScore() {
+<span class="fc" id="L307">		System.out.println(&quot;Tricks0: &quot; + model.getNumTricks(0));</span>
+<span class="fc" id="L308">		System.out.println(&quot;Tricks1: &quot; + model.getNumTricks(1));</span>
+<span class="fc" id="L309">		System.out.println(&quot;Score0: &quot; + model.getScore(0));</span>
+<span class="fc" id="L310">		System.out.println(&quot;Score1: &quot; + model.getScore(1));	</span>
+<span class="fc" id="L311">	}</span>
+	
+	private void setHandVisible() {
+<span class="fc bfc" id="L314" title="All 2 branches covered.">		for(JButton cards : hand)</span>
+<span class="fc" id="L315">			cards.setVisible(true);</span>
+<span class="fc" id="L316">	}</span>
+	
+<span class="fc" id="L318">	private class TimerListener implements ActionListener {</span>
+		public void actionPerformed(ActionEvent e) {
+<span class="fc bfc" id="L320" title="All 2 branches covered.">			if(clearFlag) {</span>
+<span class="fc" id="L321">				clearPlayedCardsIcons();</span>
+<span class="fc" id="L322">				clearFlag = false;</span>
+			}
+//			System.out.println(&quot;Current Player:&quot; + model.getCurrentPlayer() + &quot;\tgetNumPasses: &quot; + model.getNumPasses());
+<span class="fc bfc" id="L325" title="All 2 branches covered.">			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">				if(trumpSelect) {</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">					if(kittyHasBeenPressed) {</span>
+<span class="fc" id="L328">						model.botPlay(BOTCODE.SWAP);</span>
+<span class="fc" id="L329">						trumpSelect = false;</span>
+<span class="fc" id="L330">						updateTopKitty();</span>
+<span class="fc" id="L331">					}</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">					else if(model.getNumPasses() &lt; 4) {</span>
+<span class="fc" id="L333">						model.botPlay(BOTCODE.HITKITTY);</span>
+<span class="fc" id="L334">					}</span>
+					else {
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">						trumpSelect = !(BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP));</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">						if(model.getNumPasses() &gt;= 8) {</span>
+<span class="fc" id="L338">		            		model.deal();</span>
+<span class="fc" id="L339">		            		updateHand();</span>
+<span class="fc" id="L340">		            		updateTopKitty();</span>
+<span class="fc" id="L341">		            		setHandVisible();</span>
+<span class="fc" id="L342">		            		trumpSelect = true;</span>
+<span class="fc" id="L343">		            		kittyHasBeenPressed = false;</span>
+		        		}
+					}
+<span class="fc" id="L346">				} </span>
+				else {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {</span>
+<span class="fc" id="L349">						model.evalTricks();</span>
+<span class="fc bfc" id="L350" title="All 2 branches covered.">						if(model.evalScore()) {</span>
+<span class="fc" id="L351">							model.deal();</span>
+<span class="fc" id="L352">							setHandVisible();</span>
+<span class="fc" id="L353">							System.out.println(&quot;In trump selection mode&quot;);</span>
+<span class="fc" id="L354">							trumpSelect = true;</span>
+<span class="fc" id="L355">							kittyHasBeenPressed = false;</span>
+<span class="fc" id="L356">							updateButtons();</span>
+						}
+					}
+<span class="fc" id="L359">					currentPlayer = model.getCurrentPlayer();</span>
+<span class="fc" id="L360">					updatePlayedCards();</span>
+					
+				}
+<span class="fc" id="L363">			}</span>
+			else {
+<span class="fc bfc" id="L365" title="All 4 branches covered.">				if(model.getNumPasses() &gt;= 4 &amp;&amp; trumpSelect) {</span>
+				
+					int n;
+			        //Array that holds the names of all the options
+<span class="fc" id="L369">					Object[] options = {&quot;Club&quot;, &quot;Diamond&quot;, &quot;Heart&quot;, &quot;Spade&quot;, &quot;Pass&quot;};</span>
+<span class="fc" id="L370">		            n = JOptionPane.showOptionDialog(null,</span>
+<span class="fc" id="L371">		                    &quot;Pick the suit you would like, or pass&quot;,&quot;Choose a suit&quot;,</span>
+<span class="fc" id="L372">		                    JOptionPane.DEFAULT_OPTION,</span>
+<span class="fc" id="L373">		                    JOptionPane.PLAIN_MESSAGE,</span>
+<span class="fc" id="L374">		                    null,</span>
+<span class="fc" id="L375">		                    options,</span>
+<span class="fc" id="L376">		                    null);</span>
+
+		            //If the user clicks the &quot;Custom&quot; option
+<span class="fc bfc" id="L379" title="All 2 branches covered.">		            if(n == 0) {</span>
+<span class="fc" id="L380">		                model.setTrump(SUIT.CLUB);</span>
+<span class="fc" id="L381">		                model.setCurrentPlayerFirst();</span>
+<span class="fc" id="L382">		                trumpSelect = false;</span>
+<span class="fc" id="L383">		                updateButtons();</span>
+<span class="fc" id="L384">		            }</span>
+
+		            //If the user clicks the &quot;Medium&quot; option set board to 16x16
+		            //set numMines to 40
+<span class="fc bfc" id="L388" title="All 2 branches covered.">		            else if(n == 1) {</span>
+<span class="fc" id="L389">		            	model.setTrump(SUIT.DIAMOND);</span>
+<span class="fc" id="L390">		            	model.setCurrentPlayerFirst();</span>
+<span class="fc" id="L391">		                trumpSelect = false;</span>
+<span class="fc" id="L392">		                updateButtons();</span>
+<span class="fc" id="L393">		            }</span>
+
+		            //If the user clicks &quot;Hard&quot; option set board to 16x30
+		            //set numMines to 99
+<span class="fc bfc" id="L397" title="All 2 branches covered.">		            else if(n == 2) {</span>
+<span class="fc" id="L398">		            	model.setTrump(SUIT.HEART);</span>
+<span class="fc" id="L399">		            	model.setCurrentPlayerFirst();</span>
+<span class="fc" id="L400">		                trumpSelect = false;</span>
+<span class="fc" id="L401">		                updateButtons();</span>
+<span class="fc" id="L402">		            }</span>
+
+		            //If the user clicks &quot;Easy&quot; option set board to 9x9
+		            //set numMines to 9
+<span class="fc bfc" id="L406" title="All 2 branches covered.">		            else if (n == 3){</span>
+<span class="fc" id="L407">		            	model.setTrump(SUIT.SPADE);</span>
+<span class="fc" id="L408">		            	model.setCurrentPlayerFirst();</span>
+<span class="fc" id="L409">		                trumpSelect = false;</span>
+<span class="fc" id="L410">		                updateButtons();</span>
+<span class="fc" id="L411">		            }</span>
+		            else {
+<span class="fc" id="L413">		            	model.playerPassed();</span>
+<span class="fc bfc" id="L414" title="All 2 branches covered.">		            	if(model.getNumPasses() &gt;= 8) {</span>
+<span class="fc" id="L415">		            		model.deal();</span>
+<span class="fc" id="L416">		            		updateHand();</span>
+<span class="fc" id="L417">		            		updateTopKitty();</span>
+<span class="fc" id="L418">		            		setHandVisible();</span>
+<span class="fc" id="L419">		            		trumpSelect = true;</span>
+<span class="fc" id="L420">		            		kittyHasBeenPressed = false;</span>
+		        		}
+		            }
+		        }
+			}
+<span class="fc" id="L425">		}</span>
+	}
+
+<span class="fc" id="L428">	private class ButtonListener implements ActionListener {</span>
+
+		public void actionPerformed(ActionEvent e) {
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">			if(model.getCurrentPlayer() == 0) {</span>
+<span class="fc bfc" id="L432" title="All 2 branches covered.">				if(passBtn == e.getSource()) {</span>
+<span class="fc" id="L433">					model.playerPassed();					</span>
+<span class="fc" id="L434">				}</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">				else if(renegeBtn == e.getSource()) {</span>
+	//				System.out.println(&quot;renegeBtn pressed&quot;);
+				}
+<span class="fc bfc" id="L438" title="All 2 branches covered.">				else if(topKitty == e.getSource()) {</span>
+<span class="fc" id="L439">					kittyHasBeenPressed = true;</span>
+<span class="fc" id="L440">					model.setTrump(model.getTopKitty().getSuit());</span>
+<span class="fc" id="L441">					model.setCurrentPlayerDealer();</span>
+<span class="fc" id="L442">					passBtn.setVisible(false);</span>
+<span class="fc" id="L443">					renegeBtn.setVisible(true);</span>
+<span class="fc" id="L444">					topKitty.setEnabled(false);</span>
+				}
+<span class="fc bfc" id="L446" title="All 2 branches covered.">				for(int i=0; i&lt;5; i++) {</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">					if(hand[i] == e.getSource()) {</span>
+<span class="fc bfc" id="L448" title="All 2 branches covered.">						if(!trumpSelect) {</span>
+<span class="fc" id="L449">							model.makeMove(i);</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">							if(model.getPlayedCards().size() &gt;= 4) {</span>
+								/* TODO: Getting current player from the prev trick winner... need to update visuals */
+<span class="fc" id="L452">								model.evalTricks();</span>
+<span class="fc bfc" id="L453" title="All 2 branches covered.">								if(model.evalScore()) {</span>
+<span class="fc" id="L454">									model.deal();</span>
+<span class="fc" id="L455">									setHandVisible();</span>
+<span class="fc" id="L456">									System.out.println(&quot;In trump selection mode&quot;);</span>
+<span class="fc" id="L457">									trumpSelect = true;</span>
+<span class="fc" id="L458">									kittyHasBeenPressed = false;</span>
+<span class="fc" id="L459">									updateButtons();</span>
+								}
+							}
+<span class="fc bfc" id="L462" title="All 2 branches covered.">							if(model.getPlayer(0).getHand().size() != 5) {</span>
+<span class="fc" id="L463">								hand[model.getPlayer(0).getHand().size()].setVisible(false);</span>
+<span class="fc" id="L464">								hand[model.getPlayer(0).getHand().size()].setIcon(card_back);</span>
+							}
+<span class="fc" id="L466">							currentPlayer = model.getCurrentPlayer();</span>
+<span class="fc" id="L467">							updatePlayedCards();</span>
+<span class="fc" id="L468">						}</span>
+<span class="pc bpc" id="L469" title="3 of 6 branches missed.">						else if(trumpSelect &amp;&amp; model.isCurrentPlayerDealer() &amp;&amp; kittyHasBeenPressed) {</span>
+<span class="fc" id="L470">							model.swapWithTopKitty(i);</span>
+<span class="fc" id="L471">							updateHand();</span>
+<span class="fc" id="L472">							trumpSelect = false;</span>
+<span class="fc" id="L473">							topKitty.setIcon(card_back);</span>
+<span class="fc" id="L474">							passBtn.setVisible(false);</span>
+<span class="fc" id="L475">							renegeBtn.setVisible(true);</span>
+<span class="fc" id="L476">							updateTopKitty();</span>
+						}
+						else {
+							/* never enter here */
+						}
+					}
+				}
+<span class="fc" id="L483">				updateHand();</span>
+			}
+			
+<span class="fc" id="L486">		}</span>
+
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>

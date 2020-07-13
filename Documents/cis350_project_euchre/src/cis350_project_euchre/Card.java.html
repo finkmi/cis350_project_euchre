@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Card.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">Card.java</span></div><h1>Card.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+
+/**********************************************************************
+ * Represents a playing card.
+ * 
+ * @author Michael Fink, Charlie Dorn
+ *********************************************************************/
+public class Card {
+	
+	/** 
+	 * The value of the playing card (9 - 14) where 11=Jack, 12=Queen,
+	 * 13=King, and 14=Ace.
+	 */
+	private int value;
+	
+	/** The suit of the card using the SUIT enum class. */
+	private SUIT suit;
+	
+	/******************************************************************
+	 * Creates a new card with the given value and suit. The value 
+	 * should be from 9-14.
+	 * 
+	 * @param value This cards value (9, 10, Jack=11, Queen=12, 
+	 * 				King=13, Ace=14).
+	 * @param s This cards suit.
+	 *****************************************************************/
+<span class="fc" id="L27">	public Card(int value, SUIT s) {</span>
+<span class="fc" id="L28">		this.value = value;</span>
+<span class="fc" id="L29">		this.suit = s;</span>
+<span class="fc" id="L30">	}</span>
+
+	/******************************************************************
+	 * Getter method for the value of the card.
+	 * 
+	 * @return This cards value.
+	 *****************************************************************/
+	public int getValue() {
+<span class="fc" id="L38">		return value;</span>
+	}
+
+	/******************************************************************
+	 * Getter method for the suit of the card.
+	 * 
+	 * @return This cards suit.
+	 *****************************************************************/
+	public SUIT getSuit() {
+<span class="fc" id="L47">		return suit;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>

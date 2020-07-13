@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>PlayerTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 12, 2020 6:14:11 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">PlayerTest.java</span></div><h1>PlayerTest.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+<span class="nc" id="L7">class PlayerTest {</span>
+
+	@Test
+	/* This tests that the default constructor is not a bot */
+	void test_defaultConstructorIsNotABot() {
+<span class="nc" id="L12">		Player p1 = new Player(0);</span>
+<span class="nc" id="L13">		assertFalse(p1.getIsBot());</span>
+<span class="nc" id="L14">	}</span>
+	
+	@Test
+	/* This tests that the secondary constructor can create a bot */
+	void test_secondaryConstructorSetsBotStatusTrue() {
+<span class="nc" id="L19">		Player p1 = new Player(0, true, 1);		</span>
+<span class="nc" id="L20">		assertTrue(p1.getIsBot());</span>
+<span class="nc" id="L21">	}</span>
+	
+	@Test
+	/* This tests that the secondary constructor can not create a bot */
+	void test_secondaryConstructorSetsBotStatusFalse() {
+<span class="nc" id="L26">		Player p1 = new Player(0, false, 1);		</span>
+<span class="nc" id="L27">		assertFalse(p1.getIsBot());</span>
+<span class="nc" id="L28">	}</span>
+	
+	@Test
+	/* This tests that the default constructor sets the team correctly */
+	void test_defaultConstructorSetsTeamCorrectly() {
+<span class="nc" id="L33">		Player p1 = new Player(0);</span>
+<span class="nc" id="L34">		Player p2 = new Player(1);</span>
+		
+<span class="nc" id="L36">		assertEquals(p1.getTeam(), 0);</span>
+<span class="nc" id="L37">		assertEquals(p2.getTeam(), 1);</span>
+<span class="nc" id="L38">	}</span>
+	
+	@Test
+	/* This tests that the secondary constructor sets the team correctly */
+	void test_secondaryConstructorSetsTeamCorrectly() {
+<span class="nc" id="L43">		Player p1 = new Player(0, true, 1);</span>
+<span class="nc" id="L44">		Player p2 = new Player(1, false, 1);</span>
+		
+<span class="nc" id="L46">		assertEquals(p1.getTeam(), 0);</span>
+<span class="nc" id="L47">		assertEquals(p2.getTeam(), 1);</span>
+<span class="nc" id="L48">	}</span>
+	
+	@Test
+	/* This tests that the player can have cards added to their hand */
+	void test_playerCanAddCardsToHand() {
+<span class="nc" id="L53">		Player p1 = new Player(0, true, 1);</span>
+<span class="nc" id="L54">		Card c1 = new Card(9, SUIT.CLUB);</span>
+		
+<span class="nc" id="L56">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L57">		p1.addCardToHand(0, c1);</span>
+<span class="nc" id="L58">		assertFalse(p1.getHand().isEmpty());</span>
+<span class="nc" id="L59">	}</span>
+	
+	@Test
+	/* This tests that the correct cards are added to the players hand */
+	void test_playerCanAddCorrectCardsToHand() {
+<span class="nc" id="L64">		Player p1 = new Player(0, false, 1);</span>
+<span class="nc" id="L65">		Card c1 = new Card(14, SUIT.HEART);</span>
+		
+<span class="nc" id="L67">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L68">		p1.addCardToHand(0,  c1);</span>
+		
+<span class="nc" id="L70">		assertEquals(p1.getCardFromHand(0), c1);</span>
+<span class="nc" id="L71">	}</span>
+	
+	@Test 
+	/* This tests that a card in the players hand can be changed */
+	void test_playerCanChangeCardInHand() {
+<span class="nc" id="L76">		Player p1 = new Player(0);</span>
+<span class="nc" id="L77">		Card c1 = new Card(11, SUIT.SPADE);</span>
+<span class="nc" id="L78">		Card c2 = new Card(13, SUIT.DIAMOND);</span>
+		
+<span class="nc" id="L80">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L81">		p1.addCardToHand(0, c1);</span>
+<span class="nc" id="L82">		assertEquals(p1.getCardFromHand(0), c1);</span>
+		
+<span class="nc" id="L84">		p1.setCardInHand(0, c2);</span>
+<span class="nc" id="L85">		assertEquals(p1.getCardFromHand(0), c2);</span>
+<span class="nc" id="L86">	}</span>
+	
+	@Test 
+	/* This tests that a card in the players hand can be removed */
+	void test_playerCanRemoveCardInHand() {
+<span class="nc" id="L91">		Player p1 = new Player(0);</span>
+<span class="nc" id="L92">		Card c1 = new Card(11, SUIT.SPADE);</span>
+<span class="nc" id="L93">		Card c2 = new Card(13, SUIT.DIAMOND);</span>
+		
+<span class="nc" id="L95">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L96">		p1.addCardToHand(0, c1);</span>
+<span class="nc" id="L97">		assertEquals(p1.getCardFromHand(0), c1);</span>
+		
+<span class="nc" id="L99">		p1.addCardToHand(1, c2);</span>
+<span class="nc" id="L100">		assertEquals(p1.getCardFromHand(1), c2);</span>
+		
+<span class="nc" id="L102">		assertEquals(p1.getHand().size(), 2);</span>
+<span class="nc" id="L103">		p1.removeCardFromHand(0);</span>
+<span class="nc" id="L104">		assertEquals(p1.getHand().size(), 1);</span>
+<span class="nc" id="L105">	}</span>
+	
+	@Test
+	/* This tests that all the cards in the players hand can be removed */
+	void test_playerCanRemoveAllCards() {
+<span class="nc" id="L110">		Player p1 = new Player(0);</span>
+<span class="nc" id="L111">		Card c1 = new Card(12, SUIT.CLUB);</span>
+<span class="nc" id="L112">		Card c2 = new Card(10, SUIT.HEART);</span>
+		
+<span class="nc" id="L114">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L115">		p1.addCardToHand(0, c1);</span>
+<span class="nc" id="L116">		p1.addCardToHand(1, c2);</span>
+<span class="nc" id="L117">		assertEquals(p1.getHand().size(), 2);</span>
+		
+<span class="nc" id="L119">		p1.clearHand();</span>
+<span class="nc" id="L120">		assertTrue(p1.getHand().isEmpty());</span>
+<span class="nc" id="L121">	}</span>
+	
+	@Test
+	/* This tests that the Renegeable boolean can be set */
+	void test_playerSetsRenegeable() {
+<span class="nc" id="L126">		Player p1 = new Player(0);</span>
+<span class="nc" id="L127">		p1.setRenegeable(true);</span>
+<span class="nc" id="L128">		assertTrue(p1.isRenegeable());</span>
+		
+<span class="nc" id="L130">		p1.setRenegeable(false);</span>
+<span class="nc" id="L131">		assertFalse(p1.isRenegeable());</span>
+<span class="nc" id="L132">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 12, 2020 6:14:11 PM)</div></body></html>
