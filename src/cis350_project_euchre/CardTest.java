@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package cis350_project_euchre;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -31,7 +31,7 @@ public class Player {
 	 * 
 	 * @param team The team the player is on (0 or 1).
 	 *****************************************************************/
-	public Player(int team) {
+	public Player(final int team) {
 		/* Set the team of the new player, and instantiate the hand */
 		setTeam(team);
 		hand = new ArrayList();
@@ -51,7 +51,7 @@ public class Player {
 	 * @param difficulty Integer representing the difficulty level
 	 * 					 of the bot.
 	 *****************************************************************/
-	public Player(int team, boolean isBot, int difficulty) {
+	public Player(final int team, final boolean isBot, final int difficulty) {
 		/* Set the team of the new player, and instantiate the hand */
 		this.setTeam(team);
 		hand = new ArrayList();
@@ -68,7 +68,7 @@ public class Player {
 	 * @param index The spot in the hand to place this card.
 	 * @param card The card to be placed in the hand.
 	 *****************************************************************/
-	public void addCardToHand(int index, Card card) {
+	public void addCardToHand(final int index, final Card card) {
 		hand.add(index, card);
 	}
 	
@@ -79,7 +79,7 @@ public class Player {
 	 * @param index The spot in the hand to swap with this card.
 	 * @param card The card to be set in the hand.
 	 *****************************************************************/
-	public void setCardInHand(int index, Card card) {
+	public void setCardInHand(final int index, final Card card) {
 		hand.set(index, card);
 	}
 	
@@ -90,7 +90,7 @@ public class Player {
 	 *  			retrieved from.
 	 * @return The card at the specified index in the hand.
 	 *****************************************************************/
-	public Card getCardFromHand(int index) {
+	public Card getCardFromHand(final int index) {
 		return hand.get(index);
 	}
 	
@@ -100,7 +100,7 @@ public class Player {
 	 * @param index The index within the hand that the card should be
 	 * 				removed from.
 	 *****************************************************************/
-	public void removeCardFromHand(int index) {
+	public void removeCardFromHand(final int index) {
 		hand.remove(index);
 	}
 	
@@ -134,7 +134,7 @@ public class Player {
 	 * 
 	 * @param team An integer representing the team (0 or 1).
 	 *****************************************************************/
-	public void setTeam(int team) {
+	public void setTeam(final int team) {
 		this.team = team;
 	}
 
@@ -157,7 +157,7 @@ public class Player {
 	 * @param renegeable True if the player made an invalid move, else
 	 * 					 false.
 	 *****************************************************************/
-	public void setRenegeable(boolean renegeable) {
+	public void setRenegeable(final boolean renegeable) {
 		this.renegeable = renegeable;
 	}
 	

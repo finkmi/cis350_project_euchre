@@ -1,4 +1,6 @@
+//CHECKSTYLE:OFF
 package cis350_project_euchre;
+//CHECKSTYLE:ON
 
 /**********************************************************************
  * Represents a playing card.
@@ -24,7 +26,7 @@ public class Card {
 	 * 				King=13, Ace=14).
 	 * @param s This cards suit.
 	 *****************************************************************/
-	public Card(int value, SUIT s) {
+	public Card(final int value, final SUIT s) {
 		this.value = value;
 		this.suit = s;
 	}

@@ -1,99 +1,103 @@
 package cis350_project_euchre;
-
+//CHECKSTYLE:OFF
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+//CHECKSTYLE:ON
 
 public class EuchreController extends JPanel {
 
-	/** Filepath defined for images on each teammates computer */
+	/** Filepath defined for images on each teammates computer. */
 	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
 //	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	
-	/** Array of JButtons to make up the players hand */
+	/** Array of JButtons to make up the players hand. */
 	private JButton[] hand;
 
-	/** Instance of the model class */
+	/** Instance of the model class. */
 	private EuchreModel model;
 
-	/** JButton for renege */
+	/** JButton for renege. */
 	private JButton renegeBtn;
 	
-	/** JButton for passing on the kitty */
+	/** JButton for passing on the kitty. */
 	private JButton passBtn;
 	
-	/** JButton to represent the top card of the kitty */
+	/** JButton to represent the top card of the kitty. */
 	private JButton topKitty;
 
-	/** ImageIcon for 9 of clubs */
+	/** ImageIcon for 9 of clubs. */
 	private ImageIcon club9;
-	/** ImageIcon for 10 of clubs */
+	/** ImageIcon for 10 of clubs. */
 	private ImageIcon club10;
-	/** ImageIcon for Jack of clubs */
+	/** ImageIcon for Jack of clubs. */
 	private ImageIcon club11;
-	/** ImageIcon for Queen of clubs */
+	/** ImageIcon for Queen of clubs. */
 	private ImageIcon club12;
-	/** ImageIcon for King of clubs */
+	/** ImageIcon for King of clubs. */
 	private ImageIcon club13;
-	/** ImageIcon for Ace of clubs */
+	/** ImageIcon for Ace of clubs. */
 	private ImageIcon club14;
-	/** ImageIcon for 9 of diamonds */
+	/** ImageIcon for 9 of diamonds. */
 	private ImageIcon diamond9;
-	/** ImageIcon for 10 of diamonds */
+	/** ImageIcon for 10 of diamonds. */
 	private ImageIcon diamond10;
-	/** ImageIcon for Jack of diamonds */
+	/** ImageIcon for Jack of diamonds. */
 	private ImageIcon diamond11;
-	/** ImageIcon for Queen of diamonds */
+	/** ImageIcon for Queen of diamonds. */
 	private ImageIcon diamond12;
-	/** ImageIcon for King of diamonds */
+	/** ImageIcon for King of diamonds. */
 	private ImageIcon diamond13;
-	/** ImageIcon for Ace of diamonds */
+	/** ImageIcon for Ace of diamonds. */
 	private ImageIcon diamond14; 
-	/** ImageIcon for 9 of hearts */
+	/** ImageIcon for 9 of hearts. */
 	private ImageIcon heart9;
-	/** ImageIcon for 10 of hearts */
+	/** ImageIcon for 10 of hearts. */
 	private ImageIcon heart10;
-	/** ImageIcon for Jack of hearts */
+	/** ImageIcon for Jack of hearts. */
 	private ImageIcon heart11;
-	/** ImageIcon for Queen of hearts */
+	/** ImageIcon for Queen of hearts. */
 	private ImageIcon heart12;
-	/** ImageIcon for King of hearts */
+	/** ImageIcon for King of hearts. */
 	private ImageIcon heart13;
-	/** ImageIcon for Ace of hearts */
+	/** ImageIcon for Ace of hearts. */
 	private ImageIcon heart14;
-	/** ImageIcon for 9 of spades */
+	/** ImageIcon for 9 of spades. */
 	private ImageIcon spade9;
-	/** ImageIcon for 10 of spades */
+	/** ImageIcon for 10 of spades. */
 	private ImageIcon spade10;
-	/** ImageIcon for Jack of spades */
+	/** ImageIcon for Jack of spades. */
 	private ImageIcon spade11;
-	/** ImageIcon for Queen of spades */
+	/** ImageIcon for Queen of spades. */
 	private ImageIcon spade12;
-	/** ImageIcon for King of spades */
+	/** ImageIcon for King of spades. */
 	private ImageIcon spade13;
-	/** ImageIcon for Ace of spades */
+	/** ImageIcon for Ace of spades. */
 	private ImageIcon spade14;
-	/** ImageIcon for a black joker */
+	/** ImageIcon for a black joker. */
+	//CHECKSTYLE:OFF
 	private ImageIcon black_joker;
-	/** ImageIcon for a card back */
+	/** ImageIcon for a card back. */
 	private ImageIcon card_back;
+	//CHECKSTYLE:ON
+
 	
-	/** Array of JLabels for displaying the played cards for a trick */
+	/** Array of JLabels for displaying the played cards for a trick. */
 	private JLabel[] playedCards;
 	
-	/** Boolean for clearing the game (true if full hand was played */
+	/** Boolean for clearing the game (true if full hand was played. */
 	private boolean clearFlag = false;
 	
-	/** Boolean to tell if we are in trump selecting mode (or not) */
+	/** Boolean to tell if we are in trump selecting mode (or not). */
 	private boolean trumpSelect;
 	
-	/** Boolean to tell if the kitty has been pressed this hand */
+	/** Boolean to tell if the kitty has been pressed this hand. */
 	private boolean kittyHasBeenPressed;
 	
-	/** Instance of timer used for bot play */
-	Timer timer;
+	/** Instance of timer used for bot play. */
+	private Timer timer;
 	
-	/** The index of the current player */
+	/** The index of the current player. */
 	private int currentPlayer;
 
 	/******************************************************************
@@ -111,8 +115,8 @@ public class EuchreController extends JPanel {
 		/* Set up all of the JPanels in a grid layout */
 		panel.setLayout(new GridLayout(3, 3, 10, 10));
 		JPanel[][] panelArray = new JPanel[3][3];
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
 				panelArray[i][j] = new JPanel();
 				panel.add(panelArray[i][j]);
 			}
@@ -132,17 +136,17 @@ public class EuchreController extends JPanel {
 		
 		/* Setup layered pane for played cards */
 		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setPreferredSize(new Dimension(5*imageWidth,imageHeight));
+		layeredPane.setPreferredSize(new Dimension(5 * imageWidth, imageHeight));
 		/* Instantiate the array of JLabels used for played cards */
 		playedCards = new JLabel[4];
 		/* Add layered pane to the middle panel */
 		panelArray[1][1].add(layeredPane);
 		/* Setup position, and add each JLabel to the panel */
-		int xorigin = (imageWidth * 5/2) - ((imageWidth+150)/2);
-		for(int i=0; i<4; i++) {
+		int xorigin = (imageWidth * 5 / 2) - ((imageWidth + 150) / 2);
+		for (int i = 0; i < 4; i++) {
 			playedCards[i] = new JLabel();
-			layeredPane.add(playedCards[i], new Integer(i*50));
-			playedCards[i].setBounds(xorigin+(50*i), 00, imageWidth, imageHeight);
+			layeredPane.add(playedCards[i], new Integer(i * 50));
+			playedCards[i].setBounds(xorigin + (50 * i), 00, imageWidth, imageHeight);
 		}
 		
 		/* Setup button listener */
@@ -172,8 +176,8 @@ public class EuchreController extends JPanel {
 
 		/* Size buttons appropriately */
 		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));
-		renegeBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));
-		passBtn.setPreferredSize(new Dimension((int)(imageWidth*.75),(int)(imageWidth*.5)));
+		renegeBtn.setPreferredSize(new Dimension((int) (imageWidth * .75), (int) (imageWidth * .5)));
+		passBtn.setPreferredSize(new Dimension((int) (imageWidth * .75), (int) (imageWidth * .5)));
 		
 		/* Add action listener to renege button, and set spacing */
 		renegeBtn.addActionListener(listener);
@@ -205,7 +209,7 @@ public class EuchreController extends JPanel {
 		/* Add the panel to the gui */
 		add(panel);
 		/* Instantiate the timer for 1 sec intervals, and start it */
-		Timer timer = new Timer(1000, new TimerListener());
+		timer = new Timer(1000, new TimerListener());
 		timer.start();
 		
 	}
@@ -257,12 +261,12 @@ public class EuchreController extends JPanel {
 	 * @param card The card the image is wanted for.
 	 * @return The imageicon corresponding to the card.
 	 *****************************************************************/
-	private ImageIcon getCardIcon(Card card) {
+	private ImageIcon getCardIcon(final Card card) {
 		/* This entire function is essentially just a big lookup 
 		 * table to get the imageicons based on the card */
 		 switch (card.getSuit()) {
 		 	case CLUB:
-		 		switch(card.getValue()) {
+		 		switch (card.getValue()) {
 	 			case 9:
 	 				return club9;
 	 			case 10:
@@ -274,12 +278,13 @@ public class EuchreController extends JPanel {
 				case 13:
 					return club13;	
 				case 14:
-					return club14;	
+					return club14;
+				default:
+					return black_joker;
 		 		}	 		
-		 		break;
 		 		
 		 	case DIAMOND:
-		 		switch(card.getValue()) {
+		 		switch (card.getValue()) {
 	 			case 9:
 	 				return diamond9;
 	 			case 10:
@@ -291,12 +296,13 @@ public class EuchreController extends JPanel {
 				case 13:
 					return diamond13;	
 				case 14:
-					return diamond14;	
+					return diamond14;
+				default:
+					return black_joker;	
 		 		}
-		 		break;
 		 		
 		 	case HEART:
-		 		switch(card.getValue()) {
+		 		switch (card.getValue()) {
 	 			case 9:
 	 				return heart9;
 	 			case 10:
@@ -308,12 +314,13 @@ public class EuchreController extends JPanel {
 				case 13:
 					return heart13;	
 				case 14:
-					return heart14;	
+					return heart14;
+				default:
+					return black_joker;	
 		 		}
-		 		break;
 		 		
 		 	case SPADE:
-		 		switch(card.getValue()) {
+		 		switch (card.getValue()) {
 	 			case 9:
 	 				return spade9;
 	 			case 10:
@@ -325,12 +332,14 @@ public class EuchreController extends JPanel {
 				case 13:
 					return spade13;	
 				case 14:
-					return spade14;	
+					return spade14;
+				default:
+					return black_joker;
 		 		}
-		 		break;
+		 		
+		 	default:
+		 		return black_joker;		
 		 }
-		 /* A default return is needed, but should never be hit */
-		 return black_joker;
 	}
 	
 	/******************************************************************
@@ -341,7 +350,7 @@ public class EuchreController extends JPanel {
 	 *****************************************************************/
 	private void updateHand() {
 		/* Go through and update each cards icon based on the card */
-		for(int i=0; i<model.getPlayer(0).getHand().size(); i++) {
+		for (int i = 0; i < model.getPlayer(0).getHand().size(); i++) {
 			hand[i].setIcon(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
 		}
 	}
@@ -352,10 +361,12 @@ public class EuchreController extends JPanel {
 	 * However, after trump selection mode, it should be gone.
 	 *****************************************************************/
 	private void updateTopKitty() {
-		if(trumpSelect)
+		if (trumpSelect) {
 			topKitty.setIcon(getCardIcon(model.getTopKitty()));
-		else
+		} 
+		else {
 			topKitty.setIcon(card_back);
+		}
 	}
 	
 	/******************************************************************
@@ -364,13 +375,13 @@ public class EuchreController extends JPanel {
 	 * any time a player (human or bot) plays a card.
 	 *****************************************************************/
 	private void updatePlayedCards() {
-		for(Card card: model.getPlayedCards()) {
+		for (Card card: model.getPlayedCards()) {
 			playedCards[model.getPlayedCards().indexOf(card)].setIcon(getCardIcon(card));
 		}
 		/* If four cards have been played, or no cards have been played,
 		 * set the clearFlag. It will ensure that the played cards get
 		 * cleared next time the 1 sec timer occurs */
-		if(model.clearPlayedCards() || model.getPlayedCards().size() == 0) {
+		if (model.clearPlayedCards() || model.getPlayedCards().size() == 0) {
 			clearFlag = true;
 		} 
 	}
@@ -382,7 +393,7 @@ public class EuchreController extends JPanel {
 	 *****************************************************************/
 	private void clearPlayedCardsIcons() {
 		/* Set playedCards icons all to null to make them invisible */
-		for(int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			playedCards[i].setIcon(null);
 		}
 		/* Update GUI info for user */
@@ -421,8 +432,9 @@ public class EuchreController extends JPanel {
 	 * to make sure they are set back to visible again.
 	 *****************************************************************/
 	private void setHandVisible() {
-		for(JButton cards : hand)
+		for (JButton cards : hand) {
 			cards.setVisible(true);
+		}
 	}
 	
 	/******************************************************************
@@ -431,24 +443,24 @@ public class EuchreController extends JPanel {
 	 * immediately, they are set up on a one second timer.
 	 *****************************************************************/
 	private class TimerListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			/* If the clear flag as been set, we need to clear the 
 			 * played cards to get ready for a new trick/hand */
-			if(clearFlag) {
+			if (clearFlag) {
 				clearPlayedCardsIcons();
 				clearFlag = false;
 			}
 			
 			/* If the current player is a bot, we need to process
 			 * the bots play */
-			if(model.getPlayer(model.getCurrentPlayer()).getIsBot()) {
+			if (model.getPlayer(model.getCurrentPlayer()).getIsBot()) {
 				/* If we are in trump selection mode */
-				if(trumpSelect) {
+				if (trumpSelect) {
 					/* If the kitty has been pressed, the bot should swap */
 					/* We set the current player to the dealer when the kitty
 					 * is pressed, so it is known that the dealer is the
 					 * current player and will therefore be able to swap */
-					if(kittyHasBeenPressed) {
+					if (kittyHasBeenPressed) {
 						model.botPlay(BOTCODE.SWAP);
 						/* We are no longer in trump selection mode, and the
 						 * kitty therefore needs to be flipped over */
@@ -459,7 +471,7 @@ public class EuchreController extends JPanel {
 					 * decide to hit the kitty or not. Currently, the bots
 					 * logic is to always pass, but this will be updated in
 					 * release 2 */
-					else if(model.getNumPasses() < 4) {
+					else if (model.getNumPasses() < 4) {
 						model.botPlay(BOTCODE.HITKITTY);
 					}
 					/* If neither of the other 2 cases, then the bot should
@@ -470,7 +482,7 @@ public class EuchreController extends JPanel {
 						trumpSelect = !(BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP));
 						/* If this was the 8th pass, we don't screw the dealer
 						 * so just redeal and reset everything */
-						if(model.getNumPasses() >= 8) {
+						if (model.getNumPasses() >= 8) {
 		            		/* Re-deal, and update graphics for newly dealt cards */
 							model.deal();
 		            		updateHand();
@@ -492,7 +504,7 @@ public class EuchreController extends JPanel {
 						model.evalTricks();
 						/* If the tricks are such that the hand can be scored, we
 						 * should score the hand */
-						if(model.evalScore()) {
+						if (model.evalScore()) {
 							/* If the hand is scored, redeal, set cards visible,
 							 * back into trump selection mode, and the kitty
 							 * has not been pressed for this new hand */
@@ -519,13 +531,13 @@ public class EuchreController extends JPanel {
 				/* If there have been at least 4 passes and we
 				 * are in trump selection mode, we should be 
 				 * given the chance to choose the suit */
-				if(model.getNumPasses() >= 4 && trumpSelect) {
+				if (model.getNumPasses() >= 4 && trumpSelect) {
 				
 					int n;
 			        /* Array that holds the names of all the options */
 					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
 		            n = JOptionPane.showOptionDialog(null,
-		                    "Pick the suit you would like, or pass","Choose a suit",
+		                    "Pick the suit you would like, or pass", "Choose a suit",
 		                    JOptionPane.DEFAULT_OPTION,
 		                    JOptionPane.PLAIN_MESSAGE,
 		                    null,
@@ -533,7 +545,7 @@ public class EuchreController extends JPanel {
 		                    null);
 
 		            /* If the user clicks the "Club" option */
-		            if(n == 0) {
+		            if (n == 0) {
 		                model.setTrump(SUIT.CLUB);
 		                model.setCurrentPlayerFirst();
 		                trumpSelect = false;
@@ -541,7 +553,7 @@ public class EuchreController extends JPanel {
 		            }
 
 		            /* If the user clicks the "Diamond" option */ 
-		            else if(n == 1) {
+		            else if (n == 1) {
 		            	model.setTrump(SUIT.DIAMOND);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
@@ -549,7 +561,7 @@ public class EuchreController extends JPanel {
 		            }
 
 		            /* If the user clicks the "Heart" option */
-		            else if(n == 2) {
+		            else if (n == 2) {
 		            	model.setTrump(SUIT.HEART);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
@@ -557,7 +569,7 @@ public class EuchreController extends JPanel {
 		            }
 
 		            /* If the user clicks the "Spade" option */
-		            else if (n == 3){
+		            else if (n == 3) {
 		            	model.setTrump(SUIT.SPADE);
 		            	model.setCurrentPlayerFirst();
 		                trumpSelect = false;
@@ -571,7 +583,7 @@ public class EuchreController extends JPanel {
 		            	/* If that was the eight pass, we need
 		            	 * to re-deal and restart (this game
 		            	 * does not do "screw the dealer" */
-		            	if(model.getNumPasses() >= 8) {
+		            	if (model.getNumPasses() >= 8) {
 		            		/* Re-deal and update GUI */
 		            		model.deal();
 		            		updateHand();
@@ -595,26 +607,26 @@ public class EuchreController extends JPanel {
 	 *****************************************************************/
 	private class ButtonListener implements ActionListener {
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			/* Verify we are the current player before doing
 			 * anything... we can't play if its not our turn */
-			if(model.getCurrentPlayer() == 0) {
+			if (model.getCurrentPlayer() == 0) {
 				/* If the pass button was pressed, the model needs
 				 * to know that the player passed in order to make 
 				 * it the next players turn */
-				if(passBtn == e.getSource()) {
+				if (passBtn == e.getSource()) {
 					model.playerPassed();					
 				}
 				/* If the renege button was pressed, do nothing yet.
 				 * This functionality will be added in release 2 */
-				else if(renegeBtn == e.getSource()) {
-	//				System.out.println("renegeBtn pressed");
+				else if (renegeBtn == e.getSource()) {
+					System.out.println("");
 				}
 				/* If the topKitty was pressed, this means the human
 				 * player would like the suit of the top kitty card
 				 * to be trump. The dealer will need to pick this card
 				 * up when it's their turn */
-				else if(topKitty == e.getSource()) {
+				else if (topKitty == e.getSource()) {
 					/* Set flag true */
 					kittyHasBeenPressed = true;
 					/* Set trump accordingly */
@@ -629,23 +641,23 @@ public class EuchreController extends JPanel {
 				}
 				/* Check if the button pressed was any of the card 
 				 * button (the cards in the players hand) */
-				for(int i=0; i<5; i++) {
-					if(hand[i] == e.getSource()) {
+				for (int i = 0; i < 5; i++) {
+					if (hand[i] == e.getSource()) {
 						/* If we aren't in trump selection mode, the 
 						 * player is trying to play a card */
-						if(!trumpSelect) {
+						if (!trumpSelect) {
 							/* Play the card the user pressed */
 							model.makeMove(i);
 							/* Check if all cards for the trick have
 							 * been played */
-							if(model.getPlayedCards().size() >= 4) {
+							if (model.getPlayedCards().size() >= 4) {
 								/* Evaluate tricks because we just 
 								 * finished a trick */
 								model.evalTricks();
 								/* Check to see if the current trick
 								 * count warrants check the score. If
 								 * it does, we need to reset */
-								if(model.evalScore()) {
+								if (model.evalScore()) {
 									/* We finished the previous hand,
 									 * redeal, and reset GUI for the
 									 * next hand */
@@ -665,7 +677,7 @@ public class EuchreController extends JPanel {
 							 * last card because the arraylist will 
 							 * automatically shift everything down when
 							 * we play a card */
-							if(model.getPlayer(0).getHand().size() != 5) {
+							if (model.getPlayer(0).getHand().size() != 5) {
 								hand[model.getPlayer(0).getHand().size()].setVisible(false);
 								hand[model.getPlayer(0).getHand().size()].setIcon(card_back);
 							}
@@ -678,7 +690,7 @@ public class EuchreController extends JPanel {
 						 * they must be the dealer and must have to discard a card
 						 * (due to one of the other players deciding to order the kitty
 						 * as trump) */
-						else if(trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
+						else if (trumpSelect && model.isCurrentPlayerDealer() && kittyHasBeenPressed) {
 							/* Swap the card in the players hand with the topKitty */
 							model.swapWithTopKitty(i);
 							/* Visually update the hand */
@@ -690,20 +702,12 @@ public class EuchreController extends JPanel {
 							renegeBtn.setVisible(true);
 							updateTopKitty();
 						}
-						/* This should never be entered, but was added just
-						 * in case we at somepoint need to use this option */
-						else {
-							/* never enter here */
-						}
 					}
 				}
 				/* Update the players hand (graphically) after the player makes
 				 * any moves. We want to make sure the GUI stays up to date */
 				updateHand();
-			}
-			
+			}	
 		}
-
 	}
-
 }

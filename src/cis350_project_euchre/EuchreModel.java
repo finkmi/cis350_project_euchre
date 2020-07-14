@@ -1,5 +1,8 @@
+//CHECKSTYLE:OFF
 package cis350_project_euchre;
 import java.util.ArrayList;
+import java.util.Random;
+//CHECKSTYLE:ON
 
 /**********************************************************************
  * The Euchre Model class. Contains functions and variables needed
@@ -10,10 +13,10 @@ import java.util.ArrayList;
 public class EuchreModel {
 	
 	/** Difficulty that the bots should be initialized with. */
-	static final int difficulty = 1;
+	private int difficulty = 1;
 	
 	/** Array of Player objects to represent the four players. */
-	private Player players[];
+	private Player[] players;
 	
 	/** The index of the current player within the players array. */
 	private int currentPlayer;
@@ -24,11 +27,17 @@ public class EuchreModel {
 	/** The index of the dealer of this hand in the players array. */
 	private int dealer;
 	
-	/** Integers for the scores of each team. */
-	private int team0Score, team1Score;
+	/** Scores of team 0. */
+	private int team0Score;
 	
-	/** Integers for the number of tricks each team has. */
-	private int team0Tricks, team1Tricks;
+	/** Scores of team 1. */
+	private int team1Score;
+	
+	/** Current number of tricks team 0 has. */
+	private int team0Tricks;
+	
+	/** Current number of tricks team 1 has. */
+	private int team1Tricks;
 	
 	/** ArrayList of card that make up the 24 cards used in Euchre. */
 	private ArrayList<Card> deck;
@@ -48,6 +57,9 @@ public class EuchreModel {
 	/** The number of times the players have passed. */
 	private int numPasses;
 	
+	/** Random number generator used in deal method. */
+	private Random randomNum = new Random();
+	
 	/******************************************************************
 	 * The Euchre model constructor. Sets up the array of players, sets
 	 * the dealer index, and sets up the deck of cards to be use in
@@ -57,8 +69,8 @@ public class EuchreModel {
 		
 		/* Set up the array of players, and instantiate each player */
 		players = new Player[4];
-		for(int i = 0; i <4; i++) {
-			players[i] = new Player(i%2, i==0 ? false : true,
+		for (int i = 0; i < 4; i++) {
+			players[i] = new Player(i % 2, i == 0 ? false : true,
 					difficulty);
 		}
 		
@@ -88,8 +100,9 @@ public class EuchreModel {
 	
 	
 	
-	
+	//CHECKSTYLE:OFF
 	/********************* Getters & Setters *************************/
+	//CHECKSTYLE:ON
 	
 	/******************************************************************
 	 * Return the player at the index specified in the players array.
@@ -98,14 +111,18 @@ public class EuchreModel {
 	 * 				array.
 	 * @return The player at the specified index.
 	 *****************************************************************/
-	public Player getPlayer(int index) { return players[index];}
+	public Player getPlayer(final int index) {
+		return players[index];
+	}
 	
 	/******************************************************************
 	 * Get the index of the currentPlayer.
 	 * 
 	 * @return An integer representing the index of the currentPlayer.
 	 *****************************************************************/
-	public int getCurrentPlayer() {	return currentPlayer;}
+	public int getCurrentPlayer() {
+		return currentPlayer;
+	}
 	
 	/******************************************************************
 	 * Sets the dealer as the current player. This is done to allow the
@@ -114,18 +131,22 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void setCurrentPlayerDealer() {
 		/* Handle the wrap-around case where firstPlayer=0, dealer=3 */
-		if(firstPlayer == 0)
+		if (firstPlayer == 0) {
 			currentPlayer = 3;
+		}
 		/* Otherwise, dealer is one less than firstPlayer */
-		else
+		else {
 			currentPlayer = firstPlayer - 1;
+		}
 	}
 	
 	/******************************************************************
 	 * Set the currentPlayer to be the same as the firstPlayer. This 
 	 * needs to be done at the start of each trick.
 	 *****************************************************************/
-	public void setCurrentPlayerFirst() {currentPlayer = firstPlayer;}
+	public void setCurrentPlayerFirst() {
+		currentPlayer = firstPlayer;
+	}
 		
 	/******************************************************************
 	 * Get the number of tricks won be a given team.
@@ -133,7 +154,9 @@ public class EuchreModel {
 	 * @param team The team to check the number of tricks for.
 	 * @return The number of tricks the given team has won this hand.
 	 *****************************************************************/
-	public int getNumTricks(int team) { return team == 0 ? team0Tricks : team1Tricks;}
+	public int getNumTricks(final int team) {
+		return team == 0 ? team0Tricks : team1Tricks;
+	}
 	
 	/******************************************************************
 	 * Get the score of a given team.
@@ -141,10 +164,12 @@ public class EuchreModel {
 	 * @param team The team to check the score for.
 	 * @return The score of the given team.
 	 *****************************************************************/
-	public int getScore(int team) { return team == 0 ? team0Score : team1Score;}
+	public int getScore(final int team) {
+		return team == 0 ? team0Score : team1Score;
+	}
 	
 	/*****************************************************************
-	 * Set both teams scores and tricks back to zero
+	 * Set both teams scores and tricks back to zero.
 	 ****************************************************************/
 	public void resetScore() {
 		team0Score = 0;
@@ -159,15 +184,19 @@ public class EuchreModel {
 	 * 
 	 * @param s The suit that trump should be set to.
 	 *****************************************************************/
- 	public void setTrump(SUIT s) {
+ 	public void setTrump(final SUIT s) {
 		currentTrump = s;
 		trumpSelectingTeam = players[currentPlayer].getTeam();
 	}
  	
  	/******************************************************************
-	 * Gets the current trump
+	 * Gets the current trump.
+	 * 
+	 * @return The suit that is currently trump.
 	 *****************************************************************/
-	public SUIT getTrump() { return currentTrump;}
+	public SUIT getTrump() { 
+		return currentTrump;
+	}
  	
 	/******************************************************************
 	 * Get the current number of times a player has passed on picking
@@ -176,7 +205,9 @@ public class EuchreModel {
 	 * @return The number of times a player has passed on picking up
 	 * 		   trump.
 	 *****************************************************************/
-	public int getNumPasses() {	return numPasses;}
+	public int getNumPasses() {	
+		return numPasses;
+	}
 	
 	/******************************************************************
 	 * Get the arrayList of cards that have been played in the current
@@ -184,20 +215,25 @@ public class EuchreModel {
 	 * 
 	 * @return The arrayList of playedCards this trick.
 	 *****************************************************************/
-	public ArrayList<Card> getPlayedCards() { return playedCards;}
+	public ArrayList<Card> getPlayedCards() {
+		return playedCards;
+	}
 	
 	/******************************************************************
 	 * Get the topKitty card.
 	 * 
 	 * @return The card object of the topKitty.
 	 *****************************************************************/
-	public Card getTopKitty() {	return topKitty;}
+	public Card getTopKitty() {
+		return topKitty;
+	}
 	
 	
 	
 	
-	
+	//CHECKSTYLE:OFF
 	/********************** Public Methods ***************************/
+	//CHECKSTYLE:ON
 	
 	/******************************************************************
 	 * Handles the dealing logic of the Euchre game.
@@ -211,15 +247,16 @@ public class EuchreModel {
 		fillDeck();
 		
 		/* Clear each players hand */
-		for(Player p : players)
+		for (Player p : players) {
 			p.clearHand();
+		}
 		
 		/* Deal cards one-by-one to each player until all players have
 		 * five cards */
-		for(int i = 0; i < 5; i++) {
-			for(int player = 0; player < 4; player++) {
+		for (int i = 0; i < 5; i++) {
+			for (int player = 0; player < 4; player++) {
 				/* get a random integer between 0 and 23 (inclusive) */
-				randCard = (int)(Math.random() * deck.size());
+				randCard = (randomNum.nextInt(deck.size()));
 				
 				/* add the card at this random index to the players
 				 * hand, and remove it from the deck so it doesn't
@@ -247,8 +284,9 @@ public class EuchreModel {
 	public void incrementDealer() {
 		firstPlayer = currentPlayer = (dealer + 1) % 4;
 		dealer++;
-		if(dealer >= 4)
+		if (dealer >= 4) {
 			dealer = 0;
+		}
 	}
 	
 	/******************************************************************
@@ -257,8 +295,8 @@ public class EuchreModel {
 	 * @return True if the currentPlayer is the dealer, else false.
 	 *****************************************************************/
 	public boolean isCurrentPlayerDealer() {
-		return((currentPlayer == firstPlayer-1) ||
-				(currentPlayer == 0 && firstPlayer == 3));
+		return ((currentPlayer == firstPlayer - 1) 
+				|| (currentPlayer == 0 && firstPlayer == 3));
 	}
 	
 	/******************************************************************
@@ -270,7 +308,7 @@ public class EuchreModel {
 	 * @param index The index of the card within the current players
 	 * 				hand that should be played.
 	 *****************************************************************/
-	public void makeMove(int index) {
+	public void makeMove(final int index) {
 		/* Check if the move is valid */
 		//TODO: Set renegeable if not valid
 		isValidMove(index);
@@ -280,7 +318,7 @@ public class EuchreModel {
 		players[currentPlayer].removeCardFromHand(index);
 		
 		/* Increment the current player appropriately */
-		currentPlayer = (currentPlayer+1) % 4;	
+		currentPlayer = (currentPlayer + 1) % 4;	
 	}
 	
 	/******************************************************************
@@ -290,7 +328,7 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void playerPassed() {
 		/* Increment the current player appropriately */
-		currentPlayer = (currentPlayer+1) % 4;
+		currentPlayer = (currentPlayer + 1) % 4;
 		/* Increment the number of passes */
 		numPasses++;
 	}
@@ -303,7 +341,7 @@ public class EuchreModel {
 	 * 				the card that should be swapped with the topKitty
 	 * 				card.
 	 *****************************************************************/
-	public void swapWithTopKitty(int index) {
+	public void swapWithTopKitty(final int index) {
 		/* Replace the players card at the index with the topKitty */
 		players[currentPlayer].setCardInHand(index, topKitty);
 		
@@ -320,7 +358,7 @@ public class EuchreModel {
 	 *****************************************************************/
 	public boolean clearPlayedCards() {
 		/* If all cards for this trick have been played, clear */
-		if(playedCards.size() >= 4) {
+		if (playedCards.size() >= 4) {
 			playedCards.clear();
 			return true;
 		}
@@ -344,31 +382,30 @@ public class EuchreModel {
 		/* Loop through the played cards and determine the scoring
 		 * scoring value for each played card. Save this value, 
 		 * including any modifiers, into the modifiedValues array */
-		for(int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			modifiedValues[i] = playedCards.get(i).getValue();
 			/* If the played card followed suit, it receives a *2
 			 * multiplier */
-			if(playedCards.get(i).getSuit() == followSuit) {
+			if (playedCards.get(i).getSuit() == followSuit) {
 				modifiedValues[i] *= 2;
 			}
 			/* If the played card followed trump, it receives a *4
 			 * multiplier */
-			if(playedCards.get(i).getSuit() == currentTrump) {		
+			if (playedCards.get(i).getSuit() == currentTrump) {		
 				modifiedValues[i] *= 4;
 			}	
 			/* If the card is a jack, need to see if it is a bauer */
-			if(playedCards.get(i).getValue() == 11) {
+			if (playedCards.get(i).getValue() == 11) {
 				/* If this jack is trump, it is the right bauer and is
 				 * the most valuable card, so set it to 1000 */
-				if(playedCards.get(i).getSuit() == currentTrump) {
+				if (playedCards.get(i).getSuit() == currentTrump) {
 					modifiedValues[i] = 1000;
 				}
 				/* If this jack is the same color as trump, it is the
 				 * left bauer and is the second most valuable card, so
 				 * set it to 999 to be slightly less than the right
 				 * bauer */
-				else if(playedCards.get(i).getSuit() == 
-						sameColor(currentTrump)) {
+				else if (playedCards.get(i).getSuit() == sameColor(currentTrump)) {
 					modifiedValues[i] = 999;
 				}
 			}
@@ -376,25 +413,26 @@ public class EuchreModel {
 		
 		/* Loop through the modified values to find the index of the 
 		 * largest value */
-		for(int i=1; i<4; i++) {
-			if(modifiedValues[i] > modifiedValues[maxIndex])
+		for (int i = 1; i < 4; i++) {
+			if (modifiedValues[i] > modifiedValues[maxIndex]) {
 				maxIndex = i;
+			}
 		}
 		
 		/* If the player that won the trick was on team 0, increment
 		 * team 0 tricks */
-		if(players[(firstPlayer + maxIndex)%4].getTeam() == 0) {
+		if (players[(firstPlayer + maxIndex) % 4].getTeam() == 0) {
 			team0Tricks++;
 			
 		}
 		/* If the player that won the trick was on team 1, increment
 		 * team 1 tricks */
-		else if(players[(firstPlayer + maxIndex)%4].getTeam() == 1) {
+		else if (players[(firstPlayer + maxIndex) % 4].getTeam() == 1) {
 			team1Tricks++;
 		}
 		
 		/* Set the first and current players to the trick winner */
-		firstPlayer = currentPlayer = ((firstPlayer + maxIndex)%4);
+		firstPlayer = currentPlayer = ((firstPlayer + maxIndex) % 4);
 	}
 	
 	/******************************************************************
@@ -407,15 +445,15 @@ public class EuchreModel {
 	 * 		   reset, false if the hand is not done yet.
 	 *****************************************************************/
 	public boolean evalScore() {
-		/** The boolean used to determine if scoring happened and if
+		/* The boolean used to determine if scoring happened and if
 		 * a reset (re-deal) is necessary. */
 		boolean reset = true;
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-		if((team0Tricks >= 3 && team1Tricks >= 1)) {
+		if ((team0Tricks >= 3 && team1Tricks >= 1)) {
 			/* If team 0 won more tricks and selected trump, they get
 			 * 1 point */
-			if(trumpSelectingTeam == 0) {
+			if (trumpSelectingTeam == 0) {
 				team0Score += 1;
 			}
 			/* If team 0 won more tricks, but team 1 selected trump,
@@ -428,10 +466,10 @@ public class EuchreModel {
 		}
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-		else if((team0Tricks >= 1 && team1Tricks >= 3)) {
+		else if ((team0Tricks >= 1 && team1Tricks >= 3)) {
 			/* If team 1 won more tricks and selected trump, they get
 			 * 1 point */
-			if(trumpSelectingTeam == 1) {
+			if (trumpSelectingTeam == 1) {
 				team1Score += 1;
 			}
 			/* If team 1 won more tricks, but team 0 selected trump,
@@ -443,11 +481,11 @@ public class EuchreModel {
 			team0Tricks = team1Tricks = 0;
 		}
 		/* If the 5 tricks have been played, the hand is done */
-		else if(team0Tricks + team1Tricks == 5) {
-			if(team0Tricks == 5) {
+		else if (team0Tricks + team1Tricks == 5) {
+			if (team0Tricks == 5) {
 				/* If team 0 won all 5 tricks and selected trump,
 				 * they get 2 points */
-				if(trumpSelectingTeam == 0) {
+				if (trumpSelectingTeam == 0) {
 					team0Score += 2;
 				}
 				/* If team 0 won all 5 tricks, but team 1 selected
@@ -458,10 +496,10 @@ public class EuchreModel {
 				/* Reset trick counts to 0 */
 				team0Tricks = team1Tricks = 0;
 			}
-			else if(team1Tricks == 5) {
+			else if (team1Tricks == 5) {
 				/* If team 1 won all 5 tricks and selected trump,
 				 * they get 2 points */
-				if(trumpSelectingTeam == 1) {
+				if (trumpSelectingTeam == 1) {
 					team1Score += 2;
 				}
 				/* If team 1 won all 5 tricks, but team 0 selected
@@ -475,8 +513,9 @@ public class EuchreModel {
 		}
 		/* If the hand is not complete and no scoring took place, 
 		 * there is no need to reset, therefore set reset false */
-		else
+		else {
 			reset = false;
+		}
 		
 		/* Return the status of reset (true if scored, else false) */
 		return reset;		
@@ -484,14 +523,14 @@ public class EuchreModel {
 	
 	/******************************************************************
 	 * Handles which private method to call based on the code sent by
-	 * the controller
+	 * the controller.
 	 * 
 	 * @param code describing what action the bot should take
 	 * @return the BOTCODE describing what the resulting action of the
 	 * bot play was
 	 */
-	public BOTCODE botPlay(BOTCODE code) {
-		switch(code) {
+	public BOTCODE botPlay(final BOTCODE code) {
+		switch (code) {
 		case TRUMP:
 			return botSelectTrump();
 		case PLAY:
@@ -500,15 +539,17 @@ public class EuchreModel {
 			return botSwapWithKitty();
 		case HITKITTY:
 			return botSelectKitty();
+		default:
+			return BOTCODE.DEFAULT;
 		}
-		return BOTCODE.DEFAULT;
 	}
 	
 	
 	
 	
-
+	//CHECKSTYLE:OFF
 	/********************** Private Methods ***************************/
+	//CHECKSTYLE:ON
 	
 	/*******************************************************************
 	 * Checks if the card at the index is a valid play based on the 
@@ -518,23 +559,24 @@ public class EuchreModel {
 	 * @param index of the card to be played
 	 * @return True if the move was valid and False if not
 	 ******************************************************************/
-	private boolean isValidMove(int index) {
+	private boolean isValidMove(final int index) {
 		
-		if(playedCards.isEmpty())
+		if (playedCards.isEmpty()) {
 			return true;
+		}
 		
 		SUIT follow = playedCards.get(0).getSuit();
 		
 		//left bauer follow logic
-		if(playedCards.get(0).getValue() == 11 && 
-				currentTrump == sameColor(playedCards.get(0).getSuit()))
+		if (playedCards.get(0).getValue() == 11 
+				&& currentTrump == sameColor(playedCards.get(0).getSuit())) {
 			follow = currentTrump;
+		}
 			
 		
-		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
-			for(Card possiblePlay : players[currentPlayer].getHand())
-			{
-				if(possiblePlay.getSuit() == follow) {
+		if (players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
+			for (Card possiblePlay : players[currentPlayer].getHand()) {
+				if (possiblePlay.getSuit() == follow) {
 					players[currentPlayer].setRenegeable(true);
 					return false;
 				}
@@ -552,8 +594,8 @@ public class EuchreModel {
 	 * 			   same color as.
 	 * @return The suit that is the same color as the inputted suit.
 	 *****************************************************************/
-	private SUIT sameColor(SUIT suit) {
-		switch(suit) {
+	private SUIT sameColor(final SUIT suit) {
+		switch (suit) {
 		/* If the suit is clubs, return spades */
 		case CLUB:
 			return SUIT.SPADE;
@@ -583,9 +625,11 @@ public class EuchreModel {
 		
 		/* Add all cards to the deck, starting with 9 up to Ace for
 		 * each of the four suits */
-		for(int value = 9; value < 15; value++)
-			for(SUIT suit : SUIT.values()) 
-				deck.add(new Card(value,suit));
+		for (int value = 9; value < 15; value++) {
+			for (SUIT suit : SUIT.values()) {
+				deck.add(new Card(value, suit));
+			}
+		}
 	}
 	
 	/******************************************************************
@@ -621,7 +665,7 @@ public class EuchreModel {
 	 */
 	private BOTCODE botSwapWithKitty() {
 		/* Choose a random card in the bots hand */
-		int randCard = (int)(Math.random() * 5);
+		int randCard = randomNum.nextInt(5);
 		/* Swap the random card with the kitty */
 		swapWithTopKitty(randCard);
 		return BOTCODE.SWAP_SUCCESSFUL;
@@ -638,26 +682,27 @@ public class EuchreModel {
 		
 		/* Check each card to see if it is a valid move (i.e. it
 		 * follows suit) */
-		for(Card card : players[currentPlayer].getHand())
-			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {
+		for (Card card : players[currentPlayer].getHand()) {
+			if (isValidMove(players[currentPlayer].getHand().indexOf(card))) {
 				/* If there is a valid move, make the mode */
 				makeMove(players[currentPlayer].getHand().indexOf(card));
 				/* If all cards in trick have been played, 
 				 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
-				if(playedCards.size() >= 4) {
+				if (playedCards.size() >= 4) {
 					return BOTCODE.PLAY_TRICKFINISHED;
 				}				
 				/* If not all cards in trick have been played, 
 				 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
 				return BOTCODE.PLAY_TRICKNOTFINISHED;
 			}
+		}
 		
 		/* If no valid moves available, play the first card in hand */
 		/* This is in place as a failsafe */
 		makeMove(0);
 		/* If all cards in trick have been played, 
 		 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
-		if(playedCards.size() >= 4) {
+		if (playedCards.size() >= 4) {
 			return BOTCODE.PLAY_TRICKFINISHED;
 		}	
 		/* If not all cards in trick have been played, 

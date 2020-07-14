@@ -1,6 +1,7 @@
 package cis350_project_euchre;
-import java.awt.Dimension;
+//CHECKSTYLE:OFF
 import javax.swing.*;
+//CHECKSTYLE:ON
 
 /**********************************************************************
  * The view class for the Euchre program.
@@ -16,12 +17,12 @@ public class EuchreView {
 	 * 
 	 * @param args
 	 *****************************************************************/
-    public static void main (String[] args) {
+    public static void main(final String[] args) {
     	
     	/* Create the JFrame for the game, make it exit when the close
     	 * button is pressed */
-    	JFrame frame = new JFrame ("Euchre");
-        frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+    	JFrame frame = new JFrame("Euchre");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         EuchreController controller = new EuchreController();
         
         /* Add the controller to the JFrame created for the program */
