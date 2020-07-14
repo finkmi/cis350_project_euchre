@@ -653,6 +653,7 @@ public class EuchreModel {
 			}
 		
 		/* If no valid moves available, play the first card in hand */
+		/* This is in place as a failsafe */
 		makeMove(0);
 		/* If all cards in trick have been played, 
 		 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
