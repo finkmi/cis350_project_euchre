@@ -34,7 +34,7 @@ public class Player {
 	public Player(final int team) {
 		/* Set the team of the new player, and instantiate the hand */
 		setTeam(team);
-		hand = new ArrayList();
+		hand = new ArrayList<Card>();
 		
 		/* This player is not a bot, and has made no illegal moves */
 		difficulty = 0;
@@ -54,7 +54,7 @@ public class Player {
 	public Player(final int team, final boolean isBot, final int difficulty) {
 		/* Set the team of the new player, and instantiate the hand */
 		this.setTeam(team);
-		hand = new ArrayList();
+		hand = new ArrayList<Card>();
 		
 		/* Set bot statuses accordingly, and renegable set to false */
 		this.difficulty = difficulty;
