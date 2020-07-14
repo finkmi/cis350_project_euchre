@@ -145,7 +145,10 @@ public class EuchreController extends JPanel {
 		int xorigin = (imageWidth * 5 / 2) - ((imageWidth + 150) / 2);
 		for (int i = 0; i < 4; i++) {
 			playedCards[i] = new JLabel();
-			layeredPane.add(playedCards[i], new Integer(i * 50));
+			/* Use valueOf to take advantage of caching. Values above 127
+			 * may not be cached, but anything between -128 and 127 will
+			 * be cached which will lead to better performance */
+			layeredPane.add(playedCards[i], Integer.valueOf(i * 50));
 			playedCards[i].setBounds(xorigin + (50 * i), 00, imageWidth, imageHeight);
 		}
 		
