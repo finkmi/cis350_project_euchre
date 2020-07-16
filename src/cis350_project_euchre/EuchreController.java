@@ -13,6 +13,9 @@ public class EuchreController extends JPanel {
 	
 	/** Array of JButtons to make up the players hand. */
 	private JButton[] hand;
+	
+	/** Array of labels for the user to see. */
+	private JLabel[] labels;
 
 	/** Instance of the model class. */
 	private EuchreModel model;
@@ -124,7 +127,7 @@ public class EuchreController extends JPanel {
 		
 		/* Set the layout for the panel that has the players hand,
 		 * as well as the panel that has the buttons and kitty */
-		panelArray[2][1].setLayout(new GridLayout(1, 5));
+		panelArray[2][1].setLayout(new GridLayout(2, 5));
 		panelArray[2][2].setLayout(new GridBagLayout());
 				
 		/* Save icons from computer to be used for gameplay */
@@ -161,6 +164,18 @@ public class EuchreController extends JPanel {
 
 		/* Instantiate the buttons for the hand */
 		hand = new JButton[5];
+		
+		/* Instantiate the labels for the player panel */
+		labels = new JLabel[5];
+		
+		for (int i = 0; i <= 4; i++) {
+			labels[i] = new JLabel();
+			if (i == 2) {
+				labels[i].setIcon(black_joker);
+			}
+			labels[i].setVisible(true);
+			panelArray[2][1].add(labels[i]);
+		}
 		
 		/* Add the hand buttons to the GUI with their appropriate card image */
 		for (int i = 0; i <= 4; i++) {
@@ -222,39 +237,39 @@ public class EuchreController extends JPanel {
 	 *****************************************************************/
 	private void createIcons() {
 		/* Sets Images for clubs */
-		club9 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/9_of_clubs.png");
-		club10 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/10_of_clubs.png");
-		club11 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/jack_of_clubs.png");
-		club12 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/queen_of_clubs.png");
-		club13 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/king_of_clubs.png");
-		club14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_clubs.png");
+		club9 = new ImageIcon("cardImages/9_of_clubs.png");
+		club10 = new ImageIcon("cardImages/10_of_clubs.png");
+		club11 = new ImageIcon("cardImages/jack_of_clubs.png");
+		club12 = new ImageIcon("cardImages/queen_of_clubs.png");
+		club13 = new ImageIcon("cardImages/king_of_clubs.png");
+		club14 = new ImageIcon("cardImages/ace_of_clubs.png");
 
 		/* Set Images for diamonds */
-		diamond9 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/9_of_diamonds.png");
-		diamond10 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/10_of_diamonds.png");
-		diamond11 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/jack_of_diamonds.png");
-		diamond12 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/queen_of_diamonds.png");
-		diamond13 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/king_of_diamonds.png");
-		diamond14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_diamonds.png");
+		diamond9 = new ImageIcon("cardImages/9_of_diamonds.png");
+		diamond10 = new ImageIcon("cardImages/10_of_diamonds.png");
+		diamond11 = new ImageIcon("cardImages/jack_of_diamonds.png");
+		diamond12 = new ImageIcon("cardImages/queen_of_diamonds.png");
+		diamond13 = new ImageIcon("cardImages/king_of_diamonds.png");
+		diamond14 = new ImageIcon("cardImages/ace_of_diamonds.png");
 
 		/* Set Images for hearts */
-		heart9 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/9_of_hearts.png");
-		heart10 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/10_of_hearts.png");
-		heart11 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/jack_of_hearts.png");
-		heart12 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/queen_of_hearts.png");
-		heart13 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/king_of_hearts.png");
-		heart14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_hearts.png");
+		heart9 = new ImageIcon("cardImages/9_of_hearts.png");
+		heart10 = new ImageIcon("cardImages/10_of_hearts.png");
+		heart11 = new ImageIcon("cardImages/jack_of_hearts.png");
+		heart12 = new ImageIcon("cardImages/queen_of_hearts.png");
+		heart13 = new ImageIcon("cardImages/king_of_hearts.png");
+		heart14 = new ImageIcon("cardImages/ace_of_hearts.png");
 
 		/* Set Images for spades */
-		spade9 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/9_of_spades.png");
-		spade10 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/10_of_spades.png");
-		spade11 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/jack_of_spades.png");
-		spade12 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/queen_of_spades.png");
-		spade13 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/king_of_spades.png");
-		spade14 = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/ace_of_spades.png");
+		spade9 = new ImageIcon("cardImages/9_of_spades.png");
+		spade10 = new ImageIcon("cardImages/10_of_spades.png");
+		spade11 = new ImageIcon("cardImages/jack_of_spades.png");
+		spade12 = new ImageIcon("cardImages/queen_of_spades.png");
+		spade13 = new ImageIcon("cardImages/king_of_spades.png");
+		spade14 = new ImageIcon("cardImages/ace_of_spades.png");
 		
-		black_joker = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/black_joker.png");
-		card_back = new ImageIcon(FILEPATH + "/cis350_project_euchre/cardImages/card_back.png");
+		black_joker = new ImageIcon("cardImages/black_joker.png");
+		card_back = new ImageIcon("cardImages/card_back.png");
 	}
 	
 	/******************************************************************
