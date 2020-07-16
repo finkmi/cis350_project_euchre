@@ -83,6 +83,11 @@ public class EuchreController extends JPanel {
 	/** ImageIcon for a card back. */
 	private ImageIcon card_back;
 	//CHECKSTYLE:ON
+	
+	/** ImageIcon for green light to indicate current player */
+	private ImageIcon lightOn;
+	/** ImageIcon for off light to indicate current player */
+	private ImageIcon lightOff;
 
 	
 	/** Array of JLabels for displaying the played cards for a trick. */
@@ -169,11 +174,12 @@ public class EuchreController extends JPanel {
 		labels = new JLabel[5];
 		
 		for (int i = 0; i <= 4; i++) {
-			labels[i] = new JLabel();
+			labels[i] = new JLabel(lightOn, JLabel.CENTER);
+			labels[i].setVisible(false);
 			if (i == 2) {
-				labels[i].setIcon(black_joker);
+				labels[i].setIcon(lightOff);
+				labels[i].setVisible(true);
 			}
-			labels[i].setVisible(true);
 			panelArray[2][1].add(labels[i]);
 		}
 		
@@ -270,6 +276,9 @@ public class EuchreController extends JPanel {
 		
 		black_joker = new ImageIcon("cardImages/black_joker.png");
 		card_back = new ImageIcon("cardImages/card_back.png");
+		
+		lightOn = new ImageIcon("images/ongreen.png");
+		lightOff = new ImageIcon("images/offgreen.png");
 	}
 	
 	/******************************************************************
