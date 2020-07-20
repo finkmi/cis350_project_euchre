@@ -6,16 +6,18 @@ import javax.swing.*;
 //CHECKSTYLE:ON
 
 public class EuchreController extends JPanel {
-
-	/** Filepath defined for images on each teammates computer. */
-	static final String FILEPATH = "C:/Users/charl/eclipse-workspace/";
-//	static final String FILEPATH = "/Users/michaelfink/workspace/";
 	
 	/** Array of JButtons to make up the players hand. */
 	private JButton[] hand;
+	private JLabel[] leftBotHand;
+	private JLabel[] topBotHand;
+	private JLabel[] rightBotHand;
 	
 	/** Array of labels for the user to see. */
-	private JLabel[] labels;
+	private JLabel[] humanIndicator;
+	private JLabel[] leftBotIndicator;
+	private JLabel[] topBotIndicator;
+	private JLabel[] rightBotIndicator;
 
 	/** Instance of the model class. */
 	private EuchreModel model;
@@ -76,17 +78,40 @@ public class EuchreController extends JPanel {
 	/** ImageIcon for King of spades. */
 	private ImageIcon spade13;
 	/** ImageIcon for Ace of spades. */
-	private ImageIcon spade14;
+	private ImageIcon spade14;	
 	/** ImageIcon for a black joker. */
 	//CHECKSTYLE:OFF
 	private ImageIcon black_joker;
 	/** ImageIcon for a card back. */
 	private ImageIcon card_back;
 	//CHECKSTYLE:ON
+	/** ImageIcon for black card scoring */
+	private ImageIcon black1;
+	private ImageIcon black2;
+	private ImageIcon black3;
+	private ImageIcon black4;
+	private ImageIcon black5;
+	private ImageIcon black6;
+	private ImageIcon black7;
+	private ImageIcon black8;
+	private ImageIcon black9;
+	private ImageIcon black10;
+	private ImageIcon red1;
+	private ImageIcon red2;
+	private ImageIcon red3;
+	private ImageIcon red4;
+	private ImageIcon red5;
+	private ImageIcon red6;
+	private ImageIcon red7;
+	private ImageIcon red8;
+	private ImageIcon red9;
+	private ImageIcon red10;
 	
-	/** ImageIcon for green light to indicate current player */
+	private ImageIcon side_card_back;
+	
+	/** ImageIcon for green light to indicate current player. */
 	private ImageIcon lightOn;
-	/** ImageIcon for off light to indicate current player */
+	/** ImageIcon for off light to indicate current player. */
 	private ImageIcon lightOff;
 
 	
@@ -134,6 +159,11 @@ public class EuchreController extends JPanel {
 		 * as well as the panel that has the buttons and kitty */
 		panelArray[2][1].setLayout(new GridLayout(2, 5));
 		panelArray[2][2].setLayout(new GridBagLayout());
+		
+		/* Set up the bot players hands (Left to Right around the table) */
+		panelArray[1][0].setLayout(new GridLayout(5, 2));
+		panelArray[0][1].setLayout(new GridLayout(2, 5));
+		panelArray[1][2].setLayout(new GridLayout(5, 2));
 				
 		/* Save icons from computer to be used for gameplay */
 		createIcons();
@@ -169,18 +199,25 @@ public class EuchreController extends JPanel {
 
 		/* Instantiate the buttons for the hand */
 		hand = new JButton[5];
+		leftBotHand = new JLabel[5];
+		topBotHand = new JLabel[5];
+		rightBotHand = new JLabel[5];
 		
 		/* Instantiate the labels for the player panel */
-		labels = new JLabel[5];
+		humanIndicator = new JLabel[5];
+		leftBotIndicator = new JLabel[5];
+		topBotIndicator = new JLabel[5];
+		rightBotIndicator = new JLabel[5];
 		
+		/* Set up the players information panel */
 		for (int i = 0; i <= 4; i++) {
-			labels[i] = new JLabel(lightOn, JLabel.CENTER);
-			labels[i].setVisible(false);
+			humanIndicator[i] = new JLabel(lightOn, JLabel.CENTER);
+			humanIndicator[i].setVisible(false);
 			if (i == 2) {
-				labels[i].setIcon(lightOff);
-				labels[i].setVisible(true);
+				humanIndicator[i].setIcon(lightOn);
+				humanIndicator[i].setVisible(true);
 			}
-			panelArray[2][1].add(labels[i]);
+			panelArray[2][1].add(humanIndicator[i]);
 		}
 		
 		/* Add the hand buttons to the GUI with their appropriate card image */
@@ -188,9 +225,65 @@ public class EuchreController extends JPanel {
 			hand[i] = new JButton(getCardIcon(model.getPlayer(0).getCardFromHand(i)));
 			hand[i].setPreferredSize(new Dimension(imageWidth, imageHeight));
 			hand[i].setVisible(true);
+			
+			hand[i].setOpaque(false);
+			hand[i].setContentAreaFilled(false);
+			hand[i].setBorderPainted(false);
+			
 			/* Add action listener to hand buttons */
 			hand[i].addActionListener(listener);
 			panelArray[2][1].add(hand[i]);
+		}
+		
+		/* Set up left bots hand */
+		for (int i = 0; i <= 4; i++) {
+			for (int j = 0; j <= 1; j++) {
+				if (j == 0) {
+					leftBotHand[i] = new JLabel(side_card_back);
+					panelArray[1][0].add(leftBotHand[i]);
+				}
+				else {
+					leftBotIndicator[i] = new JLabel(lightOff, JLabel.CENTER);
+					if (i != 2) {
+						leftBotIndicator[i].setVisible(false);
+					}
+					panelArray[1][0].add(leftBotIndicator[i]);
+				}
+			}
+		}
+		
+		/* Set up top bots hand */
+		for (int i = 0; i <= 1; i++) {
+			for (int j = 0; j <= 4; j++) {
+				if (i == 0) {
+					topBotHand[i] = new JLabel(card_back);
+					panelArray[0][1].add(topBotHand[i]);
+				}
+				else {
+					topBotIndicator[i] = new JLabel(lightOff, JLabel.CENTER);
+					if (j != 2) {
+						topBotIndicator[i].setVisible(false);
+					}
+					panelArray[0][1].add(topBotIndicator[i]);
+				}
+			}
+		}
+		
+		/* Set up right bots hand */
+		for (int i = 0; i <= 4; i++) {
+			for (int j = 0; j <= 1; j++) {
+				if (j == 1) {
+					rightBotHand[i] = new JLabel(side_card_back);
+					panelArray[1][2].add(rightBotHand[i]);
+				}
+				else {
+					rightBotIndicator[i] = new JLabel(lightOff, JLabel.CENTER);
+					if (i != 2) {
+						rightBotIndicator[i].setVisible(false);
+					}
+					panelArray[1][2].add(rightBotIndicator[i]);
+				}
+			}
 		}
 
 		/* Instantiate the renege, pass, and topKitty buttons */
@@ -279,6 +372,31 @@ public class EuchreController extends JPanel {
 		
 		lightOn = new ImageIcon("images/ongreen.png");
 		lightOff = new ImageIcon("images/offgreen.png");
+		
+		/* Set images for black card scoring */
+		black1 = new ImageIcon("images/black1.png");
+		black2 = new ImageIcon("images/black2.png");
+		black1 = new ImageIcon("images/black3.png");
+		black2 = new ImageIcon("images/black4.png");
+		black1 = new ImageIcon("images/black5.png");
+		black2 = new ImageIcon("images/black6.png");
+		black1 = new ImageIcon("images/black7.png");
+		black2 = new ImageIcon("images/black8.png");
+		black1 = new ImageIcon("images/black9.png");
+		black2 = new ImageIcon("images/black10.png");
+		
+		red1 = new ImageIcon("images/red1.png");
+		red2 = new ImageIcon("images/red2.png");
+		red3 = new ImageIcon("images/red3.png");
+		red4 = new ImageIcon("images/red4.png");
+		red5 = new ImageIcon("images/red5.png");
+		red6 = new ImageIcon("images/red6.png");
+		red7 = new ImageIcon("images/red7.png");
+		red8 = new ImageIcon("images/red8.png");
+		red9 = new ImageIcon("images/red9.png");
+		red10 = new ImageIcon("images/red10.png");
+		
+		side_card_back = new ImageIcon("images/card_back90.png");
 	}
 	
 	/******************************************************************
@@ -532,6 +650,7 @@ public class EuchreController extends JPanel {
 						/* If the tricks are such that the hand can be scored, we
 						 * should score the hand */
 						if (model.evalScore()) {
+							hand[0].setIcon(card_back);
 							/* If the hand is scored, redeal, set cards visible,
 							 * back into trump selection mode, and the kitty
 							 * has not been pressed for this new hand */
