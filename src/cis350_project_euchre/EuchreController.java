@@ -501,8 +501,23 @@ public class EuchreController extends JPanel {
 		resizedImg = myCard.getScaledInstance(newHeight, newWidth, Image.SCALE_SMOOTH);
 		side_card_back = new ImageIcon(resizedImg);
 		
-		lightOn = new ImageIcon("images/ongreen.png");
-		lightOff = new ImageIcon("images/offgreen.png");
+		/* Scan the on light indicator */
+		try {
+			myCard = ImageIO.read(new File("images/ongreen.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		resizedImg = myCard.getScaledInstance(newWidth / 2, newWidth / 2, Image.SCALE_SMOOTH);
+		lightOn = new ImageIcon(resizedImg);
+		
+		/* Scan the off light indicator */
+		try {
+			myCard = ImageIO.read(new File("images/offgreen.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		resizedImg = myCard.getScaledInstance(newWidth / 2, newWidth / 2, Image.SCALE_SMOOTH);
+		lightOff = new ImageIcon(resizedImg);
 		
 		/* Set images for black card scoring */
 		black1 = new ImageIcon("images/black1.png");
