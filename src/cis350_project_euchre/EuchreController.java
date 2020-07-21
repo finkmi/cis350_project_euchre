@@ -139,6 +139,8 @@ public class EuchreController extends JPanel {
 
 	/** The index of the current player. */
 	private int currentPlayer;
+	
+	private boolean trickFinished;
 
 	/******************************************************************
 	 * Constructor for the Euchre controller method. Handles the starting of the
@@ -262,18 +264,19 @@ public class EuchreController extends JPanel {
 			}
 		}
 
+		
 		/* Set up top bots hand */
 		for (int i = 0; i <= 1; i++) {
 			for (int j = 0; j <= 4; j++) {
 				if (i == 0) {
-					topBotHand[i] = new JLabel(card_back);
-					panelArray[0][1].add(topBotHand[i]);
+					topBotHand[j] = new JLabel(card_back);
+					panelArray[0][1].add(topBotHand[j]);
 				} else {
-					topBotIndicator[i] = new JLabel(lightOff, JLabel.CENTER);
+					topBotIndicator[j] = new JLabel(lightOff, JLabel.CENTER);
 					if (j != 2) {
-						topBotIndicator[i].setVisible(false);
+						topBotIndicator[j].setVisible(false);
 					}
-					panelArray[0][1].add(topBotIndicator[i]);
+					panelArray[0][1].add(topBotIndicator[j]);
 				}
 			}
 		}
@@ -364,27 +367,21 @@ public class EuchreController extends JPanel {
 			 		switch (j) {
 		 			case 9:
 		 				club9 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 		 			case 10:
 		 				club10 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 					case 11:
 						club11 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 12:
 						club12 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 13:
 						club13 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 14:
 						club14 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					default:
 						/* Do nothing... not valid */
@@ -396,27 +393,21 @@ public class EuchreController extends JPanel {
 			 		switch (j) {
 		 			case 9:
 		 				diamond9 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 		 			case 10:
 		 				diamond10 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 					case 11:
 						diamond11 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 12:
 						diamond12 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 13:
 						diamond13 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 14:
 						diamond14 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					default:
 						/* Do nothing... not valid */
@@ -428,27 +419,21 @@ public class EuchreController extends JPanel {
 			 		switch (j) {
 		 			case 9:
 		 				heart9 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 		 			case 10:
 		 				heart10 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 					case 11:
 						heart11 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 12:
 						heart12 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 13:
 						heart13 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 14:
 						heart14 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					default:
 						/* Do nothing... not valid */
@@ -460,27 +445,21 @@ public class EuchreController extends JPanel {
 			 		switch (j) {
 		 			case 9:
 		 				spade9 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 		 			case 10:
 		 				spade10 = new ImageIcon(resizedImg);
-		 				System.out.println("A");
 		 				break;
 					case 11:
 						spade11 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 12:
 						spade12 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 13:
 						spade13 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					case 14:
 						spade14 = new ImageIcon(resizedImg);
-						System.out.println("A");
 						break;
 					default:
 						/* Do nothing... not valid */
@@ -686,6 +665,52 @@ public class EuchreController extends JPanel {
 	}
 
 	/******************************************************************
+	 * Takes the index of the current player and sets their indicator
+	 * to the 'ON' position and sets the other players to 'OFF'.
+	 *
+	 * @param indexCurPlayer is the currentplayer index of the players 
+	 * array
+	 ******************************************************************/
+	private void updateIndicators(final int indexCurPlayer) {
+		if (indexCurPlayer == 0) {
+			humanIndicator[2].setIcon(lightOn);
+			leftBotIndicator[2].setIcon(lightOff);
+			topBotIndicator[2].setIcon(lightOff);
+			rightBotIndicator[2].setIcon(lightOff);
+		}
+		else if (indexCurPlayer == 1) {
+			humanIndicator[2].setIcon(lightOff);
+			leftBotIndicator[2].setIcon(lightOn);
+			topBotIndicator[2].setIcon(lightOff);
+			rightBotIndicator[2].setIcon(lightOff);
+		}
+		else if (indexCurPlayer == 2) {
+			humanIndicator[2].setIcon(lightOff);
+			leftBotIndicator[2].setIcon(lightOff);
+			topBotIndicator[2].setIcon(lightOn);
+			rightBotIndicator[2].setIcon(lightOff);
+		}
+		else {
+			humanIndicator[2].setIcon(lightOff);
+			leftBotIndicator[2].setIcon(lightOff);
+			topBotIndicator[2].setIcon(lightOff);
+			rightBotIndicator[2].setIcon(lightOn);
+		}
+	}
+	
+	private void updatePlayersCards(final int indexCurPlayer) {
+		if (indexCurPlayer == 1) {
+			leftBotHand[model.getPlayer(indexCurPlayer).getHand().size() - 1].setVisible(false);
+		}
+		else if (indexCurPlayer == 2) {
+			topBotHand[model.getPlayer(indexCurPlayer).getHand().size() - 1].setVisible(false);
+		}
+		else if (indexCurPlayer == 3) {
+			rightBotHand[model.getPlayer(indexCurPlayer).getHand().size() - 1].setVisible(false);
+		}
+	}
+	
+	/******************************************************************
 	 * This function handles clearing the icons. It also makes sure to update
 	 * everything else on the GUI (such as the hand, the topKitty, and the score).
 	 *****************************************************************/
@@ -733,7 +758,20 @@ public class EuchreController extends JPanel {
 		for (JButton cards : hand) {
 			cards.setVisible(true);
 		}
+
+		for (JLabel cards : topBotHand) {
+			cards.setVisible(true);
+		}
+
+		for (JLabel cards : rightBotHand) {
+			cards.setVisible(true);
+		}
+
+		for (JLabel cards : leftBotHand) {
+			cards.setVisible(true);
+		}
 	}
+	
 
 	/******************************************************************
 	 * The timerlistener class is used in this project in order to give the bots a
@@ -749,6 +787,18 @@ public class EuchreController extends JPanel {
 			if (clearFlag) {
 				clearPlayedCardsIcons();
 				clearFlag = false;
+			}
+			
+			// TODO: This logic works well unless we evalScore (because it changes the models
+			// currentPlayer so it's no longer the winner...
+			if (trickFinished) {
+				trickFinished = false;
+				JOptionPane.showConfirmDialog(
+						null,
+						"Player " + model.getCurrentPlayer() + " Won the trick!",
+						"Trick Finished!",
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 
 			/*
@@ -811,10 +861,13 @@ public class EuchreController extends JPanel {
 				 * a card to play
 				 */
 				else {
+					
+					updatePlayersCards(model.getCurrentPlayer());
 					/* If the play results in a trick being finished */
 					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {
 						/* The trick is done, so we should evaluate the trick count */
 						model.evalTricks();
+						trickFinished = true;
 						/*
 						 * If the tricks are such that the hand can be scored, we should score the hand
 						 */
@@ -842,6 +895,7 @@ public class EuchreController extends JPanel {
 					updatePlayedCards();
 
 				}
+				updateIndicators(model.getCurrentPlayer());
 			}
 			/* If it's not the bot turn (therefore a humans turn) */
 			else {
@@ -912,6 +966,7 @@ public class EuchreController extends JPanel {
 							kittyHasBeenPressed = false;
 						}
 					}
+					updateIndicators(model.getCurrentPlayer());
 				}
 			}
 		}
@@ -983,6 +1038,7 @@ public class EuchreController extends JPanel {
 								 * Evaluate tricks because we just finished a trick
 								 */
 								model.evalTricks();
+								trickFinished = true;
 								/*
 								 * Check to see if the current trick count warrants check the score. If it does,
 								 * we need to reset
@@ -1041,6 +1097,7 @@ public class EuchreController extends JPanel {
 				 * want to make sure the GUI stays up to date
 				 */
 				updateHand();
+				updateIndicators(model.getCurrentPlayer());
 			}
 		}
 	}
