@@ -17,14 +17,14 @@ class PlayerTest {
 	@Test
 	/* This tests that the secondary constructor can create a bot */
 	void test_secondaryConstructorSetsBotStatusTrue() {
-		Player p1 = new Player(0, true, 1);		
+		Player p1 = new Player(0, true);		
 		assertTrue(p1.getIsBot());
 	}
 	
 	@Test
 	/* This tests that the secondary constructor can not create a bot */
 	void test_secondaryConstructorSetsBotStatusFalse() {
-		Player p1 = new Player(0, false, 1);		
+		Player p1 = new Player(0, false);		
 		assertFalse(p1.getIsBot());
 	}
 	
@@ -41,8 +41,8 @@ class PlayerTest {
 	@Test
 	/* This tests that the secondary constructor sets the team correctly */
 	void test_secondaryConstructorSetsTeamCorrectly() {
-		Player p1 = new Player(0, true, 1);
-		Player p2 = new Player(1, false, 1);
+		Player p1 = new Player(0, true);
+		Player p2 = new Player(1, false);
 		
 		assertEquals(p1.getTeam(), 0);
 		assertEquals(p2.getTeam(), 1);
@@ -51,7 +51,7 @@ class PlayerTest {
 	@Test
 	/* This tests that the player can have cards added to their hand */
 	void test_playerCanAddCardsToHand() {
-		Player p1 = new Player(0, true, 1);
+		Player p1 = new Player(0, true);
 		Card c1 = new Card(9, SUIT.CLUB);
 		
 		assertTrue(p1.getHand().isEmpty());
@@ -62,7 +62,7 @@ class PlayerTest {
 	@Test
 	/* This tests that the correct cards are added to the players hand */
 	void test_playerCanAddCorrectCardsToHand() {
-		Player p1 = new Player(0, false, 1);
+		Player p1 = new Player(0, false);
 		Card c1 = new Card(14, SUIT.HEART);
 		
 		assertTrue(p1.getHand().isEmpty());
@@ -120,16 +120,4 @@ class PlayerTest {
 		p1.clearHand();
 		assertTrue(p1.getHand().isEmpty());
 	}
-	
-	@Test
-	/* This tests that the Renegeable boolean can be set */
-	void test_playerSetsRenegeable() {
-		Player p1 = new Player(0);
-		p1.setRenegeable(true);
-		assertTrue(p1.isRenegeable());
-		
-		p1.setRenegeable(false);
-		assertFalse(p1.isRenegeable());
-	}
-
 }

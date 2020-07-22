@@ -17,13 +17,8 @@ public class Player {
 	
 	/** Specifies if the player is a bot or a human player. */
 	private boolean isBot;
-	
-	/** Specifies the difficulty of a bot if isBot is true. */
-	private int difficulty;
-	
-	/** Specifies if the user has made an illegal move or not. */
-	private boolean renegeable;
-	
+
+
 	/******************************************************************
 	 * Constructor for a player. This constructor makes the assumption
 	 * that the player is not a bot, and therefore only takes a team
@@ -37,9 +32,7 @@ public class Player {
 		hand = new ArrayList<Card>();
 		
 		/* This player is not a bot, and has made no illegal moves */
-		difficulty = 0;
 		isBot = false;
-		renegeable = false;
 	}
 	
 	/******************************************************************
@@ -48,18 +41,14 @@ public class Player {
 	 * 
 	 * @param team The team the player is on (0 or 1).
 	 * @param isBot True if the player is a bot, else false.
-	 * @param difficulty Integer representing the difficulty level
-	 * 					 of the bot.
 	 *****************************************************************/
-	public Player(final int team, final boolean isBot, final int difficulty) {
+	public Player(final int team, final boolean isBot) {
 		/* Set the team of the new player, and instantiate the hand */
 		this.setTeam(team);
 		hand = new ArrayList<Card>();
 		
-		/* Set bot statuses accordingly, and renegable set to false */
-		this.difficulty = difficulty;
+		/* Set bot statuses accordingly */
 		this.isBot = isBot;
-		this.renegeable = false;	
 	}
 	
 	/******************************************************************
@@ -136,29 +125,6 @@ public class Player {
 	 *****************************************************************/
 	public void setTeam(final int team) {
 		this.team = team;
-	}
-
-	/******************************************************************
-	 * Gets the status of the renegable boolean. Used to determine if 
-	 * the player has made an invalid move, thus someone could call 
-	 * them out for renege-ing.
-	 * 
-	 * @return True if the player has made an invalid move, else false.
-	 *****************************************************************/
-	public boolean isRenegeable() {
-		return renegeable;
-	}
-
-	/******************************************************************
-	 * Sets the status of the renegeable boolean. Used to determine if 
-	 * the player has made an invalid move, thus someone could call 
-	 * them out for renege-ing.
-	 * 
-	 * @param renegeable True if the player made an invalid move, else
-	 * 					 false.
-	 *****************************************************************/
-	public void setRenegeable(final boolean renegeable) {
-		this.renegeable = renegeable;
 	}
 	
 	/******************************************************************

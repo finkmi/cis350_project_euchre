@@ -48,4 +48,13 @@ public class Card {
 	public SUIT getSuit() {
 		return suit;
 	}
+
+	/******************************************************************
+	 * Set card suit to the given value.
+	 * 
+	 * @param s the suit desired to change this cards suit to.
+	 *****************************************************************/
+	public void setSuit(final SUIT s) {
+		suit = s;
+	}
 }
