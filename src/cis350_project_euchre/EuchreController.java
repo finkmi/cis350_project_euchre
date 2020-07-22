@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 //CHECKSTYLE:ON
 
 public class EuchreController extends JPanel {
@@ -27,9 +28,6 @@ public class EuchreController extends JPanel {
 
 	/** Instance of the model class. */
 	private EuchreModel model;
-
-	/** JButton for renege. */
-	private JButton renegeBtn;
 
 	/** JButton for passing on the kitty. */
 	private JButton passBtn;
@@ -139,8 +137,10 @@ public class EuchreController extends JPanel {
 
 	/** The index of the current player. */
 	private int currentPlayer;
-	
-	private boolean trickFinished;
+		
+	private JTextArea gameInfo;
+	private JScrollPane gameInfoDisplay;
+	private Font font = new Font("Times New Roman", Font.BOLD, 30);
 
 	/******************************************************************
 	 * Constructor for the Euchre controller method. Handles the starting of the
@@ -297,22 +297,15 @@ public class EuchreController extends JPanel {
 			}
 		}
 
-		/* Instantiate the renege, pass, and topKitty buttons */
-		renegeBtn = new JButton("Renege");
+		/* Instantiate the pass and topKitty buttons */
 		passBtn = new JButton("Pass");
 		topKitty = new JButton(getCardIcon(model.getTopKitty()));
 
 		/* Size buttons appropriately */
 		topKitty.setPreferredSize(new Dimension(imageWidth, imageHeight));
-		renegeBtn.setPreferredSize(new Dimension((int) (imageWidth * .75), (int) (imageWidth * .5)));
 		passBtn.setPreferredSize(new Dimension((int) (imageWidth * .75), (int) (imageWidth * .5)));
 
-		/* Add action listener to renege button, and set spacing */
-		renegeBtn.addActionListener(listener);
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 1;
-		panelArray[2][2].add(renegeBtn);
 
 		/* Add action listener to pass button, and set spacing */
 		passBtn.addActionListener(listener);
@@ -331,8 +324,34 @@ public class EuchreController extends JPanel {
 
 		/* Set the buttons visible/invisible to prepare to start the game */
 		topKitty.setVisible(true);
-		renegeBtn.setVisible(false);
 		passBtn.setVisible(true);
+		
+		/* Setting up info text and scroll pane */
+		gameInfo = new JTextArea(5, 20);
+		
+		/* Set the caret to white... This way it won't look editable to the user.
+		 * Could set the textArea to not editable, but then it won't scroll 
+		 * properly to show the most recent data entry at the bottom. */
+		gameInfo.setCaretColor(Color.white);
+		
+		/* Get the caret and save it as a variable, allowing us
+		 * to set it to always update no matter what thread the change has
+		 * come from. This makes the caret always go to the bottom line of the 
+		 * text area. New data entry occurs at the bottom, and old entries are
+		 * scrolled upwards */
+		DefaultCaret caret = (DefaultCaret)gameInfo.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+		/* Set the font for our text panel */
+		gameInfo.setFont(font);
+		gameInfoDisplay = new JScrollPane(gameInfo);
+		/* Add some new lines so that we start at the bottom of the text box */
+		for (int i = 0; i < 4; i++) {
+			gameInfo.append("\n");
+		}
+		
+		/* Add the text box, and scrolling pane to the bottom/left corner */
+		panelArray[2][0].add(gameInfoDisplay, BorderLayout.CENTER);
 
 		/* Add the panel to the gui */
 		add(panel);
@@ -741,12 +760,11 @@ public class EuchreController extends JPanel {
 	}
 
 	/******************************************************************
-	 * Updates the buttons for passing, renegeing, and the topKitty based on if we
+	 * Updates the buttons for passing and the topKitty based on if we
 	 * are in trump selection mode or not.
 	 *****************************************************************/
 	private void updateButtons() {
 		passBtn.setVisible(trumpSelect);
-		renegeBtn.setVisible(!trumpSelect);
 		topKitty.setEnabled(trumpSelect);
 		/* Make sure we update topKitty too */
 		updateTopKitty();
@@ -802,18 +820,6 @@ public class EuchreController extends JPanel {
 			if (clearFlag) {
 				clearPlayedCardsIcons();
 				clearFlag = false;
-			}
-			
-			// TODO: This logic works well unless we evalScore (because it changes the models
-			// currentPlayer so it's no longer the winner...
-			if (trickFinished) {
-				trickFinished = false;
-				JOptionPane.showConfirmDialog(
-						null,
-						"Player " + model.getCurrentPlayer() + " Won the trick!",
-						"Trick Finished!",
-						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.INFORMATION_MESSAGE);
 			}
 
 			/*
@@ -882,7 +888,8 @@ public class EuchreController extends JPanel {
 					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {
 						/* The trick is done, so we should evaluate the trick count */
 						model.evalTricks();
-						trickFinished = true;
+						gameInfo.append("Player " + model.getCurrentPlayer() + " Won the trick!\n");
+
 						/*
 						 * If the tricks are such that the hand can be scored, we should score the hand
 						 */
@@ -1007,13 +1014,6 @@ public class EuchreController extends JPanel {
 					model.playerPassed();
 				}
 				/*
-				 * If the renege button was pressed, do nothing yet. This functionality will be
-				 * added in release 2
-				 */
-				else if (renegeBtn == e.getSource()) {
-					System.out.println("");
-				}
-				/*
 				 * If the topKitty was pressed, this means the human player would like the suit
 				 * of the top kitty card to be trump. The dealer will need to pick this card up
 				 * when it's their turn
@@ -1030,7 +1030,6 @@ public class EuchreController extends JPanel {
 					model.setCurrentPlayerDealer();
 					/* Set buttons accordingly */
 					passBtn.setVisible(false);
-					renegeBtn.setVisible(true);
 					topKitty.setEnabled(false);
 				}
 				/*
@@ -1053,7 +1052,7 @@ public class EuchreController extends JPanel {
 								 * Evaluate tricks because we just finished a trick
 								 */
 								model.evalTricks();
-								trickFinished = true;
+								gameInfo.append("Player " + model.getCurrentPlayer() + " Won the trick!\n");
 								/*
 								 * Check to see if the current trick count warrants check the score. If it does,
 								 * we need to reset
@@ -1102,7 +1101,6 @@ public class EuchreController extends JPanel {
 							trumpSelect = false;
 							topKitty.setIcon(card_back);
 							passBtn.setVisible(false);
-							renegeBtn.setVisible(true);
 							updateTopKitty();
 						}
 					}
