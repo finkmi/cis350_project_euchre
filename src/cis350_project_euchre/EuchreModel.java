@@ -12,9 +12,6 @@ import java.util.Random;
  *********************************************************************/
 public class EuchreModel {
 	
-	/** Difficulty that the bots should be initialized with. */
-	private int difficulty = 1;
-	
 	/** Array of Player objects to represent the four players. */
 	private Player[] players;
 	
@@ -70,8 +67,7 @@ public class EuchreModel {
 		/* Set up the array of players, and instantiate each player */
 		players = new Player[4];
 		for (int i = 0; i < 4; i++) {
-			players[i] = new Player(i % 2, i == 0 ? false : true,
-					difficulty);
+			players[i] = new Player(i % 2, i == 0 ? false : true);
 		}
 		
 		/* Set trump to null to begin with */
@@ -310,15 +306,15 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void makeMove(final int index) {
 		/* Check if the move is valid */
-		//TODO: Set renegeable if not valid
-		isValidMove(index);
-		/* Add the played card from the users hand to playedCards */
-		playedCards.add(players[currentPlayer].getCardFromHand(index));
-		/* Remove the played card from the players hand */
-		players[currentPlayer].removeCardFromHand(index);
-		
-		/* Increment the current player appropriately */
-		currentPlayer = (currentPlayer + 1) % 4;	
+		if (isValidMove(index)) {
+			/* Add the played card from the users hand to playedCards */
+			playedCards.add(players[currentPlayer].getCardFromHand(index));
+			/* Remove the played card from the players hand */
+			players[currentPlayer].removeCardFromHand(index);
+			
+			/* Increment the current player appropriately */
+			currentPlayer = (currentPlayer + 1) % 4;
+		}
 	}
 	
 	/******************************************************************
@@ -553,36 +549,54 @@ public class EuchreModel {
 	
 	/*******************************************************************
 	 * Checks if the card at the index is a valid play based on the 
-	 * first card played. Used to determine if the opposing team can
-	 * renege on the trick.
+	 * first card played.
 	 * 
 	 * @param index of the card to be played
 	 * @return True if the move was valid and False if not
 	 ******************************************************************/
 	private boolean isValidMove(final int index) {
 		
+		boolean result = true;
+		
 		if (playedCards.isEmpty()) {
-			return true;
+			return result;
 		}
 		
 		SUIT follow = playedCards.get(0).getSuit();
+		Card cardSelected = players[currentPlayer].getCardFromHand(index);
 		
-		//left bauer follow logic
+		//Logic to set the follow equal to the same color suit of the left bauer when played first rather than the actual suit
 		if (playedCards.get(0).getValue() == 11 
 				&& currentTrump == sameColor(playedCards.get(0).getSuit())) {
 			follow = currentTrump;
-		}
-			
+		}	
 		
-		if (players[currentPlayer].getCardFromHand(index).getSuit() != follow) {
+		//Loop through all cards in hand to see if there was a card that follows suit before allowing any move
+		if (cardSelected.getSuit() != follow) {
 			for (Card possiblePlay : players[currentPlayer].getHand()) {
-				if (possiblePlay.getSuit() == follow) {
-					players[currentPlayer].setRenegeable(true);
-					return false;
+				//Set left bauer's trump to the same color so logically it acts as its same color rather than its face suit.
+				if (possiblePlay.getSuit() == sameColor(currentTrump) && possiblePlay.getValue() == 11) {
+					possiblePlay.setSuit(sameColor(possiblePlay.getSuit()));
+					//Check that left bauer isn't in hand if trump is to be followed
+					if (possiblePlay.getSuit() == follow) {
+						result = false;
+					}
+					possiblePlay.setSuit(sameColor(possiblePlay.getSuit()));
 				}
+				//Check that none of the cards in hand are the same suit as first played
+				else if (possiblePlay.getSuit() == follow) {
+					result = false;
+				}
+				
 			}
+			
+			// Logic to allow you to play the left bauer in the case of following trump
+			if (cardSelected.getSuit() == sameColor(currentTrump) && cardSelected.getValue() == 11 && follow == currentTrump) {
+				result = true;
+			}
+
 		}
-		return true;
+		return result;
 	}
 	
 	/******************************************************************
