@@ -100,6 +100,11 @@ public class EuchreModel {
 	/********************* Getters & Setters *************************/
 	//CHECKSTYLE:ON
 	
+	public int getDealer() {
+		return dealer;
+	}
+	
+	
 	/******************************************************************
 	 * Return the player at the index specified in the players array.
 	 * 

@@ -141,6 +141,8 @@ public class EuchreController extends JPanel {
 	private JTextArea gameInfo;
 	private JScrollPane gameInfoDisplay;
 	private Font font = new Font("Times New Roman", Font.BOLD, 30);
+	
+	private boolean playerHasBeenToldToSelectTrump = false;
 
 	/******************************************************************
 	 * Constructor for the Euchre controller method. Handles the starting of the
@@ -776,10 +778,12 @@ public class EuchreController extends JPanel {
 	 * info.
 	 *****************************************************************/
 	private void updateScore() {
-		System.out.println("Tricks0: " + model.getNumTricks(0));
-		System.out.println("Tricks1: " + model.getNumTricks(1));
-		System.out.println("Score0: " + model.getScore(0));
-		System.out.println("Score1: " + model.getScore(1));
+//		System.out.println("Tricks0: " + model.getNumTricks(0));
+//		System.out.println("Tricks1: " + model.getNumTricks(1));
+//		System.out.println("Score0: " + model.getScore(0));
+//		System.out.println("Score1: " + model.getScore(1));
+		gameInfo.append("Team 1 has " + model.getNumTricks(0) + "\n");
+		gameInfo.append("Team 2 has " + model.getNumTricks(1) + "\n\n");
 	}
 
 	/******************************************************************
@@ -888,7 +892,7 @@ public class EuchreController extends JPanel {
 					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {
 						/* The trick is done, so we should evaluate the trick count */
 						model.evalTricks();
-						gameInfo.append("Player " + model.getCurrentPlayer() + " Won the trick!\n");
+						gameInfo.append("Player " + (model.getCurrentPlayer()+1) + " Won the trick!\n");
 
 						/*
 						 * If the tricks are such that the hand can be scored, we should score the hand
@@ -921,6 +925,17 @@ public class EuchreController extends JPanel {
 			}
 			/* If it's not the bot turn (therefore a humans turn) */
 			else {
+				
+				if (model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectTrump) {
+					playerHasBeenToldToSelectTrump = true;
+					JOptionPane.showConfirmDialog(
+							null,
+							"Tell dealer, player " + (((model.getDealer() + 3) % 4) + 1) + ", to pick up the kitty, or pass!",
+							"You are selecting trump!",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 				/*
 				 * If there have been at least 4 passes and we are in trump selection mode, we
 				 * should be given the chance to choose the suit
@@ -1011,6 +1026,7 @@ public class EuchreController extends JPanel {
 				 * passed in order to make it the next players turn
 				 */
 				if (passBtn == e.getSource()) {
+					playerHasBeenToldToSelectTrump = false;
 					model.playerPassed();
 				}
 				/*
@@ -1019,6 +1035,7 @@ public class EuchreController extends JPanel {
 				 * when it's their turn
 				 */
 				else if (topKitty == e.getSource()) {
+					playerHasBeenToldToSelectTrump = false;
 					/* Set flag true */
 					kittyHasBeenPressed = true;
 					/* Set trump accordingly */
@@ -1052,7 +1069,7 @@ public class EuchreController extends JPanel {
 								 * Evaluate tricks because we just finished a trick
 								 */
 								model.evalTricks();
-								gameInfo.append("Player " + model.getCurrentPlayer() + " Won the trick!\n");
+								gameInfo.append("Player " + (model.getCurrentPlayer()+1) + " Won the trick!\n");
 								/*
 								 * Check to see if the current trick count warrants check the score. If it does,
 								 * we need to reset
