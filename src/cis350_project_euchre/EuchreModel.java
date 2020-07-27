@@ -658,6 +658,13 @@ public class EuchreModel {
 	 * 		   or not.
 	 *****************************************************************/
 	private BOTCODE botSelectTrump() {
+		for(SUIT s: SUIT.values()) {
+			if(evalHandPotential(s) > 100) {
+				currentTrump = s;
+				setCurrentPlayerFirst();
+				return BOTCODE.TRUMP_SELECTED;
+			}	
+		}
 		playerPassed();
 		return BOTCODE.TRUMP_NOTSELECTED;
 	}
@@ -684,9 +691,25 @@ public class EuchreModel {
 	 */
 	private BOTCODE botSwapWithKitty() {
 		/* Choose a random card in the bots hand */
-		int randCard = randomNum.nextInt(5);
-		/* Swap the random card with the kitty */
-		swapWithTopKitty(randCard);
+//		int randCard = randomNum.nextInt(5);
+//		/* Swap the random card with the kitty */
+//		swapWithTopKitty(randCard);
+		
+		//Find the index of the lowest off suit card in hand
+		int lowestOffSuit = 0;
+		for (int i = 1; i < 5; i++) {
+			if(players[currentPlayer].getCardFromHand(i).getSuit() == currentTrump) {
+				break;
+			}
+			else if(players[currentPlayer].getCardFromHand(i).getSuit() == sameColor(currentTrump) && players[currentPlayer].getCardFromHand(i).getValue() == 11) {
+				break;
+			}
+			else if(players[currentPlayer].getCardFromHand(i).getValue() < players[currentPlayer].getCardFromHand(lowestOffSuit).getValue()) {
+				lowestOffSuit = i;
+			}
+		}
+		swapWithTopKitty(lowestOffSuit);
+
 		return BOTCODE.SWAP_SUCCESSFUL;
 	}
 	
@@ -727,5 +750,27 @@ public class EuchreModel {
 		/* If not all cards in trick have been played, 
 		 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
 		return BOTCODE.PLAY_TRICKNOTFINISHED;		
-	}	
+	}
+	
+	private int evalHandPotential(SUIT trump) {
+		
+		int result = 0;
+		
+		for (Card card : players[currentPlayer].getHand()) {
+			if(card.getSuit() == trump && card.getValue() == 11) {
+				result += 30;
+			}
+			else if(card.getSuit() == sameColor(trump) && card.getValue() == 11) {
+				result += 29;
+			}
+			else if(card.getSuit() == trump) {
+				result += card.getValue() * 2;
+			}
+			else {
+				result += card.getValue();
+			}
+		}
+		return result;
+	}
+	
 }

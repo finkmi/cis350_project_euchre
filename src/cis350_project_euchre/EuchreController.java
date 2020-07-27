@@ -143,7 +143,7 @@ public class EuchreController extends JPanel {
 		
 	private JTextArea gameInfo;
 	private JScrollPane gameInfoDisplay;
-	private Font font = new Font("Times New Roman", Font.BOLD, 30);
+	private Font font = new Font("Times New Roman", Font.BOLD, 10);
 	
 	private boolean playerHasBeenToldToSelectTrump = false;
 
@@ -981,65 +981,10 @@ public class EuchreController extends JPanel {
 				 */
 				if (model.getNumPasses() >= 4 && trumpSelect) {
 
-					/* Array that holds the names of all the options */
-<<<<<<< HEAD
-					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
-					n = JOptionPane.showOptionDialog(null, "Pick the suit you would like, or pass", "Choose a suit",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
-
-					/* If the user clicks the "Club" option */
-					if (n == 0) {
-						model.setTrump(SUIT.CLUB);
-						model.setCurrentPlayerFirst();
-						trumpSelect = false;
-						updateButtons();
-					}
-
-					/* If the user clicks the "Diamond" option */
-					else if (n == 1) {
-						model.setTrump(SUIT.DIAMOND);
-						model.setCurrentPlayerFirst();
-						trumpSelect = false;
-						updateButtons();
-					}
-
-					/* If the user clicks the "Heart" option */
-					else if (n == 2) {
-						model.setTrump(SUIT.HEART);
-						model.setCurrentPlayerFirst();
-						trumpSelect = false;
-						updateButtons();
-					}
-
-					/* If the user clicks the "Spade" option */
-					else if (n == 3) {
-						model.setTrump(SUIT.SPADE);
-						model.setCurrentPlayerFirst();
-						trumpSelect = false;
-						updateButtons();
-					}
-					/*
-					 * Else, either the player clicked the "pass" option or exited out of the
-					 * pop-up, either way, it counts as a pass
-					 */
-					else {
-						model.playerPassed();
-						/*
-						 * If that was the eight pass, we need to re-deal and restart (this game does
-						 * not do "screw the dealer"
-						 */
-						if (model.getNumPasses() >= 8) {
-							/* Re-deal and update GUI */
-							model.deal();
-							updateHand();
-							updateTopKitty();
-							setHandVisible();
-=======
 					JButton[] options = { new JButton("Club"), new JButton("Diamond"), new JButton("Heart"), new JButton("Spade"), new JButton("Pass") };
 					
 					
 					options[model.getTopKitty().getSuit().ordinal()].setEnabled(false);
->>>>>>> e2f92f562faf1b6b198a9e43455cb8e8656a1288
 
 					
 					options[0].addActionListener(new ActionListener() {
