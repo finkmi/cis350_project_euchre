@@ -100,6 +100,11 @@ public class EuchreModel {
 	/********************* Getters & Setters *************************/
 	//CHECKSTYLE:ON
 	
+	/******************************************************************
+	 * Return the index of the dealer.
+	 * 
+	 * @return The index of the dealer currently.
+	 *****************************************************************/
 	public int getDealer() {
 		return dealer;
 	}
@@ -658,8 +663,8 @@ public class EuchreModel {
 	 * 		   or not.
 	 *****************************************************************/
 	private BOTCODE botSelectTrump() {
-		for(SUIT s: SUIT.values()) {
-			if(evalHandPotential(s) > 100) {
+		for (SUIT s: SUIT.values()) {
+			if (evalHandPotential(s) > 100) {
 				currentTrump = s;
 				setCurrentPlayerFirst();
 				return BOTCODE.TRUMP_SELECTED;
@@ -698,13 +703,13 @@ public class EuchreModel {
 		//Find the index of the lowest off suit card in hand
 		int lowestOffSuit = 0;
 		for (int i = 1; i < 5; i++) {
-			if(players[currentPlayer].getCardFromHand(i).getSuit() == currentTrump) {
+			if (players[currentPlayer].getCardFromHand(i).getSuit() == currentTrump) {
 				break;
 			}
-			else if(players[currentPlayer].getCardFromHand(i).getSuit() == sameColor(currentTrump) && players[currentPlayer].getCardFromHand(i).getValue() == 11) {
+			else if (players[currentPlayer].getCardFromHand(i).getSuit() == sameColor(currentTrump) && players[currentPlayer].getCardFromHand(i).getValue() == 11) {
 				break;
 			}
-			else if(players[currentPlayer].getCardFromHand(i).getValue() < players[currentPlayer].getCardFromHand(lowestOffSuit).getValue()) {
+			else if (players[currentPlayer].getCardFromHand(i).getValue() < players[currentPlayer].getCardFromHand(lowestOffSuit).getValue()) {
 				lowestOffSuit = i;
 			}
 		}
@@ -752,18 +757,18 @@ public class EuchreModel {
 		return BOTCODE.PLAY_TRICKNOTFINISHED;		
 	}
 	
-	private int evalHandPotential(SUIT trump) {
+	private int evalHandPotential(final SUIT trump) {
 		
 		int result = 0;
 		
 		for (Card card : players[currentPlayer].getHand()) {
-			if(card.getSuit() == trump && card.getValue() == 11) {
+			if (card.getSuit() == trump && card.getValue() == 11) {
 				result += 30;
 			}
-			else if(card.getSuit() == sameColor(trump) && card.getValue() == 11) {
+			else if (card.getSuit() == sameColor(trump) && card.getValue() == 11) {
 				result += 29;
 			}
-			else if(card.getSuit() == trump) {
+			else if (card.getSuit() == trump) {
 				result += card.getValue() * 2;
 			}
 			else {

@@ -16,17 +16,23 @@ public class EuchreController extends JPanel {
 
 	/** Array of JButtons to make up the players hand. */
 	private JButton[] hand;
+	/** Array of JButtons to make up the left bots hand. */
 	private JLabel[] leftBotHand;
+	/** Array of JButtons to make up the top bots hand. */
 	private JLabel[] topBotHand;
+	/** Array of JButtons to make up the right bots hand. */
 	private JLabel[] rightBotHand;
 
-	/** Array of labels for the user to see. */
+	/** Array of labels with the indicator light to show player as current user. */
 	private JLabel[] humanIndicator;
+	/** Array of labels with the indicator light to show left bot as current user. */
 	private JLabel[] leftBotIndicator;
+	/** Array of labels with the indicator light to show top bot as current user. */
 	private JLabel[] topBotIndicator;
+	/** Array of labels with the indicator light to show right bot as current user. */
 	private JLabel[] rightBotIndicator;
 	
-	/** Array of two for tracking score in gui */
+	/** Array of two for tracking score in gui. */
 	private JLabel[] scores;
 
 	/** Instance of the model class. */
@@ -86,45 +92,70 @@ public class EuchreController extends JPanel {
 	private ImageIcon spade13;
 	/** ImageIcon for Ace of spades. */
 	private ImageIcon spade14;
+	
 	/** ImageIcon for a black joker. */
-	// CHECKSTYLE:OFF
 	private ImageIcon black_joker;
 	/** ImageIcon for a card back. */
 	private ImageIcon card_back;
-	// CHECKSTYLE:ON
-	/** ImageIcon for black card scoring */
-	private ImageIcon black1;
-	private ImageIcon black2;
-	private ImageIcon black3;
-	private ImageIcon black4;
-	private ImageIcon black5;
-	private ImageIcon black6;
-	private ImageIcon black7;
-	private ImageIcon black8;
-	private ImageIcon black9;
-	private ImageIcon black10;
-	private ImageIcon red1;
-	private ImageIcon red2;
-	private ImageIcon red3;
-	private ImageIcon red4;
-	private ImageIcon red5;
-	private ImageIcon red6;
-	private ImageIcon red7;
-	private ImageIcon red8;
-	private ImageIcon red9;
-	private ImageIcon red10;
-	
-	private ImageIcon club;
-	private ImageIcon diamond;
-	private ImageIcon heart;
-	private ImageIcon spade;
-	
-	private JLabel trumpIcon;
-
+	/** ImageIcon for sideways card back. */
 	private ImageIcon side_card_back;
 
+	/** ImageIcon for black card score of 1. */
+	private ImageIcon black1;
+	/** ImageIcon for black card score of 2. */
+	private ImageIcon black2;
+	/** ImageIcon for black card score of 3. */
+	private ImageIcon black3;
+	/** ImageIcon for black card score of 4. */
+	private ImageIcon black4;
+	/** ImageIcon for black card score of 5. */
+	private ImageIcon black5;
+	/** ImageIcon for black card score of 6. */
+	private ImageIcon black6;
+	/** ImageIcon for black card score of 7. */
+	private ImageIcon black7;
+	/** ImageIcon for black card score of 8. */
+	private ImageIcon black8;
+	/** ImageIcon for black card score of 9. */
+	private ImageIcon black9;
+	/** ImageIcon for black card score of 10. */
+	private ImageIcon black10;
+	
+	/** ImageIcon for red card score of 1. */
+	private ImageIcon red1;
+	/** ImageIcon for red card score of 2. */
+	private ImageIcon red2;
+	/** ImageIcon for red card score of 3. */
+	private ImageIcon red3;
+	/** ImageIcon for red card score of 4. */
+	private ImageIcon red4;
+	/** ImageIcon for red card score of 5. */
+	private ImageIcon red5;
+	/** ImageIcon for red card score of 6. */
+	private ImageIcon red6;
+	/** ImageIcon for red card score of 7. */
+	private ImageIcon red7;
+	/** ImageIcon for red card score of 8. */
+	private ImageIcon red8;
+	/** ImageIcon for red card score of 9. */
+	private ImageIcon red9;
+	/** ImageIcon for red card score of 10. */
+	private ImageIcon red10;
+	
+	/** ImageIcon for club trump icon. */
+	private ImageIcon club;
+	/** ImageIcon for diamond trump icon. */
+	private ImageIcon diamond;
+	/** ImageIcon for heart trump icon. */
+	private ImageIcon heart;
+	/** ImageIcon for spade trump icon. */
+	private ImageIcon spade;
+	
+	/** Jlabel for placing the trump icon. */
+	private JLabel trumpIcon;
+
+	/** Used for reading in the image from a file (to resize). */
 	private BufferedImage myCard = null;
-	private Image resizedImg;
 
 	/** ImageIcon for green light to indicate current player. */
 	private ImageIcon lightOn;
@@ -148,12 +179,18 @@ public class EuchreController extends JPanel {
 
 	/** The index of the current player. */
 	private int currentPlayer;
-		
-	private JTextArea gameInfo;
-	private JScrollPane gameInfoDisplay;
-	private Font font = new Font("Times New Roman", Font.BOLD, 10);
-	private Font trumpFont = new Font("Times New Roman", Font.BOLD, 30);
 	
+	/** The screen resolution of the current monitor. */
+	private Dimension screenSz = Toolkit.getDefaultToolkit().getScreenSize();
+	/** The text box for game info to be printed in. */
+	private JTextArea gameInfo;
+	/** The scrollPane that the text box will be displayed in. */
+	private JScrollPane gameInfoDisplay;
+	/** The font to be used throughout the GUI. */
+	private Font font = new Font("Times New Roman", Font.BOLD, (int) screenSz.width / 110);
+	/** The font to be used for popups. */
+	private Font popupFont = new Font("Comic Sans MS", Font.PLAIN, (int) screenSz.width / 125);
+	/** Boolean telling us that the player has been prompted to make a trump selection. */
 	private boolean playerHasBeenToldToSelectTrump = false;
 
 	/******************************************************************
@@ -181,7 +218,7 @@ public class EuchreController extends JPanel {
 		panelArray[0][2].setLayout(new GridLayout());
 		trumpIcon = new JLabel("Current Trump", SwingConstants.CENTER);
 		trumpIcon.setHorizontalTextPosition(JLabel.CENTER);
-		trumpIcon.setFont(trumpFont);
+		trumpIcon.setFont(font);
 		trumpIcon.setForeground(Color.LIGHT_GRAY);
 		panelArray[0][2].add(trumpIcon, BorderLayout.CENTER);
 
@@ -422,8 +459,6 @@ public class EuchreController extends JPanel {
 	 * Creates all card icons from resource files.
 	 *****************************************************************/
 	private void createIcons() {		
-		
-		Dimension screenSz = Toolkit.getDefaultToolkit().getScreenSize();
 		/* Width should be height / 15, scale height to match width (ratio is W:H, 125:182) */
 		int newWidth = (screenSz.height - 200) / 15;
 		int newHeight = (newWidth * 182) / 125;
@@ -468,42 +503,43 @@ public class EuchreController extends JPanel {
 		side_card_back = new ImageIcon(scanResizedImg(newHeight, newWidth, "images/card_back90.png"));
 		
 		/* Scan the light on/off indicators */
-		lightOn = new ImageIcon(scanResizedImg(newWidth/2, newWidth/2, "images/ongreen.png"));
-		lightOff = new ImageIcon(scanResizedImg(newWidth/2, newWidth/2, "images/offgreen.png"));
+		lightOn = new ImageIcon(scanResizedImg(newWidth / 2, newWidth / 2, "images/ongreen.png"));
+		lightOff = new ImageIcon(scanResizedImg(newWidth / 2, newWidth / 2, "images/offgreen.png"));
 		
 		/* Scan the black card scoring images */
-		black1 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black1.png"));
-		black2 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black2.png"));
-		black3 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black3.png"));
-		black4 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black4.png"));
-		black5 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black5.png"));
-		black6 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black6.png"));
-		black7 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black7.png"));
-		black8 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black8.png"));
-		black9 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black9.png"));
-		black10 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black10.png"));
+		black1 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black1.png"));
+		black2 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black2.png"));
+		black3 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black3.png"));
+		black4 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black4.png"));
+		black5 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black5.png"));
+		black6 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black6.png"));
+		black7 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black7.png"));
+		black8 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black8.png"));
+		black9 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black9.png"));
+		black10 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/black10.png"));
 		
 		/* Scan the red card scoring images */
-		red1 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red1.png"));
-		red2 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red2.png"));
-		red3 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red3.png"));
-		red4 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red4.png"));
-		red5 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red5.png"));
-		red6 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red6.png"));
-		red7 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red7.png"));
-		red8 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red8.png"));
-		red9 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red9.png"));
-		red10 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red10.png"));
+		red1 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red1.png"));
+		red2 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red2.png"));
+		red3 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red3.png"));
+		red4 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red4.png"));
+		red5 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red5.png"));
+		red6 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red6.png"));
+		red7 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red7.png"));
+		red8 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red8.png"));
+		red9 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red9.png"));
+		red10 = new ImageIcon(scanResizedImg(newWidth * 2, newHeight * 2, "images/red10.png"));
 		
 		/* Scan the suit images */
-		club = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/club.png"));
-		diamond = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/diamond.png"));
-		heart = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/heart.png"));
-		spade = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/spade.png"));
+		club = new ImageIcon(scanResizedImg(newHeight * 2, newHeight * 2, "images/club.png"));
+		diamond = new ImageIcon(scanResizedImg(newHeight * 2, newHeight * 2, "images/diamond.png"));
+		heart = new ImageIcon(scanResizedImg(newHeight * 2, newHeight * 2, "images/heart.png"));
+		spade = new ImageIcon(scanResizedImg(newHeight * 2, newHeight * 2, "images/spade.png"));
 		
 	}
 	
-	private Image scanResizedImg(final int sizeW, final int sizeH, String path) {
+	private Image scanResizedImg(final int sizeW, final int sizeH, final String path) {
+		Image resizedImg;
 		try {
 			myCard = ImageIO.read(new File(path));
 		} catch (IOException e) {
@@ -901,7 +937,7 @@ public class EuchreController extends JPanel {
 					if (BOTCODE.PLAY_TRICKFINISHED == model.botPlay(BOTCODE.PLAY)) {
 						/* The trick is done, so we should evaluate the trick count */
 						model.evalTricks();
-						gameInfo.append("Player " + (model.getCurrentPlayer()+1) + " Won the trick!\n");
+						gameInfo.append("Player " + (model.getCurrentPlayer() + 1) + " Won the trick!\n");
 
 						/*
 						 * If the tricks are such that the hand can be scored, we should score the hand
@@ -937,9 +973,11 @@ public class EuchreController extends JPanel {
 				
 				if (model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectTrump) {
 					playerHasBeenToldToSelectTrump = true;
+					JLabel msgLabel = new JLabel("Tell dealer, player " + (((model.getDealer() + 3) % 4) + 1) + ", to pick up the kitty, or pass!");
+					msgLabel.setFont(popupFont);
 					JOptionPane.showConfirmDialog(
 							null,
-							"Tell dealer, player " + (((model.getDealer() + 3) % 4) + 1) + ", to pick up the kitty, or pass!",
+							msgLabel,
 							"You are selecting trump!",
 							JOptionPane.DEFAULT_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
@@ -955,7 +993,7 @@ public class EuchreController extends JPanel {
 					JButton[] options = {new JButton("Club"), new JButton("Diamond"), new JButton("Heart"), new JButton("Spade"), new JButton("Pass") };
 					options[model.getTopKitty().getSuit().ordinal()].setEnabled(false);
 					options[0].addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
+						public void actionPerformed(final ActionEvent arg0) {
 							trumpIcon.setIcon(club);
 							//trumpIcon.setText("");
 							model.setTrump(SUIT.CLUB);
@@ -970,7 +1008,7 @@ public class EuchreController extends JPanel {
 			            }
 					});
 					options[1].addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
+						public void actionPerformed(final ActionEvent arg0) {
 							trumpIcon.setIcon(diamond);
 							//trumpIcon.setText("");
 							model.setTrump(SUIT.DIAMOND);
@@ -981,12 +1019,12 @@ public class EuchreController extends JPanel {
 							Window w = SwingUtilities.getWindowAncestor(options[0]);
 
 						    if (w != null) {
-						      w.dispose();//setVisible(false);
+						      w.dispose();
 						    }
 			            }
 					});
 					options[2].addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
+						public void actionPerformed(final ActionEvent arg0) {
 							trumpIcon.setIcon(heart);
 							//trumpIcon.setText("");
 							model.setTrump(SUIT.HEART);
@@ -997,12 +1035,12 @@ public class EuchreController extends JPanel {
 							Window w = SwingUtilities.getWindowAncestor(options[0]);
 
 						    if (w != null) {
-						      w.dispose();//setVisible(false);
+						      w.dispose();
 						    }
 			            }
 					});
 					options[3].addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
+						public void actionPerformed(final ActionEvent arg0) {
 							trumpIcon.setIcon(spade);
 							//trumpIcon.setText("");
 							model.setTrump(SUIT.SPADE);
@@ -1013,12 +1051,12 @@ public class EuchreController extends JPanel {
 							Window w = SwingUtilities.getWindowAncestor(options[0]);
 
 						    if (w != null) {
-						      w.dispose();//setVisible(false);
+						      w.dispose();
 						    }
 			            }
 					});
 					options[4].addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
+						public void actionPerformed(final ActionEvent arg0) {
 							model.playerPassed();
 							/*
 							 * If that was the eight pass, we need to re-deal and restart (this game does
@@ -1040,12 +1078,13 @@ public class EuchreController extends JPanel {
 							Window w = SwingUtilities.getWindowAncestor(options[0]);
 
 						    if (w != null) {
-						      w.dispose();//setVisible(false);
+						      w.dispose();
 						    }
 			            }
 					});
-//					Object[] options = { "Club", "Diamond", "Heart", "Spade", "Pass" };
-					JOptionPane.showOptionDialog(null, "Pick the suit you would like, or pass", "Choose a suit",
+					JLabel popupMsg = new JLabel("Pick the suit you would like, or pass!");
+					popupMsg.setFont(popupFont);
+					JOptionPane.showOptionDialog(null, popupMsg, "Choose a suit",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 
 					updateIndicators(model.getCurrentPlayer());
@@ -1116,7 +1155,7 @@ public class EuchreController extends JPanel {
 								 * Evaluate tricks because we just finished a trick
 								 */
 								model.evalTricks();
-								gameInfo.append("Player " + (model.getCurrentPlayer()+1) + " Won the trick!\n");
+								gameInfo.append("Player " + (model.getCurrentPlayer() + 1) + " Won the trick!\n");
 								/*
 								 * Check to see if the current trick count warrants check the score. If it does,
 								 * we need to reset
