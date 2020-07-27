@@ -981,8 +981,8 @@ public class EuchreController extends JPanel {
 				 */
 				if (model.getNumPasses() >= 4 && trumpSelect) {
 
-					int n;
 					/* Array that holds the names of all the options */
+<<<<<<< HEAD
 					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
 					n = JOptionPane.showOptionDialog(null, "Pick the suit you would like, or pass", "Choose a suit",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
@@ -1034,14 +1034,100 @@ public class EuchreController extends JPanel {
 							updateHand();
 							updateTopKitty();
 							setHandVisible();
+=======
+					JButton[] options = { new JButton("Club"), new JButton("Diamond"), new JButton("Heart"), new JButton("Spade"), new JButton("Pass") };
+					
+					
+					options[model.getTopKitty().getSuit().ordinal()].setEnabled(false);
+>>>>>>> e2f92f562faf1b6b198a9e43455cb8e8656a1288
 
+					
+					options[0].addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							model.setTrump(SUIT.CLUB);
+							model.setCurrentPlayerFirst();
+							trumpSelect = false;
+							updateButtons();
+							
+							Window w = SwingUtilities.getWindowAncestor(options[0]);
+
+						    if (w != null) {
+						      w.dispose();						    }
+			            }
+					});
+					options[1].addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							model.setTrump(SUIT.DIAMOND);
+							model.setCurrentPlayerFirst();
+							trumpSelect = false;
+							updateButtons();
+							
+							Window w = SwingUtilities.getWindowAncestor(options[0]);
+
+						    if (w != null) {
+						      w.dispose();//setVisible(false);
+						    }
+			            }
+					});
+					options[2].addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							model.setTrump(SUIT.HEART);
+							model.setCurrentPlayerFirst();
+							trumpSelect = false;
+							updateButtons();
+							
+							Window w = SwingUtilities.getWindowAncestor(options[0]);
+
+						    if (w != null) {
+						      w.dispose();//setVisible(false);
+						    }
+			            }
+					});
+					options[3].addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							model.setTrump(SUIT.SPADE);
+							model.setCurrentPlayerFirst();
+							trumpSelect = false;
+							updateButtons();
+							
+							Window w = SwingUtilities.getWindowAncestor(options[0]);
+
+						    if (w != null) {
+						      w.dispose();//setVisible(false);
+						    }
+			            }
+					});
+					options[4].addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							model.playerPassed();
 							/*
-							 * Back to trump selection, and kitty has yet to be pressed
+							 * If that was the eight pass, we need to re-deal and restart (this game does
+							 * not do "screw the dealer"
 							 */
-							trumpSelect = true;
-							kittyHasBeenPressed = false;
-						}
-					}
+							if (model.getNumPasses() >= 8) {
+								/* Re-deal and update GUI */
+								model.deal();
+								updateHand();
+								updateTopKitty();
+								setHandVisible();
+
+								/*
+								 * Back to trump selection, and kitty has yet to be pressed
+								 */
+								trumpSelect = true;
+								kittyHasBeenPressed = false;
+							}
+							Window w = SwingUtilities.getWindowAncestor(options[0]);
+
+						    if (w != null) {
+						      w.dispose();//setVisible(false);
+						    }
+			            }
+					});
+//					Object[] options = { "Club", "Diamond", "Heart", "Spade", "Pass" };
+					JOptionPane.showOptionDialog(null, "Pick the suit you would like, or pass", "Choose a suit",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+
 					updateIndicators(model.getCurrentPlayer());
 				}
 			}
