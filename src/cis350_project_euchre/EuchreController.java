@@ -113,6 +113,13 @@ public class EuchreController extends JPanel {
 	private ImageIcon red8;
 	private ImageIcon red9;
 	private ImageIcon red10;
+	
+	private ImageIcon club;
+	private ImageIcon diamond;
+	private ImageIcon heart;
+	private ImageIcon spade;
+	
+	private JLabel trumpIcon;
 
 	private ImageIcon side_card_back;
 
@@ -168,6 +175,11 @@ public class EuchreController extends JPanel {
 				panel.add(panelArray[i][j]);
 			}
 		}
+		
+		panelArray[0][2].setLayout(new GridLayout());
+		trumpIcon = new JLabel("Current Trump", SwingConstants.CENTER);
+		trumpIcon.setFont(font);
+		panelArray[0][2].add(trumpIcon, BorderLayout.CENTER);
 
 		/*
 		 * Set the layout for the panel that has the players hand, as well as the panel
@@ -310,7 +322,7 @@ public class EuchreController extends JPanel {
 		}
 		
 		for (int i = 0; i < 2; i++) {
-			scores[i] = new JLabel(black1);
+			scores[i] = new JLabel(card_back);
 			panelArray[0][2].add(scores[i]);
 		}
 
@@ -602,6 +614,10 @@ public class EuchreController extends JPanel {
 		red9 = new ImageIcon("images/red9.png");
 		red10 = new ImageIcon("images/red10.png");
 		
+		club = new ImageIcon("images/club.png");
+		diamond = new ImageIcon("images/diamond.png");
+		heart = new ImageIcon("images/heart.png");
+		spade = new ImageIcon("images/spade.png");
 		
 	}
 
@@ -692,6 +708,50 @@ public class EuchreController extends JPanel {
 
 		default:
 			return black_joker;
+		}
+	}
+	
+	private ImageIcon getScoreIcon(final int score, final int team) {
+		switch (score) {
+		case 0:
+			return card_back;
+		case 1:
+			return (team == 0) ? black1 : red1;
+		case 2:
+			return (team == 0) ? black2 : red2;
+		case 3:
+			return (team == 0) ? black3 : red3;
+		case 4:
+			return (team == 0) ? black4 : red4;
+		case 5:
+			return (team == 0) ? black5 : red5;
+		case 6:
+			return (team == 0) ? black6 : red6;
+		case 7:
+			return (team == 0) ? black7 : red7;
+		case 8:
+			return (team == 0) ? black8 : red8;
+		case 9:
+			return (team == 0) ? black9 : red9;
+		case 10:
+			return (team == 0) ? black10 : red10;
+		default:
+			return black_joker;
+		}
+	}
+	
+	private ImageIcon getTrumpIcon(final SUIT suit) {
+		switch (suit) {
+		case CLUB:
+			return club;
+		case DIAMOND:
+			return diamond;
+		case HEART:
+			return heart;
+		case SPADE:
+			return spade;
+		default:
+			return spade; //image of trump???
 		}
 	}
 
@@ -798,6 +858,7 @@ public class EuchreController extends JPanel {
 		updateHand();
 		updateTopKitty();
 		updateScore();
+		
 	}
 
 	/******************************************************************
@@ -817,12 +878,29 @@ public class EuchreController extends JPanel {
 	 * info.
 	 *****************************************************************/
 	private void updateScore() {
-//		System.out.println("Tricks0: " + model.getNumTricks(0));
-//		System.out.println("Tricks1: " + model.getNumTricks(1));
-//		System.out.println("Score0: " + model.getScore(0));
-//		System.out.println("Score1: " + model.getScore(1));
+		scores[0].setIcon(getScoreIcon(model.getScore(0), 0));
+		scores[1].setIcon(getScoreIcon(model.getScore(1), 1));
 		gameInfo.append("Team 1 has " + model.getNumTricks(0) + "\n");
 		gameInfo.append("Team 2 has " + model.getNumTricks(1) + "\n\n");
+		
+		if (model.getScore(0) >= 10 || model.getScore(1) >= 10) {
+			String winningTeam;
+			winningTeam = (model.getScore(0) > model.getScore(1)) ? "Team 1" : "Team 2";
+			int n = JOptionPane.showConfirmDialog(
+					null,
+					"" + winningTeam + " has won! Play again?",
+					"Game Over!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+			/* User wants to play again */
+			if (n == 0) {
+				//TODO: RESET the game
+			}
+			/* User wants to exit */
+			else {
+				System.exit(0);
+			}
+		}
 	}
 
 	/******************************************************************
@@ -980,15 +1058,14 @@ public class EuchreController extends JPanel {
 				 * should be given the chance to choose the suit
 				 */
 				if (model.getNumPasses() >= 4 && trumpSelect) {
-
-					JButton[] options = { new JButton("Club"), new JButton("Diamond"), new JButton("Heart"), new JButton("Spade"), new JButton("Pass") };
 					
-					
+					/* Array that holds the names of all the options */
+					JButton[] options = {new JButton("Club"), new JButton("Diamond"), new JButton("Heart"), new JButton("Spade"), new JButton("Pass") };
 					options[model.getTopKitty().getSuit().ordinal()].setEnabled(false);
-
-					
 					options[0].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
+							trumpIcon.setIcon(club);
+							trumpIcon.setText("");
 							model.setTrump(SUIT.CLUB);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1002,6 +1079,8 @@ public class EuchreController extends JPanel {
 					});
 					options[1].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
+							trumpIcon.setIcon(diamond);
+							trumpIcon.setText("");
 							model.setTrump(SUIT.DIAMOND);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1016,6 +1095,8 @@ public class EuchreController extends JPanel {
 					});
 					options[2].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
+							trumpIcon.setIcon(heart);
+							trumpIcon.setText("");
 							model.setTrump(SUIT.HEART);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1030,6 +1111,8 @@ public class EuchreController extends JPanel {
 					});
 					options[3].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
+							trumpIcon.setIcon(spade);
+							trumpIcon.setText("");
 							model.setTrump(SUIT.SPADE);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1105,11 +1188,12 @@ public class EuchreController extends JPanel {
 				 * when it's their turn
 				 */
 				else if (topKitty == e.getSource()) {
-					playerHasBeenToldToSelectTrump = false;
 					/* Set flag true */
 					kittyHasBeenPressed = true;
 					/* Set trump accordingly */
 					model.setTrump(model.getTopKitty().getSuit());
+					trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
+					trumpIcon.setText("");
 					/*
 					 * Dealer should now be the current player so they can discard a card and swap
 					 * for topKitty card
@@ -1129,6 +1213,7 @@ public class EuchreController extends JPanel {
 						 * If we aren't in trump selection mode, the player is trying to play a card
 						 */
 						if (!trumpSelect) {
+							playerHasBeenToldToSelectTrump = false;
 							/* Play the card the user pressed */
 							model.makeMove(i);
 							/*
