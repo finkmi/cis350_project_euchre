@@ -25,6 +25,9 @@ public class EuchreController extends JPanel {
 	private JLabel[] leftBotIndicator;
 	private JLabel[] topBotIndicator;
 	private JLabel[] rightBotIndicator;
+	
+	/** Array of two for tracking score in gui */
+	private JLabel[] scores;
 
 	/** Instance of the model class. */
 	private EuchreModel model;
@@ -177,6 +180,10 @@ public class EuchreController extends JPanel {
 		panelArray[1][0].setLayout(new GridLayout(5, 2));
 		panelArray[0][1].setLayout(new GridLayout(2, 5));
 		panelArray[1][2].setLayout(new GridLayout(5, 2));
+		
+		/* Set up the grid for score tracking */
+		GridBagLayout gridBag = new GridBagLayout();
+		panelArray[2][0].setLayout(gridBag);
 
 		/* Save icons from computer to be used for gameplay */
 		createIcons();
@@ -223,6 +230,9 @@ public class EuchreController extends JPanel {
 		leftBotIndicator = new JLabel[5];
 		topBotIndicator = new JLabel[5];
 		rightBotIndicator = new JLabel[5];
+		
+		/* Instantiate the labels for card scoring */
+		scores = new JLabel[2];
 
 		/* Set up the players information panel */
 		for (int i = 0; i <= 4; i++) {
@@ -298,6 +308,11 @@ public class EuchreController extends JPanel {
 				}
 			}
 		}
+		
+		for (int i = 0; i < 2; i++) {
+			scores[i] = new JLabel(black1);
+			panelArray[0][2].add(scores[i]);
+		}
 
 		/* Instantiate the pass and topKitty buttons */
 		passBtn = new JButton("Pass");
@@ -323,6 +338,8 @@ public class EuchreController extends JPanel {
 		c.gridheight = 3;
 		c.gridwidth = 2;
 		panelArray[2][2].add(topKitty);
+		
+		
 
 		/* Set the buttons visible/invisible to prepare to start the game */
 		topKitty.setVisible(true);
@@ -341,7 +358,7 @@ public class EuchreController extends JPanel {
 		 * come from. This makes the caret always go to the bottom line of the 
 		 * text area. New data entry occurs at the bottom, and old entries are
 		 * scrolled upwards */
-		DefaultCaret caret = (DefaultCaret)gameInfo.getCaret();
+		DefaultCaret caret = (DefaultCaret) gameInfo.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		/* Set the font for our text panel */
@@ -352,8 +369,30 @@ public class EuchreController extends JPanel {
 			gameInfo.append("\n");
 		}
 		
+		c.fill = GridBagConstraints.BOTH;
+		
 		/* Add the text box, and scrolling pane to the bottom/left corner */
-		panelArray[2][0].add(gameInfoDisplay, BorderLayout.CENTER);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.gridheight = 1;
+		c.weightx = 1;
+		gridBag.setConstraints(gameInfoDisplay, c);
+		panelArray[2][0].add(gameInfoDisplay);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		gridBag.setConstraints(scores[0], c);
+		panelArray[2][0].add(scores[0]);
+		
+		c.gridx = 1;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		gridBag.setConstraints(scores[1], c);
+		panelArray[2][0].add(scores[1]);
 
 		/* Add the panel to the gui */
 		add(panel);
@@ -543,14 +582,14 @@ public class EuchreController extends JPanel {
 		/* Set images for black card scoring */
 		black1 = new ImageIcon("images/black1.png");
 		black2 = new ImageIcon("images/black2.png");
-		black1 = new ImageIcon("images/black3.png");
-		black2 = new ImageIcon("images/black4.png");
-		black1 = new ImageIcon("images/black5.png");
-		black2 = new ImageIcon("images/black6.png");
-		black1 = new ImageIcon("images/black7.png");
-		black2 = new ImageIcon("images/black8.png");
-		black1 = new ImageIcon("images/black9.png");
-		black2 = new ImageIcon("images/black10.png");
+		black3 = new ImageIcon("images/black3.png");
+		black4 = new ImageIcon("images/black4.png");
+		black5 = new ImageIcon("images/black5.png");
+		black6 = new ImageIcon("images/black6.png");
+		black7 = new ImageIcon("images/black7.png");
+		black8 = new ImageIcon("images/black8.png");
+		black9 = new ImageIcon("images/black9.png");
+		black10 = new ImageIcon("images/black10.png");
 		
 		red1 = new ImageIcon("images/red1.png");
 		red2 = new ImageIcon("images/red2.png");
@@ -944,7 +983,7 @@ public class EuchreController extends JPanel {
 
 					int n;
 					/* Array that holds the names of all the options */
-					Object[] options = { "Club", "Diamond", "Heart", "Spade", "Pass" };
+					Object[] options = {"Club", "Diamond", "Heart", "Spade", "Pass"};
 					n = JOptionPane.showOptionDialog(null, "Pick the suit you would like, or pass", "Choose a suit",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 
