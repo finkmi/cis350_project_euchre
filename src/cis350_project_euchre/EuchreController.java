@@ -124,6 +124,7 @@ public class EuchreController extends JPanel {
 	private ImageIcon side_card_back;
 
 	private BufferedImage myCard = null;
+	private Image resizedImg;
 
 	/** ImageIcon for green light to indicate current player. */
 	private ImageIcon lightOn;
@@ -151,6 +152,7 @@ public class EuchreController extends JPanel {
 	private JTextArea gameInfo;
 	private JScrollPane gameInfoDisplay;
 	private Font font = new Font("Times New Roman", Font.BOLD, 10);
+	private Font trumpFont = new Font("Times New Roman", Font.BOLD, 30);
 	
 	private boolean playerHasBeenToldToSelectTrump = false;
 
@@ -178,7 +180,9 @@ public class EuchreController extends JPanel {
 		
 		panelArray[0][2].setLayout(new GridLayout());
 		trumpIcon = new JLabel("Current Trump", SwingConstants.CENTER);
-		trumpIcon.setFont(font);
+		trumpIcon.setHorizontalTextPosition(JLabel.CENTER);
+		trumpIcon.setFont(trumpFont);
+		trumpIcon.setForeground(Color.LIGHT_GRAY);
 		panelArray[0][2].add(trumpIcon, BorderLayout.CENTER);
 
 		/*
@@ -424,201 +428,89 @@ public class EuchreController extends JPanel {
 		int newWidth = (screenSz.height - 200) / 15;
 		int newHeight = (newWidth * 182) / 125;
 		
-		Image resizedImg;
+		/* Scan clubs */
+		club9 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/9_of_clubs.png"));
+		club10 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/10_of_clubs.png"));
+		club11 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/11_of_clubs.png"));
+		club12 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/12_of_clubs.png"));
+		club13 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/13_of_clubs.png"));
+		club14 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/14_of_clubs.png"));
 		
-		for (int i = 0; i < 4; i++) {
-			for (int j = 9; j <= 14; j++) {				
-				try {
-					myCard = ImageIO.read(new File("cardImages/" + j + "_of_" + (SUIT.values()[i].toString().toLowerCase()) + "s.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				resizedImg = myCard.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-				switch (i) {
-			 	case 0:
-			 		switch (j) {
-		 			case 9:
-		 				club9 = new ImageIcon(resizedImg);
-		 				break;
-		 			case 10:
-		 				club10 = new ImageIcon(resizedImg);
-		 				break;
-					case 11:
-						club11 = new ImageIcon(resizedImg);
-						break;
-					case 12:
-						club12 = new ImageIcon(resizedImg);
-						break;
-					case 13:
-						club13 = new ImageIcon(resizedImg);
-						break;
-					case 14:
-						club14 = new ImageIcon(resizedImg);
-						break;
-					default:
-						/* Do nothing... not valid */
-						break;
-			 		}
-			 		break;
-			 		
-			 	case 1:
-			 		switch (j) {
-		 			case 9:
-		 				diamond9 = new ImageIcon(resizedImg);
-		 				break;
-		 			case 10:
-		 				diamond10 = new ImageIcon(resizedImg);
-		 				break;
-					case 11:
-						diamond11 = new ImageIcon(resizedImg);
-						break;
-					case 12:
-						diamond12 = new ImageIcon(resizedImg);
-						break;
-					case 13:
-						diamond13 = new ImageIcon(resizedImg);
-						break;
-					case 14:
-						diamond14 = new ImageIcon(resizedImg);
-						break;
-					default:
-						/* Do nothing... not valid */
-						break;
-			 		}
-			 		break;
-			 		
-			 	case 2:
-			 		switch (j) {
-		 			case 9:
-		 				heart9 = new ImageIcon(resizedImg);
-		 				break;
-		 			case 10:
-		 				heart10 = new ImageIcon(resizedImg);
-		 				break;
-					case 11:
-						heart11 = new ImageIcon(resizedImg);
-						break;
-					case 12:
-						heart12 = new ImageIcon(resizedImg);
-						break;
-					case 13:
-						heart13 = new ImageIcon(resizedImg);
-						break;
-					case 14:
-						heart14 = new ImageIcon(resizedImg);
-						break;
-					default:
-						/* Do nothing... not valid */
-						break;
-			 		}
-			 		break;
-			 		
-			 	case 3:
-			 		switch (j) {
-		 			case 9:
-		 				spade9 = new ImageIcon(resizedImg);
-		 				break;
-		 			case 10:
-		 				spade10 = new ImageIcon(resizedImg);
-		 				break;
-					case 11:
-						spade11 = new ImageIcon(resizedImg);
-						break;
-					case 12:
-						spade12 = new ImageIcon(resizedImg);
-						break;
-					case 13:
-						spade13 = new ImageIcon(resizedImg);
-						break;
-					case 14:
-						spade14 = new ImageIcon(resizedImg);
-						break;
-					default:
-						/* Do nothing... not valid */
-						break;
-			 		}
-			 		break;
-			 		
-			 	default:
-			 		/* Do nothing... not valid */	
-			 		break;
-			 }
-			}
-		}
+		/* Scan diamonds */
+		diamond9 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/9_of_diamonds.png"));
+		diamond10 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/10_of_diamonds.png"));
+		diamond11 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/11_of_diamonds.png"));
+		diamond12 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/12_of_diamonds.png"));
+		diamond13 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/13_of_diamonds.png"));
+		diamond14 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/14_of_diamonds.png"));
 		
-		/* Scan the black_joker card */
+		/* Scan hearts */
+		heart9 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/9_of_hearts.png"));
+		heart10 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/10_of_hearts.png"));
+		heart11 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/11_of_hearts.png"));
+		heart12 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/12_of_hearts.png"));
+		heart13 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/13_of_hearts.png"));
+		heart14 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/14_of_hearts.png"));
+		
+		/* Scan spades */
+		spade9 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/9_of_spades.png"));
+		spade10 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/10_of_spades.png"));
+		spade11 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/11_of_spades.png"));
+		spade12 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/12_of_spades.png"));
+		spade13 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/13_of_spades.png"));
+		spade14 = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/14_of_spades.png"));
+		
+		/* Scan the black joker card */
+		black_joker = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/black_joker.png"));
+		
+		/* Scan the card back and sideways card back */
+		card_back = new ImageIcon(scanResizedImg(newWidth, newHeight, "cardImages/card_back.png"));
+		side_card_back = new ImageIcon(scanResizedImg(newHeight, newWidth, "images/card_back90.png"));
+		
+		/* Scan the light on/off indicators */
+		lightOn = new ImageIcon(scanResizedImg(newWidth/2, newWidth/2, "images/ongreen.png"));
+		lightOff = new ImageIcon(scanResizedImg(newWidth/2, newWidth/2, "images/offgreen.png"));
+		
+		/* Scan the black card scoring images */
+		black1 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black1.png"));
+		black2 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black2.png"));
+		black3 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black3.png"));
+		black4 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black4.png"));
+		black5 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black5.png"));
+		black6 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black6.png"));
+		black7 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black7.png"));
+		black8 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black8.png"));
+		black9 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black9.png"));
+		black10 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/black10.png"));
+		
+		/* Scan the red card scoring images */
+		red1 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red1.png"));
+		red2 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red2.png"));
+		red3 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red3.png"));
+		red4 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red4.png"));
+		red5 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red5.png"));
+		red6 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red6.png"));
+		red7 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red7.png"));
+		red8 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red8.png"));
+		red9 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red9.png"));
+		red10 = new ImageIcon(scanResizedImg(newWidth*2, newHeight*2, "images/red10.png"));
+		
+		/* Scan the suit images */
+		club = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/club.png"));
+		diamond = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/diamond.png"));
+		heart = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/heart.png"));
+		spade = new ImageIcon(scanResizedImg(newHeight*2, newHeight*2, "images/spade.png"));
+		
+	}
+	
+	private Image scanResizedImg(final int sizeW, final int sizeH, String path) {
 		try {
-			myCard = ImageIO.read(new File("cardImages/black_joker.png"));
+			myCard = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		resizedImg = myCard.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-		black_joker = new ImageIcon(resizedImg);
-		
-		/* Scan the card back */
-		try {
-			myCard = ImageIO.read(new File("cardImages/card_back.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resizedImg = myCard.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-		card_back = new ImageIcon(resizedImg);
-		
-		/* Scan the sideways card back */
-		try {
-			myCard = ImageIO.read(new File("images/card_back90.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resizedImg = myCard.getScaledInstance(newHeight, newWidth, Image.SCALE_SMOOTH);
-		side_card_back = new ImageIcon(resizedImg);
-		
-		/* Scan the on light indicator */
-		try {
-			myCard = ImageIO.read(new File("images/ongreen.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resizedImg = myCard.getScaledInstance(newWidth / 2, newWidth / 2, Image.SCALE_SMOOTH);
-		lightOn = new ImageIcon(resizedImg);
-		
-		/* Scan the off light indicator */
-		try {
-			myCard = ImageIO.read(new File("images/offgreen.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resizedImg = myCard.getScaledInstance(newWidth / 2, newWidth / 2, Image.SCALE_SMOOTH);
-		lightOff = new ImageIcon(resizedImg);
-		
-		/* Set images for black card scoring */
-		black1 = new ImageIcon("images/black1.png");
-		black2 = new ImageIcon("images/black2.png");
-		black3 = new ImageIcon("images/black3.png");
-		black4 = new ImageIcon("images/black4.png");
-		black5 = new ImageIcon("images/black5.png");
-		black6 = new ImageIcon("images/black6.png");
-		black7 = new ImageIcon("images/black7.png");
-		black8 = new ImageIcon("images/black8.png");
-		black9 = new ImageIcon("images/black9.png");
-		black10 = new ImageIcon("images/black10.png");
-		
-		red1 = new ImageIcon("images/red1.png");
-		red2 = new ImageIcon("images/red2.png");
-		red3 = new ImageIcon("images/red3.png");
-		red4 = new ImageIcon("images/red4.png");
-		red5 = new ImageIcon("images/red5.png");
-		red6 = new ImageIcon("images/red6.png");
-		red7 = new ImageIcon("images/red7.png");
-		red8 = new ImageIcon("images/red8.png");
-		red9 = new ImageIcon("images/red9.png");
-		red10 = new ImageIcon("images/red10.png");
-		
-		club = new ImageIcon("images/club.png");
-		diamond = new ImageIcon("images/diamond.png");
-		heart = new ImageIcon("images/heart.png");
-		spade = new ImageIcon("images/spade.png");
-		
+		resizedImg = myCard.getScaledInstance(sizeW, sizeH,  Image.SCALE_SMOOTH);
+		return resizedImg;
 	}
 
 	/******************************************************************
@@ -1065,7 +957,7 @@ public class EuchreController extends JPanel {
 					options[0].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							trumpIcon.setIcon(club);
-							trumpIcon.setText("");
+							//trumpIcon.setText("");
 							model.setTrump(SUIT.CLUB);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1080,7 +972,7 @@ public class EuchreController extends JPanel {
 					options[1].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							trumpIcon.setIcon(diamond);
-							trumpIcon.setText("");
+							//trumpIcon.setText("");
 							model.setTrump(SUIT.DIAMOND);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1096,7 +988,7 @@ public class EuchreController extends JPanel {
 					options[2].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							trumpIcon.setIcon(heart);
-							trumpIcon.setText("");
+							//trumpIcon.setText("");
 							model.setTrump(SUIT.HEART);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1112,7 +1004,7 @@ public class EuchreController extends JPanel {
 					options[3].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							trumpIcon.setIcon(spade);
-							trumpIcon.setText("");
+							//trumpIcon.setText("");
 							model.setTrump(SUIT.SPADE);
 							model.setCurrentPlayerFirst();
 							trumpSelect = false;
@@ -1193,7 +1085,7 @@ public class EuchreController extends JPanel {
 					/* Set trump accordingly */
 					model.setTrump(model.getTopKitty().getSuit());
 					trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
-					trumpIcon.setText("");
+					//trumpIcon.setText("");
 					/*
 					 * Dealer should now be the current player so they can discard a card and swap
 					 * for topKitty card
