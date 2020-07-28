@@ -935,6 +935,7 @@ public class EuchreController extends JPanel {
 							kittyHasBeenPressed = true;
 							/* Set trump accordingly */
 							model.setTrump(model.getTopKitty().getSuit());
+							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.");
 							trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
 							/*
 							 * Dealer should now be the current player so they can discard a card and swap
@@ -1018,7 +1019,7 @@ public class EuchreController extends JPanel {
 			/* If it's not the bot turn (therefore a humans turn) */
 			else {
 				
-				if (model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectTrump) {
+				if (!kittyHasBeenPressed && model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectTrump) {
 					playerHasBeenToldToSelectTrump = true;
 					JLabel msgLabel = new JLabel("Tell dealer, player " + (((model.getDealer() + 3) % 4) + 1) + ", to pick up the kitty, or pass!");
 					msgLabel.setFont(popupFont);
@@ -1032,7 +1033,7 @@ public class EuchreController extends JPanel {
 				
 				if (kittyHasBeenPressed && model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectSwap) {
 					playerHasBeenToldToSelectSwap = true;
-					JLabel msgLabel = new JLabel("Tell dealer, player " + ("Someone selected trump and you are the dealer! Pick a card in your hand to swap with the kitty."));
+					JLabel msgLabel = new JLabel("Swap a card in your hand with the kitty.");
 					msgLabel.setFont(popupFont);
 					JOptionPane.showConfirmDialog(
 							null,
