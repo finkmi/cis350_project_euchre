@@ -686,6 +686,27 @@ public class EuchreModel {
 	 * 		   as trump or not.
 	 *****************************************************************/
 	private BOTCODE botSelectKitty() {
+		/*Because dealer has already incremented at this point if this condition is
+		true then the kitty will not be going to the current players team */
+		if (players[getDealer()].getTeam() == players[currentPlayer].getTeam()) {
+			//Never have opposing team pick up bauers
+			if (getTopKitty().getValue() == 11) {
+				playerPassed();
+				return BOTCODE.HITKITTY_NOHIT;
+			}
+			
+			else {
+				if (evalHandPotential(getTopKitty().getSuit()) > 130) {
+					return BOTCODE.HITKITTY_HIT;
+				}		
+			}
+		}
+		else {
+			if (evalHandPotential(getTopKitty().getSuit()) > 70) {
+				return BOTCODE.HITKITTY_HIT;
+			}	
+		}
+			
 		playerPassed();
 		return BOTCODE.HITKITTY_NOHIT;
 	}
