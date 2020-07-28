@@ -928,7 +928,21 @@ public class EuchreController extends JPanel {
 					 * in release 2
 					 */
 					else if (model.getNumPasses() < 4) {
-						model.botPlay(BOTCODE.HITKITTY);
+						if (model.botPlay(BOTCODE.HITKITTY) == BOTCODE.HITKITTY_HIT) {
+							kittyHasBeenPressed = true;
+							/* Set trump accordingly */
+							model.setTrump(model.getTopKitty().getSuit());
+							trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
+							//trumpIcon.setText("");
+							/*
+							 * Dealer should now be the current player so they can discard a card and swap
+							 * for topKitty card
+							 */
+							model.setCurrentPlayerDealer();
+							/* Set buttons accordingly */
+							passBtn.setVisible(false);
+							topKitty.setEnabled(false);
+						}
 					}
 					/*
 					 * If neither of the other 2 cases, then the bot should select trump.
