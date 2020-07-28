@@ -176,9 +176,6 @@ public class EuchreController extends JPanel {
 
 	/** Instance of timer used for bot play. */
 	private Timer timer;
-
-	/** The index of the current player. */
-	private int currentPlayer;
 	
 	/** The screen resolution of the current monitor. */
 	private Dimension screenSz = Toolkit.getDefaultToolkit().getScreenSize();
@@ -799,6 +796,38 @@ public class EuchreController extends JPanel {
 		/* Make sure we update topKitty too */
 		updateTopKitty();
 	}
+	
+	private void resetGame() {
+		model = new EuchreModel();
+		model.deal();
+		
+		/* We start in trump selection mode, and kitty not pressed */
+		trumpSelect = true;
+		kittyHasBeenPressed = false;
+		trumpIcon.setIcon(null);
+		
+		/* Set card icons null */
+		for (int i = 0; i < 5; i++) {
+			hand[i].setIcon(black_joker);
+			leftBotHand[i].setIcon(side_card_back);
+			topBotHand[i].setIcon(card_back);
+			rightBotHand[i].setIcon(side_card_back);
+		}
+		for (int i = 0; i < 4; i++) {
+			playedCards[i].setIcon(null);
+		}
+		
+		scores[0].setIcon(card_back);
+		scores[1].setIcon(card_back);
+		
+		gameInfo.append("\n\n\n\n\n");
+		gameInfo.append("New Game Started! - Have Fun :-)\n");
+		
+		updateIndicators(model.getCurrentPlayer());
+		updateHand();
+		updateTopKitty();
+		
+	}
 
 	/******************************************************************
 	 * Update the scoring when a team wins a trick or a hand. In release two this
@@ -822,7 +851,8 @@ public class EuchreController extends JPanel {
 					JOptionPane.INFORMATION_MESSAGE);
 			/* User wants to play again */
 			if (n == 0) {
-				//TODO: RESET the game
+				System.out.println("Resetting game...");
+				resetGame();
 			}
 			/* User wants to exit */
 			else {
@@ -959,12 +989,6 @@ public class EuchreController extends JPanel {
 							updateButtons();
 						}
 					}
-					/*
-					 * Get the current player after the bot move. In release 2, we will be
-					 * implementing a method of seeing the current player on the GUI, but as of now
-					 * this is not being used
-					 */
-					currentPlayer = model.getCurrentPlayer();
 					/* Update the played cards after any bot move */
 					updatePlayedCards();
 
@@ -1190,7 +1214,6 @@ public class EuchreController extends JPanel {
 							 * Check the current player. This will be displayed on the GUI for release 2,
 							 * but currently it is unused
 							 */
-							currentPlayer = model.getCurrentPlayer();
 							updatePlayedCards();
 						}
 						/*
