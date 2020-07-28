@@ -901,12 +901,15 @@ public class EuchreController extends JPanel {
 						model.botPlay(BOTCODE.HITKITTY);
 					}
 					/*
-					 * If neither of the other 2 cases, then the bot should select trump. Currently,
-					 * the bots logic is to always pass on trump selection, but this will be updated
-					 * in release 2
+					 * If neither of the other 2 cases, then the bot should select trump.
+					 * If the bot selects trump set the icon and set the trumpSelect flag.
 					 */
 					else {
-						trumpSelect = !(BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP));
+						if (BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP)) {
+							trumpIcon.setIcon(getTrumpIcon(model.getTrump()));
+							trumpSelect = false;
+							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.");
+						}
 						/*
 						 * If this was the 8th pass, we don't screw the dealer so just redeal and reset
 						 * everything

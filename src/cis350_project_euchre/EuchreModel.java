@@ -203,6 +203,10 @@ public class EuchreModel {
 	public SUIT getTrump() { 
 		return currentTrump;
 	}
+	
+	public int getTrumpSelectingTeam() {
+		return trumpSelectingTeam;
+	}
  	
 	/******************************************************************
 	 * Get the current number of times a player has passed on picking
@@ -665,7 +669,7 @@ public class EuchreModel {
 	private BOTCODE botSelectTrump() {
 		for (SUIT s: SUIT.values()) {
 			if (evalHandPotential(s) > 100) {
-				currentTrump = s;
+				setTrump(s);
 				setCurrentPlayerFirst();
 				return BOTCODE.TRUMP_SELECTED;
 			}	
