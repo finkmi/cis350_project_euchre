@@ -189,6 +189,8 @@ public class EuchreController extends JPanel {
 	private Font popupFont = new Font("Comic Sans MS", Font.PLAIN, (int) screenSz.width / 125);
 	/** Boolean telling us that the player has been prompted to make a trump selection. */
 	private boolean playerHasBeenToldToSelectTrump = false;
+	/** Boolean telling us that the player has been prompted to make a swap selection. */
+	private boolean playerHasBeenToldToSelectSwap = false;
 
 	/******************************************************************
 	 * Constructor for the Euchre controller method. Handles the starting of the
@@ -928,7 +930,21 @@ public class EuchreController extends JPanel {
 					 * in release 2
 					 */
 					else if (model.getNumPasses() < 4) {
-						model.botPlay(BOTCODE.HITKITTY);
+						if(model.botPlay(BOTCODE.HITKITTY) == BOTCODE.HITKITTY_HIT) {
+							/* Set flag true */
+							kittyHasBeenPressed = true;
+							/* Set trump accordingly */
+							model.setTrump(model.getTopKitty().getSuit());
+							trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
+							/*
+							 * Dealer should now be the current player so they can discard a card and swap
+							 * for topKitty card
+							 */
+							model.setCurrentPlayerDealer();
+							/* Set buttons accordingly */
+							passBtn.setVisible(false);
+							topKitty.setEnabled(false);
+						}
 					}
 					/*
 					 * If neither of the other 2 cases, then the bot should select trump.
@@ -936,6 +952,10 @@ public class EuchreController extends JPanel {
 					 */
 					else {
 						if (BOTCODE.TRUMP_SELECTED == model.botPlay(BOTCODE.TRUMP)) {
+							/* Set buttons accordingly */
+							passBtn.setVisible(false);
+							topKitty.setEnabled(false);
+							topKitty.setIcon(card_back);
 							trumpIcon.setIcon(getTrumpIcon(model.getTrump()));
 							trumpSelect = false;
 							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.");
@@ -1006,6 +1026,18 @@ public class EuchreController extends JPanel {
 							null,
 							msgLabel,
 							"You are selecting trump!",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				if (kittyHasBeenPressed && model.getNumPasses() < 4 && trumpSelect && !playerHasBeenToldToSelectSwap) {
+					playerHasBeenToldToSelectSwap = true;
+					JLabel msgLabel = new JLabel("Tell dealer, player " + ("Someone selected trump and you are the dealer! Pick a card in your hand to swap with the kitty."));
+					msgLabel.setFont(popupFont);
+					JOptionPane.showConfirmDialog(
+							null,
+							msgLabel,
+							"Pick a card to swap!",
 							JOptionPane.DEFAULT_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -1151,7 +1183,6 @@ public class EuchreController extends JPanel {
 					/* Set trump accordingly */
 					model.setTrump(model.getTopKitty().getSuit());
 					trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
-					//trumpIcon.setText("");
 					/*
 					 * Dealer should now be the current player so they can discard a card and swap
 					 * for topKitty card
@@ -1172,6 +1203,7 @@ public class EuchreController extends JPanel {
 						 */
 						if (!trumpSelect) {
 							playerHasBeenToldToSelectTrump = false;
+							playerHasBeenToldToSelectSwap = false;
 							/* Play the card the user pressed */
 							model.makeMove(i);
 							/*
