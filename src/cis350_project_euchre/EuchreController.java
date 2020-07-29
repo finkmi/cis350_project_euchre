@@ -876,15 +876,17 @@ public class EuchreController extends JPanel {
 	private void updateScore() {
 		scores[0].setIcon(getScoreIcon(model.getScore(0), 0));
 		scores[1].setIcon(getScoreIcon(model.getScore(1), 1));
-		gameInfo.append("Team 1 has " + model.getNumTricks(0) + "\n");
-		gameInfo.append("Team 2 has " + model.getNumTricks(1) + "\n\n");
+		gameInfo.append("Team 1 has " + model.getNumTricks(0) + " tricks\n");
+		gameInfo.append("Team 2 has " + model.getNumTricks(1) + " tricks\n\n");
 		
 		if (model.getScore(0) >= 10 || model.getScore(1) >= 10) {
 			String winningTeam;
 			winningTeam = (model.getScore(0) > model.getScore(1)) ? "Team 1" : "Team 2";
+			JLabel msgLabel = new JLabel("" + winningTeam + " has won! Play again?");
+			msgLabel.setFont(popupFont);
 			int n = JOptionPane.showConfirmDialog(
 					null,
-					"" + winningTeam + " has won! Play again?",
+					msgLabel,
 					"Game Over!",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.INFORMATION_MESSAGE);
@@ -972,7 +974,7 @@ public class EuchreController extends JPanel {
 							kittyHasBeenPressed = true;
 							/* Set trump accordingly */
 							model.setTrump(model.getTopKitty().getSuit());
-							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.");
+							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.\n");
 							trumpIcon.setIcon(getTrumpIcon(model.getTopKitty().getSuit()));
 							/*
 							 * Dealer should now be the current player so they can discard a card and swap
@@ -996,7 +998,7 @@ public class EuchreController extends JPanel {
 							topKitty.setIcon(card_back);
 							trumpIcon.setIcon(getTrumpIcon(model.getTrump()));
 							trumpSelect = false;
-							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.");
+							gameInfo.append("Team " + (model.getTrumpSelectingTeam() + 1) + " selected " + model.getTrump() + " as trump.\n");
 						}
 						/*
 						 * If this was the 8th pass, we don't screw the dealer so just redeal and reset
