@@ -767,19 +767,8 @@ public class EuchreModel {
 				 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
 				return BOTCODE.PLAY_TRICKNOTFINISHED;
 			}
-		}
-		
-		/* If no valid moves available, play the first card in hand */
-		/* This is in place as a failsafe */
-		makeMove(0);
-		/* If all cards in trick have been played, 
-		 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
-		if (playedCards.size() >= 4) {
-			return BOTCODE.PLAY_TRICKFINISHED;
 		}	
-		/* If not all cards in trick have been played, 
-		 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
-		return BOTCODE.PLAY_TRICKNOTFINISHED;		
+		return BOTCODE.DEFAULT;
 	}
 	
 	/******************************************************************
