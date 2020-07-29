@@ -204,6 +204,10 @@ public class EuchreModel {
 		return currentTrump;
 	}
 	
+	/******************************************************************
+	 * Gets the team that selected the trump of this hand.
+	 * @return The value of the team that selected trump
+	 ******************************************************************/
 	public int getTrumpSelectingTeam() {
 		return trumpSelectingTeam;
 	}
@@ -281,7 +285,7 @@ public class EuchreModel {
 		
 		/* Set the topKitty to the card on the top of the deck
 		 * after dealing to all of the players */
-		topKitty = deck.get(0);
+		topKitty = deck.get(randomNum.nextInt(deck.size()));
 		
 		/* Increment the dealer to the next player after dealing */
 		incrementDealer();
@@ -718,12 +722,8 @@ public class EuchreModel {
 	 * 
 	 * @return A botcode stating that the swap occurred (there is no 
 	 * 		   reason the swap would not occur successfully).
-	 */
+	 ******************************************************************/
 	private BOTCODE botSwapWithKitty() {
-		/* Choose a random card in the bots hand */
-//		int randCard = randomNum.nextInt(5);
-//		/* Swap the random card with the kitty */
-//		swapWithTopKitty(randCard);
 		
 		//Find the index of the lowest off suit card in hand
 		int lowestOffSuit = 0;
@@ -782,6 +782,13 @@ public class EuchreModel {
 		return BOTCODE.PLAY_TRICKNOTFINISHED;		
 	}
 	
+	/******************************************************************
+	 * Evaluates the score of a hand given the current trump.
+	 * 
+	 * @param trump
+	 * @return Integer value attempting to estimate the potential of a
+	 * 			hand.
+	 ******************************************************************/
 	private int evalHandPotential(final SUIT trump) {
 		
 		int result = 0;

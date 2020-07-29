@@ -13,6 +13,8 @@ import javax.swing.text.DefaultCaret;
 //CHECKSTYLE:ON
 
 public class EuchreController extends JPanel {
+	
+	private static final long serialVersionUID = 42L;
 
 	/** Array of JButtons to make up the players hand. */
 	private JButton[] hand;
@@ -537,6 +539,15 @@ public class EuchreController extends JPanel {
 		
 	}
 	
+	/******************************************************************
+	 * Takes a file path and reads an image in from there, then scales
+	 * that image to the given width and height.
+	 * 
+	 * @param sizeW
+	 * @param sizeH
+	 * @param path
+	 * @return Image of the scaled card image.
+	 ******************************************************************/
 	private Image scanResizedImg(final int sizeW, final int sizeH, final String path) {
 		Image resizedImg;
 		try {
@@ -638,6 +649,15 @@ public class EuchreController extends JPanel {
 		}
 	}
 	
+	/******************************************************************
+	 * Takes the score of a given team and which team and returns the 
+	 * corresponding image of two fives in an orientation that displays
+	 * the given score.
+	 * 
+	 * @param score
+	 * @param team
+	 * @return ImageIcon depicting the score.
+	 ******************************************************************/
 	private ImageIcon getScoreIcon(final int score, final int team) {
 		switch (score) {
 		case 0:
@@ -667,6 +687,12 @@ public class EuchreController extends JPanel {
 		}
 	}
 	
+	/******************************************************************
+	 * Takes a suit and gives an image that depicts the given suit.
+	 * 
+	 * @param suit
+	 * @return ImageIcon depicting the suit passed into the function.
+	 *******************************************************************/
 	private ImageIcon getTrumpIcon(final SUIT suit) {
 		switch (suit) {
 		case CLUB:
@@ -760,6 +786,13 @@ public class EuchreController extends JPanel {
 		}
 	}
 	
+	/******************************************************************
+	 * Takes the index of the current player and makes cards invisible as
+	 * they are played to give the illusion of cards being removed from the
+	 * bot's hand.
+	 * 
+	 * @param indexCurPlayer
+	 ******************************************************************/
 	private void updatePlayersCards(final int indexCurPlayer) {
 		if (indexCurPlayer == 1) {
 			leftBotHand[model.getPlayer(indexCurPlayer).getHand().size() - 1].setVisible(false);
@@ -799,6 +832,10 @@ public class EuchreController extends JPanel {
 		updateTopKitty();
 	}
 	
+	/******************************************************************
+	 * Method used to reset all game values to their defaults and update
+	 * the GUI to display these changes in preparation for another game.
+	 ******************************************************************/
 	private void resetGame() {
 		model = new EuchreModel();
 		model.deal();
@@ -930,7 +967,7 @@ public class EuchreController extends JPanel {
 					 * in release 2
 					 */
 					else if (model.getNumPasses() < 4) {
-						if(model.botPlay(BOTCODE.HITKITTY) == BOTCODE.HITKITTY_HIT) {
+						if (model.botPlay(BOTCODE.HITKITTY) == BOTCODE.HITKITTY_HIT) {
 							/* Set flag true */
 							kittyHasBeenPressed = true;
 							/* Set trump accordingly */
