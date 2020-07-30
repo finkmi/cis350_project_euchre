@@ -121,22 +121,6 @@ class EuchreModelTest {
 	}
 	
 	@Test
-	// ensure we can clear played cards
-	void test_clearPlayedCards() {
-		EuchreModel model = new EuchreModel();
-		
-		assertEquals(model.getPlayedCards().size(), 0);
-		model.deal();
-		model.makeMove(0);
-		assertEquals(model.getPlayedCards().size(), 1);
-		model.makeMove(0);
-		model.makeMove(0);
-		model.makeMove(0);
-		model.clearPlayedCards();
-		assertEquals(model.getPlayedCards().size(), 0);		
-	}
-	
-	@Test
 	//Ensure that dealing sets the top kitty and test the getter
 	void test_getTopKitty() {
 		EuchreModel model = new EuchreModel();
