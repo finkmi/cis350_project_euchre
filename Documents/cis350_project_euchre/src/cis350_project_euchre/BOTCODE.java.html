@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>BOTCODE.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 13, 2020 11:57:50 AM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">BOTCODE.java</span></div><h1>BOTCODE.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>BOTCODE.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 30, 2020 1:12:25 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">BOTCODE.java</span></div><h1>BOTCODE.java</h1><pre class="source lang-java linenums">//CHECKSTYLE:OFF
+package cis350_project_euchre;
+//CHECKSTYLE:ON
 
 /**********************************************************************
  * This enum specifies codes that can be used in the botPlay function
@@ -7,66 +9,43 @@
  * 
  * @author Michael Fink, Charlie Dorn
  *********************************************************************/
-<span class="fc" id="L10">public enum BOTCODE {</span>
-<span class="fc" id="L11">	/**</span>
-	 * Tells the model that a bot should play a card
-	 */
-<span class="fc" id="L14">	PLAY,</span>
+<span class="fc" id="L12">public enum BOTCODE {</span>
 	
-<span class="fc" id="L16">	/**</span>
-	 * Tells the model that a bot should swap a card with the kitty
-	 */
-<span class="fc" id="L19">	SWAP,</span>
+<span class="fc" id="L14">	/** Tells the model that a bot should play a card. */</span>
+<span class="fc" id="L15">	PLAY,</span>
 	
-<span class="fc" id="L21">	/**</span>
-	 * Tells the model that a bot should select a suit for trump
-	 */
-<span class="fc" id="L24">	TRUMP,</span>
+<span class="fc" id="L17">	/** Tells the model that a bot should swap a card with the kitty. */</span>
+<span class="fc" id="L18">	SWAP,</span>
 	
-<span class="fc" id="L26">	/**</span>
-	 * Tells the model that a bot should order the kitty as trump
-	 */
-<span class="fc" id="L29">	HITKITTY,</span>
+<span class="fc" id="L20">	/** Tells the model that a bot should select a suit for trump. */</span>
+<span class="fc" id="L21">	TRUMP,</span>
 	
-<span class="fc" id="L31">	/**</span>
-	 * Tells the controller that the bot selected trump
-	 */
-<span class="fc" id="L34">	TRUMP_SELECTED,</span>
+<span class="fc" id="L23">	 /** Tells the model that a bot should order the kitty as trump. */</span>
+<span class="fc" id="L24">	HITKITTY,</span>
 	
-<span class="fc" id="L36">	/**</span>
-	 * Tells the controller that the bot did not select trump
-	 */
-<span class="fc" id="L39">	TRUMP_NOTSELECTED,</span>
+<span class="fc" id="L26">	 /** Tells the controller that the bot selected trump. */</span>
+<span class="fc" id="L27">	TRUMP_SELECTED,</span>
 	
-<span class="fc" id="L41">	/**</span>
-	 * Tells the controller if a trick has been played after bot play
-	 */
-<span class="fc" id="L44">	PLAY_TRICKFINISHED,</span>
+<span class="fc" id="L29">	/** Tells the controller that the bot did not select trump. */</span>
+<span class="fc" id="L30">	TRUMP_NOTSELECTED,</span>
 	
-<span class="fc" id="L46">	/**</span>
-	 * Tells the controller if a trick hasn't completed after bot play
-	 */
-<span class="fc" id="L49">	PLAY_TRICKNOTFINISHED,</span>
+<span class="fc" id="L32">	/** Tells the controller if a trick has been played after bot play. */</span>
+<span class="fc" id="L33">	PLAY_TRICKFINISHED,</span>
 	
-<span class="fc" id="L51">	/**</span>
-	 * Tells the controller a bot swapped their card with the kitty
-	 */
-<span class="fc" id="L54">	SWAP_SUCCESSFUL,</span>
+<span class="fc" id="L35">	/** Tells the controller if a trick hasn't completed after bot play. */</span>
+<span class="fc" id="L36">	PLAY_TRICKNOTFINISHED,</span>
 	
-<span class="fc" id="L56">	/**</span>
-	 * Tells the controller a bot ordered the kitty as trump
-	 */
-<span class="fc" id="L59">	HITKITTY_HIT,</span>
+<span class="fc" id="L38">	/** Tells the controller a bot swapped their card with the kitty. */</span>
+<span class="fc" id="L39">	SWAP_SUCCESSFUL,</span>
 	
-<span class="fc" id="L61">	/**</span>
-	 * Tells the controller a bot did not order the kitty as trump
-	 */
-<span class="fc" id="L64">	HITKITTY_NOHIT,</span>
+<span class="fc" id="L41">	/** Tells the controller a bot ordered the kitty as trump. */</span>
+<span class="fc" id="L42">	HITKITTY_HIT,</span>
 	
-<span class="fc" id="L66">	/**</span>
-	 * Default value, means nothing and shouldn't ever be used, but
-	 * is needed as a default return in the botPlay function
-	 */
-<span class="fc" id="L70">	DEFAULT</span>
+<span class="fc" id="L44">	/** Tells the controller a bot did not order the kitty as trump. */</span>
+<span class="fc" id="L45">	HITKITTY_NOHIT,</span>
+	
+<span class="fc" id="L47">	/** Default value, means nothing and shouldn't ever be used, but</span>
+	 * is needed as a default return in the botPlay function. */
+<span class="fc" id="L49">	DEFAULT</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 13, 2020 11:57:50 AM)</div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 30, 2020 1:12:25 PM)</div></body></html>

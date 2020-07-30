@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>EuchreModel.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 13, 2020 11:57:50 AM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">EuchreModel.java</span></div><h1>EuchreModel.java</h1><pre class="source lang-java linenums">package cis350_project_euchre;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>EuchreModel.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Jul 30, 2020 1:12:25 PM)</a> &gt; <a href="../../index.html" class="el_group">cis350_project_euchre</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cis350_project_euchre</a> &gt; <span class="el_source">EuchreModel.java</span></div><h1>EuchreModel.java</h1><pre class="source lang-java linenums">//CHECKSTYLE:OFF
+package cis350_project_euchre;
 import java.util.ArrayList;
+import java.util.Random;
+//CHECKSTYLE:ON
 
 /**********************************************************************
  * The Euchre Model class. Contains functions and variables needed
@@ -9,11 +12,8 @@ import java.util.ArrayList;
  *********************************************************************/
 public class EuchreModel {
 	
-	/** Difficulty that the bots should be initialized with. */
-	static final int difficulty = 1;
-	
 	/** Array of Player objects to represent the four players. */
-	private Player players[];
+	private Player[] players;
 	
 	/** The index of the current player within the players array. */
 	private int currentPlayer;
@@ -24,11 +24,17 @@ public class EuchreModel {
 	/** The index of the dealer of this hand in the players array. */
 	private int dealer;
 	
-	/** Integers for the scores of each team. */
-	private int team0Score, team1Score;
+	/** Scores of team 0. */
+	private int team0Score;
 	
-	/** Integers for the number of tricks each team has. */
-	private int team0Tricks, team1Tricks;
+	/** Scores of team 1. */
+	private int team1Score;
+	
+	/** Current number of tricks team 0 has. */
+	private int team0Tricks;
+	
+	/** Current number of tricks team 1 has. */
+	private int team1Tricks;
 	
 	/** ArrayList of card that make up the 24 cards used in Euchre. */
 	private ArrayList&lt;Card&gt; deck;
@@ -48,48 +54,61 @@ public class EuchreModel {
 	/** The number of times the players have passed. */
 	private int numPasses;
 	
+	/** Random number generator used in deal method. */
+<span class="fc" id="L58">	private Random randomNum = new Random();</span>
+	
 	/******************************************************************
 	 * The Euchre model constructor. Sets up the array of players, sets
 	 * the dealer index, and sets up the deck of cards to be use in
 	 * dealing.
 	 *****************************************************************/
-<span class="fc" id="L56">	public EuchreModel() {</span>
+<span class="fc" id="L65">	public EuchreModel() {</span>
 		
 		/* Set up the array of players, and instantiate each player */
-<span class="fc" id="L59">		players = new Player[4];</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">		for(int i = 0; i &lt;4; i++) {</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">			players[i] = new Player(i%2, i==0 ? false : true,</span>
-<span class="fc" id="L62">					difficulty);</span>
+<span class="fc" id="L68">		players = new Player[4];</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">		for (int i = 0; i &lt; 4; i++) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">			players[i] = new Player(i % 2, i == 0 ? false : true);</span>
 		}
 		
 		/* Set trump to null to begin with */
-<span class="fc" id="L66">		currentTrump = null;</span>
+<span class="fc" id="L74">		currentTrump = null;</span>
 		
 		/* Set the number of passes to 0, as no one has passed yet */
-<span class="fc" id="L69">		numPasses = 0;</span>
+<span class="fc" id="L77">		numPasses = 0;</span>
 		
 		/* Set the dealer to the player in index 3 */
-<span class="fc" id="L72">		dealer = 3;</span>
-<span class="fc" id="L73">		currentPlayer = 0;</span>
-<span class="fc" id="L74">		firstPlayer = 1;</span>
+<span class="fc" id="L80">		dealer = 3;</span>
+<span class="fc" id="L81">		currentPlayer = 0;</span>
+<span class="fc" id="L82">		firstPlayer = 1;</span>
 		
 		/* Initialize both scores to 0 */
-<span class="fc" id="L77">		team0Score = 0;</span>
-<span class="fc" id="L78">		team1Score = 0;</span>
+<span class="fc" id="L85">		team0Score = 0;</span>
+<span class="fc" id="L86">		team1Score = 0;</span>
 		
 		/* Instantiate the arraylist for played cards */
-<span class="fc" id="L81">		playedCards = new ArrayList&lt;Card&gt;();</span>
+<span class="fc" id="L89">		playedCards = new ArrayList&lt;Card&gt;();</span>
 		
 		/* Instantiate the arrayList for the deck, and fill the deck */
-<span class="fc" id="L84">		deck = new ArrayList&lt;Card&gt;();</span>
-<span class="fc" id="L85">		fillDeck();</span>
-<span class="fc" id="L86">	}</span>
+<span class="fc" id="L92">		deck = new ArrayList&lt;Card&gt;();</span>
+<span class="fc" id="L93">		fillDeck();</span>
+<span class="fc" id="L94">	}</span>
 	
 	
 	
 	
-	
+	//CHECKSTYLE:OFF
 	/********************* Getters &amp; Setters *************************/
+	//CHECKSTYLE:ON
+	
+	/******************************************************************
+	 * Return the index of the dealer.
+	 * 
+	 * @return The index of the dealer currently.
+	 *****************************************************************/
+	public int getDealer() {
+<span class="fc" id="L109">		return dealer;</span>
+	}
+	
 	
 	/******************************************************************
 	 * Return the player at the index specified in the players array.
@@ -98,14 +117,18 @@ public class EuchreModel {
 	 * 				array.
 	 * @return The player at the specified index.
 	 *****************************************************************/
-<span class="fc" id="L101">	public Player getPlayer(int index) { return players[index];}</span>
+	public Player getPlayer(final int index) {
+<span class="fc" id="L121">		return players[index];</span>
+	}
 	
 	/******************************************************************
 	 * Get the index of the currentPlayer.
 	 * 
 	 * @return An integer representing the index of the currentPlayer.
 	 *****************************************************************/
-<span class="fc" id="L108">	public int getCurrentPlayer() {	return currentPlayer;}</span>
+	public int getCurrentPlayer() {
+<span class="fc" id="L130">		return currentPlayer;</span>
+	}
 	
 	/******************************************************************
 	 * Sets the dealer as the current player. This is done to allow the
@@ -114,18 +137,22 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void setCurrentPlayerDealer() {
 		/* Handle the wrap-around case where firstPlayer=0, dealer=3 */
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">		if(firstPlayer == 0)</span>
-<span class="fc" id="L118">			currentPlayer = 3;</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">		if (firstPlayer == 0) {</span>
+<span class="fc" id="L141">			currentPlayer = 3;</span>
+<span class="fc" id="L142">		}</span>
 		/* Otherwise, dealer is one less than firstPlayer */
-		else
-<span class="nc" id="L121">			currentPlayer = firstPlayer - 1;</span>
-<span class="fc" id="L122">	}</span>
+		else {
+<span class="fc" id="L145">			currentPlayer = firstPlayer - 1;</span>
+		}
+<span class="fc" id="L147">	}</span>
 	
 	/******************************************************************
 	 * Set the currentPlayer to be the same as the firstPlayer. This 
 	 * needs to be done at the start of each trick.
 	 *****************************************************************/
-<span class="fc" id="L128">	public void setCurrentPlayerFirst() {currentPlayer = firstPlayer;}</span>
+	public void setCurrentPlayerFirst() {
+<span class="fc" id="L154">		currentPlayer = firstPlayer;</span>
+<span class="fc" id="L155">	}</span>
 		
 	/******************************************************************
 	 * Get the number of tricks won be a given team.
@@ -133,7 +160,9 @@ public class EuchreModel {
 	 * @param team The team to check the number of tricks for.
 	 * @return The number of tricks the given team has won this hand.
 	 *****************************************************************/
-<span class="fc bfc" id="L136" title="All 2 branches covered.">	public int getNumTricks(int team) { return team == 0 ? team0Tricks : team1Tricks;}</span>
+	public int getNumTricks(final int team) {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">		return team == 0 ? team0Tricks : team1Tricks;</span>
+	}
 	
 	/******************************************************************
 	 * Get the score of a given team.
@@ -141,17 +170,19 @@ public class EuchreModel {
 	 * @param team The team to check the score for.
 	 * @return The score of the given team.
 	 *****************************************************************/
-<span class="fc bfc" id="L144" title="All 2 branches covered.">	public int getScore(int team) { return team == 0 ? team0Score : team1Score;}</span>
+	public int getScore(final int team) {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">		return team == 0 ? team0Score : team1Score;</span>
+	}
 	
 	/*****************************************************************
-	 * Set both teams scores and tricks back to zero
+	 * Set both teams scores and tricks back to zero.
 	 ****************************************************************/
 	public void resetScore() {
-<span class="fc" id="L150">		team0Score = 0;</span>
-<span class="fc" id="L151">		team1Score = 0;</span>
-<span class="fc" id="L152">		team0Tricks = 0;</span>
-<span class="fc" id="L153">		team1Tricks = 0;</span>
-<span class="fc" id="L154">	}</span>
+<span class="fc" id="L181">		team0Score = 0;</span>
+<span class="fc" id="L182">		team1Score = 0;</span>
+<span class="fc" id="L183">		team0Tricks = 0;</span>
+<span class="fc" id="L184">		team1Tricks = 0;</span>
+<span class="fc" id="L185">	}</span>
 	
 	/******************************************************************
 	 * Sets the trump to the specified suit. Also determines the team
@@ -159,15 +190,27 @@ public class EuchreModel {
 	 * 
 	 * @param s The suit that trump should be set to.
 	 *****************************************************************/
- 	public void setTrump(SUIT s) {
-<span class="fc" id="L163">		currentTrump = s;</span>
-<span class="fc" id="L164">		trumpSelectingTeam = players[currentPlayer].getTeam();</span>
-<span class="fc" id="L165">	}</span>
+ 	public void setTrump(final SUIT s) {
+<span class="fc" id="L194">		currentTrump = s;</span>
+<span class="fc" id="L195">		trumpSelectingTeam = players[currentPlayer].getTeam();</span>
+<span class="fc" id="L196">	}</span>
  	
  	/******************************************************************
-	 * Gets the current trump
+	 * Gets the current trump.
+	 * 
+	 * @return The suit that is currently trump.
 	 *****************************************************************/
-<span class="fc" id="L170">	public SUIT getTrump() { return currentTrump;}</span>
+	public SUIT getTrump() { 
+<span class="fc" id="L204">		return currentTrump;</span>
+	}
+	
+	/******************************************************************
+	 * Gets the team that selected the trump of this hand.
+	 * @return The value of the team that selected trump
+	 ******************************************************************/
+	public int getTrumpSelectingTeam() {
+<span class="fc" id="L212">		return trumpSelectingTeam;</span>
+	}
  	
 	/******************************************************************
 	 * Get the current number of times a player has passed on picking
@@ -176,7 +219,9 @@ public class EuchreModel {
 	 * @return The number of times a player has passed on picking up
 	 * 		   trump.
 	 *****************************************************************/
-<span class="fc" id="L179">	public int getNumPasses() {	return numPasses;}</span>
+	public int getNumPasses() {	
+<span class="fc" id="L223">		return numPasses;</span>
+	}
 	
 	/******************************************************************
 	 * Get the arrayList of cards that have been played in the current
@@ -184,20 +229,25 @@ public class EuchreModel {
 	 * 
 	 * @return The arrayList of playedCards this trick.
 	 *****************************************************************/
-<span class="fc" id="L187">	public ArrayList&lt;Card&gt; getPlayedCards() { return playedCards;}</span>
+	public ArrayList&lt;Card&gt; getPlayedCards() {
+<span class="fc" id="L233">		return playedCards;</span>
+	}
 	
 	/******************************************************************
 	 * Get the topKitty card.
 	 * 
 	 * @return The card object of the topKitty.
 	 *****************************************************************/
-<span class="fc" id="L194">	public Card getTopKitty() {	return topKitty;}</span>
+	public Card getTopKitty() {
+<span class="fc" id="L242">		return topKitty;</span>
+	}
 	
 	
 	
 	
-	
+	//CHECKSTYLE:OFF
 	/********************** Public Methods ***************************/
+	//CHECKSTYLE:ON
 	
 	/******************************************************************
 	 * Handles the dealing logic of the Euchre game.
@@ -208,48 +258,50 @@ public class EuchreModel {
 		int randCard;
 		
 		/* Make sure the deck is filled before dealing */
-<span class="fc" id="L211">		fillDeck();</span>
+<span class="fc" id="L261">		fillDeck();</span>
 		
 		/* Clear each players hand */
-<span class="fc bfc" id="L214" title="All 2 branches covered.">		for(Player p : players)</span>
-<span class="fc" id="L215">			p.clearHand();</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">		for (Player p : players) {</span>
+<span class="fc" id="L265">			p.clearHand();</span>
+		}
 		
 		/* Deal cards one-by-one to each player until all players have
 		 * five cards */
-<span class="fc bfc" id="L219" title="All 2 branches covered.">		for(int i = 0; i &lt; 5; i++) {</span>
-<span class="fc bfc" id="L220" title="All 2 branches covered.">			for(int player = 0; player &lt; 4; player++) {</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">		for (int i = 0; i &lt; 5; i++) {</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">			for (int player = 0; player &lt; 4; player++) {</span>
 				/* get a random integer between 0 and 23 (inclusive) */
-<span class="fc" id="L222">				randCard = (int)(Math.random() * deck.size());</span>
+<span class="fc" id="L273">				randCard = (randomNum.nextInt(deck.size()));</span>
 				
 				/* add the card at this random index to the players
 				 * hand, and remove it from the deck so it doesn't
 				 * get dealt to another player */
-<span class="fc" id="L227">				players[player].addCardToHand(i, deck.get(randCard));</span>
-<span class="fc" id="L228">				deck.remove(randCard);</span>
+<span class="fc" id="L278">				players[player].addCardToHand(i, deck.get(randCard));</span>
+<span class="fc" id="L279">				deck.remove(randCard);</span>
 			}
 		}
 		
 		/* After dealing, no passes have happened yet */
-<span class="fc" id="L233">		numPasses = 0;</span>
+<span class="fc" id="L284">		numPasses = 0;</span>
 		
 		/* Set the topKitty to the card on the top of the deck
 		 * after dealing to all of the players */
-<span class="fc" id="L237">		topKitty = deck.get(0);</span>
+<span class="fc" id="L288">		topKitty = deck.get(randomNum.nextInt(deck.size()));</span>
 		
 		/* Increment the dealer to the next player after dealing */
-<span class="fc" id="L240">		incrementDealer();</span>
-<span class="fc" id="L241">	}</span>
+<span class="fc" id="L291">		incrementDealer();</span>
+<span class="fc" id="L292">	}</span>
 	
 	/******************************************************************
 	 * Increments the dealer by one and wraps if greater than 3 to 
 	 * start back from 0.
 	 *****************************************************************/
 	public void incrementDealer() {
-<span class="fc" id="L248">		firstPlayer = currentPlayer = (dealer + 1) % 4;</span>
-<span class="fc" id="L249">		dealer++;</span>
-<span class="fc bfc" id="L250" title="All 2 branches covered.">		if(dealer &gt;= 4)</span>
-<span class="fc" id="L251">			dealer = 0;</span>
-<span class="fc" id="L252">	}</span>
+<span class="fc" id="L299">		firstPlayer = currentPlayer = (dealer + 1) % 4;</span>
+<span class="fc" id="L300">		dealer++;</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">		if (dealer &gt;= 4) {</span>
+<span class="fc" id="L302">			dealer = 0;</span>
+		}
+<span class="fc" id="L304">	}</span>
 	
 	/******************************************************************
 	 * Checks if the currentPlayer is also the dealer.
@@ -257,8 +309,8 @@ public class EuchreModel {
 	 * @return True if the currentPlayer is the dealer, else false.
 	 *****************************************************************/
 	public boolean isCurrentPlayerDealer() {
-<span class="pc bpc" id="L260" title="1 of 2 branches missed.">		return((currentPlayer == firstPlayer-1) ||</span>
-<span class="pc bpc" id="L261" title="3 of 4 branches missed.">				(currentPlayer == 0 &amp;&amp; firstPlayer == 3));</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">		return ((currentPlayer == firstPlayer - 1) </span>
+<span class="pc bpc" id="L313" title="1 of 4 branches missed.">				|| (currentPlayer == 0 &amp;&amp; firstPlayer == 3));</span>
 	}
 	
 	/******************************************************************
@@ -270,18 +322,18 @@ public class EuchreModel {
 	 * @param index The index of the card within the current players
 	 * 				hand that should be played.
 	 *****************************************************************/
-	public void makeMove(int index) {
+	public void makeMove(final int index) {
 		/* Check if the move is valid */
-		//TODO: Set renegeable if not valid
-<span class="fc" id="L276">		isValidMove(index);</span>
-		/* Add the played card from the users hand to playedCards */
-<span class="fc" id="L278">		playedCards.add(players[currentPlayer].getCardFromHand(index));</span>
-		/* Remove the played card from the players hand */
-<span class="fc" id="L280">		players[currentPlayer].removeCardFromHand(index);</span>
-		
-		/* Increment the current player appropriately */
-<span class="fc" id="L283">		currentPlayer = (currentPlayer+1) % 4;	</span>
-<span class="fc" id="L284">	}</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">		if (isValidMove(index)) {</span>
+			/* Add the played card from the users hand to playedCards */
+<span class="fc" id="L329">			playedCards.add(players[currentPlayer].getCardFromHand(index));</span>
+			/* Remove the played card from the players hand */
+<span class="fc" id="L331">			players[currentPlayer].removeCardFromHand(index);</span>
+			
+			/* Increment the current player appropriately */
+<span class="fc" id="L334">			currentPlayer = (currentPlayer + 1) % 4;</span>
+		}
+<span class="fc" id="L336">	}</span>
 	
 	/******************************************************************
 	 * This function handles the player passing on calling trump (used
@@ -290,10 +342,10 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void playerPassed() {
 		/* Increment the current player appropriately */
-<span class="fc" id="L293">		currentPlayer = (currentPlayer+1) % 4;</span>
+<span class="fc" id="L345">		currentPlayer = (currentPlayer + 1) % 4;</span>
 		/* Increment the number of passes */
-<span class="fc" id="L295">		numPasses++;</span>
-<span class="fc" id="L296">	}</span>
+<span class="fc" id="L347">		numPasses++;</span>
+<span class="fc" id="L348">	}</span>
 	
 	/******************************************************************
 	 * Handle the logic to swap the card at the given index in the 
@@ -303,13 +355,13 @@ public class EuchreModel {
 	 * 				the card that should be swapped with the topKitty
 	 * 				card.
 	 *****************************************************************/
-	public void swapWithTopKitty(int index) {
+	public void swapWithTopKitty(final int index) {
 		/* Replace the players card at the index with the topKitty */
-<span class="fc" id="L308">		players[currentPlayer].setCardInHand(index, topKitty);</span>
+<span class="fc" id="L360">		players[currentPlayer].setCardInHand(index, topKitty);</span>
 		
 		/* Set the currentPlayer to firstPlayer to begin the trick */
-<span class="fc" id="L311">		setCurrentPlayerFirst();</span>
-<span class="fc" id="L312">	}</span>
+<span class="fc" id="L363">		setCurrentPlayerFirst();</span>
+<span class="fc" id="L364">	}</span>
 	
 	/******************************************************************
 	 * Clear the played cards arrayList. The arrayList should only 
@@ -320,11 +372,11 @@ public class EuchreModel {
 	 *****************************************************************/
 	public boolean clearPlayedCards() {
 		/* If all cards for this trick have been played, clear */
-<span class="pc bpc" id="L323" title="1 of 2 branches missed.">		if(playedCards.size() &gt;= 4) {</span>
-<span class="fc" id="L324">			playedCards.clear();</span>
-<span class="fc" id="L325">			return true;</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">		if (playedCards.size() &gt;= 4) {</span>
+<span class="fc" id="L376">			playedCards.clear();</span>
+<span class="fc" id="L377">			return true;</span>
 		}
-<span class="nc" id="L327">		return false;</span>
+<span class="fc" id="L379">		return false;</span>
 	}
 	
 	/******************************************************************
@@ -335,67 +387,67 @@ public class EuchreModel {
 	 *****************************************************************/
 	public void evalTricks() {
 		/* Array of modified values used in scoring a trick */
-<span class="nc" id="L338">		int[] modifiedValues = new int[4];</span>
+<span class="fc" id="L390">		int[] modifiedValues = new int[4];</span>
 		/* Determine the suit that should be followed */
-<span class="nc" id="L340">		SUIT followSuit = playedCards.get(0).getSuit();</span>
+<span class="fc" id="L392">		SUIT followSuit = playedCards.get(0).getSuit();</span>
 		/* The index within modified value of the most valuable card */
-<span class="nc" id="L342">		int maxIndex = 0;</span>
+<span class="fc" id="L394">		int maxIndex = 0;</span>
 		
 		/* Loop through the played cards and determine the scoring
 		 * scoring value for each played card. Save this value, 
 		 * including any modifiers, into the modifiedValues array */
-<span class="nc bnc" id="L347" title="All 2 branches missed.">		for(int i=0; i&lt;4; i++) {</span>
-<span class="nc" id="L348">			modifiedValues[i] = playedCards.get(i).getValue();</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">		for (int i = 0; i &lt; 4; i++) {</span>
+<span class="fc" id="L400">			modifiedValues[i] = playedCards.get(i).getValue();</span>
 			/* If the played card followed suit, it receives a *2
 			 * multiplier */
-<span class="nc bnc" id="L351" title="All 2 branches missed.">			if(playedCards.get(i).getSuit() == followSuit) {</span>
-<span class="nc" id="L352">				modifiedValues[i] *= 2;</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">			if (playedCards.get(i).getSuit() == followSuit) {</span>
+<span class="fc" id="L404">				modifiedValues[i] *= 2;</span>
 			}
 			/* If the played card followed trump, it receives a *4
 			 * multiplier */
-<span class="nc bnc" id="L356" title="All 2 branches missed.">			if(playedCards.get(i).getSuit() == currentTrump) {		</span>
-<span class="nc" id="L357">				modifiedValues[i] *= 4;</span>
+<span class="fc bfc" id="L408" title="All 2 branches covered.">			if (playedCards.get(i).getSuit() == currentTrump) {		</span>
+<span class="fc" id="L409">				modifiedValues[i] *= 4;</span>
 			}	
 			/* If the card is a jack, need to see if it is a bauer */
-<span class="nc bnc" id="L360" title="All 2 branches missed.">			if(playedCards.get(i).getValue() == 11) {</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">			if (playedCards.get(i).getValue() == 11) {</span>
 				/* If this jack is trump, it is the right bauer and is
 				 * the most valuable card, so set it to 1000 */
-<span class="nc bnc" id="L363" title="All 2 branches missed.">				if(playedCards.get(i).getSuit() == currentTrump) {</span>
-<span class="nc" id="L364">					modifiedValues[i] = 1000;</span>
-<span class="nc" id="L365">				}</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">				if (playedCards.get(i).getSuit() == currentTrump) {</span>
+<span class="fc" id="L416">					modifiedValues[i] = 1000;</span>
+<span class="fc" id="L417">				}</span>
 				/* If this jack is the same color as trump, it is the
 				 * left bauer and is the second most valuable card, so
 				 * set it to 999 to be slightly less than the right
 				 * bauer */
-<span class="nc bnc" id="L370" title="All 2 branches missed.">				else if(playedCards.get(i).getSuit() == </span>
-<span class="nc" id="L371">						sameColor(currentTrump)) {</span>
-<span class="nc" id="L372">					modifiedValues[i] = 999;</span>
+<span class="fc bfc" id="L422" title="All 2 branches covered.">				else if (playedCards.get(i).getSuit() == sameColor(currentTrump)) {</span>
+<span class="fc" id="L423">					modifiedValues[i] = 999;</span>
 				}
 			}
 		}
 		
 		/* Loop through the modified values to find the index of the 
 		 * largest value */
-<span class="nc bnc" id="L379" title="All 2 branches missed.">		for(int i=1; i&lt;4; i++) {</span>
-<span class="nc bnc" id="L380" title="All 2 branches missed.">			if(modifiedValues[i] &gt; modifiedValues[maxIndex])</span>
-<span class="nc" id="L381">				maxIndex = i;</span>
+<span class="fc bfc" id="L430" title="All 2 branches covered.">		for (int i = 1; i &lt; 4; i++) {</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">			if (modifiedValues[i] &gt; modifiedValues[maxIndex]) {</span>
+<span class="fc" id="L432">				maxIndex = i;</span>
+			}
 		}
 		
 		/* If the player that won the trick was on team 0, increment
 		 * team 0 tricks */
-<span class="nc bnc" id="L386" title="All 2 branches missed.">		if(players[(firstPlayer + maxIndex)%4].getTeam() == 0) {</span>
-<span class="nc" id="L387">			team0Tricks++;</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">		if (players[(firstPlayer + maxIndex) % 4].getTeam() == 0) {</span>
+<span class="fc" id="L439">			team0Tricks++;</span>
 			
-<span class="nc" id="L389">		}</span>
+<span class="fc" id="L441">		}</span>
 		/* If the player that won the trick was on team 1, increment
 		 * team 1 tricks */
-<span class="nc bnc" id="L392" title="All 2 branches missed.">		else if(players[(firstPlayer + maxIndex)%4].getTeam() == 1) {</span>
-<span class="nc" id="L393">			team1Tricks++;</span>
+<span class="pc bpc" id="L444" title="1 of 2 branches missed.">		else if (players[(firstPlayer + maxIndex) % 4].getTeam() == 1) {</span>
+<span class="fc" id="L445">			team1Tricks++;</span>
 		}
 		
 		/* Set the first and current players to the trick winner */
-<span class="nc" id="L397">		firstPlayer = currentPlayer = ((firstPlayer + maxIndex)%4);</span>
-<span class="nc" id="L398">	}</span>
+<span class="fc" id="L449">		firstPlayer = currentPlayer = ((firstPlayer + maxIndex) % 4);</span>
+<span class="fc" id="L450">	}</span>
 	
 	/******************************************************************
 	 * The evalScore method evaluates the number of tricks that have
@@ -407,140 +459,162 @@ public class EuchreModel {
 	 * 		   reset, false if the hand is not done yet.
 	 *****************************************************************/
 	public boolean evalScore() {
-		/** The boolean used to determine if scoring happened and if
+		/* The boolean used to determine if scoring happened and if
 		 * a reset (re-deal) is necessary. */
-<span class="nc" id="L412">		boolean reset = true;</span>
+<span class="fc" id="L464">		boolean reset = true;</span>
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-<span class="nc bnc" id="L415" title="All 4 branches missed.">		if((team0Tricks &gt;= 3 &amp;&amp; team1Tricks &gt;= 1)) {</span>
+<span class="fc bfc" id="L467" title="All 4 branches covered.">		if ((team0Tricks &gt;= 3 &amp;&amp; team1Tricks &gt;= 1)) {</span>
 			/* If team 0 won more tricks and selected trump, they get
 			 * 1 point */
-<span class="nc bnc" id="L418" title="All 2 branches missed.">			if(trumpSelectingTeam == 0) {</span>
-<span class="nc" id="L419">				team0Score += 1;</span>
-<span class="nc" id="L420">			}</span>
+<span class="fc bfc" id="L470" title="All 2 branches covered.">			if (trumpSelectingTeam == 0) {</span>
+<span class="fc" id="L471">				team0Score += 1;</span>
+<span class="fc" id="L472">			}</span>
 			/* If team 0 won more tricks, but team 1 selected trump,
 			 * team 0 gets 2 points (team 0 euchred team 1) */
 			else {
-<span class="nc" id="L424">				team0Score += 2;</span>
+<span class="fc" id="L476">				team0Score += 2;</span>
 			}
 			/* Reset trick counts to 0 */
-<span class="nc" id="L427">			team0Tricks = team1Tricks = 0;</span>
-<span class="nc" id="L428">		}</span>
+<span class="fc" id="L479">			team0Tricks = team1Tricks = 0;</span>
+<span class="fc" id="L480">		}</span>
 		/* If one team has won 3 tricks, and the other has won 1 or 
 		 * more, the hand should be considered done */
-<span class="nc bnc" id="L431" title="All 4 branches missed.">		else if((team0Tricks &gt;= 1 &amp;&amp; team1Tricks &gt;= 3)) {</span>
+<span class="fc bfc" id="L483" title="All 4 branches covered.">		else if ((team0Tricks &gt;= 1 &amp;&amp; team1Tricks &gt;= 3)) {</span>
 			/* If team 1 won more tricks and selected trump, they get
 			 * 1 point */
-<span class="nc bnc" id="L434" title="All 2 branches missed.">			if(trumpSelectingTeam == 1) {</span>
-<span class="nc" id="L435">				team1Score += 1;</span>
-<span class="nc" id="L436">			}</span>
+<span class="fc bfc" id="L486" title="All 2 branches covered.">			if (trumpSelectingTeam == 1) {</span>
+<span class="fc" id="L487">				team1Score += 1;</span>
+<span class="fc" id="L488">			}</span>
 			/* If team 1 won more tricks, but team 0 selected trump,
 			 * team 1 gets 2 points (team 1 euchred team 0) */
 			else {
-<span class="nc" id="L440">				team1Score += 2;</span>
+<span class="fc" id="L492">				team1Score += 2;</span>
 			}	
 			/* Reset trick counts to 0 */
-<span class="nc" id="L443">			team0Tricks = team1Tricks = 0;</span>
-<span class="nc" id="L444">		}</span>
+<span class="fc" id="L495">			team0Tricks = team1Tricks = 0;</span>
+<span class="fc" id="L496">		}</span>
 		/* If the 5 tricks have been played, the hand is done */
-<span class="nc bnc" id="L446" title="All 2 branches missed.">		else if(team0Tricks + team1Tricks == 5) {</span>
-<span class="nc bnc" id="L447" title="All 2 branches missed.">			if(team0Tricks == 5) {</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">		else if (team0Tricks + team1Tricks == 5) {</span>
+<span class="fc bfc" id="L499" title="All 2 branches covered.">			if (team0Tricks == 5) {</span>
 				/* If team 0 won all 5 tricks and selected trump,
 				 * they get 2 points */
-<span class="nc bnc" id="L450" title="All 2 branches missed.">				if(trumpSelectingTeam == 0) {</span>
-<span class="nc" id="L451">					team0Score += 2;</span>
-<span class="nc" id="L452">				}</span>
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">				if (trumpSelectingTeam == 0) {</span>
+<span class="fc" id="L503">					team0Score += 2;</span>
+<span class="fc" id="L504">				}</span>
 				/* If team 0 won all 5 tricks, but team 1 selected
 				 * trump, team 0 gets 4 points */
 				else {
-<span class="nc" id="L456">					team0Score += 4;</span>
+<span class="nc" id="L508">					team0Score += 4;</span>
 				}
 				/* Reset trick counts to 0 */
-<span class="nc" id="L459">				team0Tricks = team1Tricks = 0;</span>
-<span class="nc" id="L460">			}</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">			else if(team1Tricks == 5) {</span>
+<span class="fc" id="L511">				team0Tricks = team1Tricks = 0;</span>
+<span class="fc" id="L512">			}</span>
+<span class="pc bpc" id="L513" title="1 of 2 branches missed.">			else if (team1Tricks == 5) {</span>
 				/* If team 1 won all 5 tricks and selected trump,
 				 * they get 2 points */
-<span class="nc bnc" id="L464" title="All 2 branches missed.">				if(trumpSelectingTeam == 1) {</span>
-<span class="nc" id="L465">					team1Score += 2;</span>
-<span class="nc" id="L466">				}</span>
+<span class="fc bfc" id="L516" title="All 2 branches covered.">				if (trumpSelectingTeam == 1) {</span>
+<span class="fc" id="L517">					team1Score += 2;</span>
+<span class="fc" id="L518">				}</span>
 				/* If team 1 won all 5 tricks, but team 0 selected
 				 * trump, team 1 gets 4 points */
 				else {
-<span class="nc" id="L470">					team1Score += 4;</span>
+<span class="fc" id="L522">					team1Score += 4;</span>
 				}
 				/* Reset trick counts to 0 */
-<span class="nc" id="L473">				team0Tricks = team1Tricks = 0;</span>
+<span class="fc" id="L525">				team0Tricks = team1Tricks = 0;</span>
 			}
-<span class="nc" id="L475">		}</span>
+<span class="fc" id="L527">		}</span>
 		/* If the hand is not complete and no scoring took place, 
 		 * there is no need to reset, therefore set reset false */
-		else
-<span class="nc" id="L479">			reset = false;</span>
+		else {
+<span class="fc" id="L531">			reset = false;</span>
+		}
 		
 		/* Return the status of reset (true if scored, else false) */
-<span class="nc" id="L482">		return reset;		</span>
+<span class="fc" id="L535">		return reset;		</span>
 	}
 	
 	/******************************************************************
 	 * Handles which private method to call based on the code sent by
-	 * the controller
+	 * the controller.
 	 * 
 	 * @param code describing what action the bot should take
 	 * @return the BOTCODE describing what the resulting action of the
 	 * bot play was
 	 */
-	public BOTCODE botPlay(BOTCODE code) {
-<span class="pc bpc" id="L494" title="4 of 5 branches missed.">		switch(code) {</span>
+	public BOTCODE botPlay(final BOTCODE code) {
+<span class="fc bfc" id="L547" title="All 5 branches covered.">		switch (code) {</span>
 		case TRUMP:
-<span class="nc" id="L496">			return botSelectTrump();</span>
+<span class="fc" id="L549">			return botSelectTrump();</span>
 		case PLAY:
-<span class="nc" id="L498">			return botPlayCard();</span>
+<span class="fc" id="L551">			return botPlayCard();</span>
 		case SWAP:
-<span class="nc" id="L500">			return botSwapWithKitty();</span>
+<span class="fc" id="L553">			return botSwapWithKitty();</span>
 		case HITKITTY:
-<span class="nc" id="L502">			return botSelectKitty();</span>
+<span class="fc" id="L555">			return botSelectKitty();</span>
+		default:
+<span class="fc" id="L557">			return BOTCODE.DEFAULT;</span>
 		}
-<span class="fc" id="L504">		return BOTCODE.DEFAULT;</span>
 	}
 	
 	
 	
 	
-
+	//CHECKSTYLE:OFF
 	/********************** Private Methods ***************************/
+	//CHECKSTYLE:ON
 	
 	/*******************************************************************
 	 * Checks if the card at the index is a valid play based on the 
-	 * first card played. Used to determine if the opposing team can
-	 * renege on the trick.
+	 * first card played.
 	 * 
 	 * @param index of the card to be played
 	 * @return True if the move was valid and False if not
 	 ******************************************************************/
-	private boolean isValidMove(int index) {
+	private boolean isValidMove(final int index) {
 		
-<span class="fc bfc" id="L523" title="All 2 branches covered.">		if(playedCards.isEmpty())</span>
-<span class="fc" id="L524">			return true;</span>
+<span class="fc" id="L577">		boolean result = true;</span>
 		
-<span class="fc" id="L526">		SUIT follow = playedCards.get(0).getSuit();</span>
-		
-		//left bauer follow logic
-<span class="pc bpc" id="L529" title="1 of 2 branches missed.">		if(playedCards.get(0).getValue() == 11 &amp;&amp; </span>
-<span class="pc bpc" id="L530" title="1 of 2 branches missed.">				currentTrump == sameColor(playedCards.get(0).getSuit()))</span>
-<span class="nc" id="L531">			follow = currentTrump;</span>
-			
-		
-<span class="pc bpc" id="L534" title="1 of 2 branches missed.">		if(players[currentPlayer].getCardFromHand(index).getSuit() != follow) {</span>
-<span class="fc bfc" id="L535" title="All 2 branches covered.">			for(Card possiblePlay : players[currentPlayer].getHand())</span>
-			{
-<span class="fc bfc" id="L537" title="All 2 branches covered.">				if(possiblePlay.getSuit() == follow) {</span>
-<span class="fc" id="L538">					players[currentPlayer].setRenegeable(true);</span>
-<span class="fc" id="L539">					return false;</span>
-				}
-			}
+<span class="fc bfc" id="L579" title="All 2 branches covered.">		if (playedCards.isEmpty()) {</span>
+<span class="fc" id="L580">			return result;</span>
 		}
-<span class="fc" id="L543">		return true;</span>
+		
+<span class="fc" id="L583">		SUIT follow = playedCards.get(0).getSuit();</span>
+<span class="fc" id="L584">		Card cardSelected = players[currentPlayer].getCardFromHand(index);</span>
+		
+		//Logic to set the follow equal to the same color suit of the left bauer when played first rather than the actual suit
+<span class="fc bfc" id="L587" title="All 2 branches covered.">		if (playedCards.get(0).getValue() == 11 </span>
+<span class="fc bfc" id="L588" title="All 2 branches covered.">				&amp;&amp; currentTrump == sameColor(playedCards.get(0).getSuit())) {</span>
+<span class="fc" id="L589">			follow = currentTrump;</span>
+		}	
+		
+		//Loop through all cards in hand to see if there was a card that follows suit before allowing any move
+<span class="fc bfc" id="L593" title="All 2 branches covered.">		if (cardSelected.getSuit() != follow) {</span>
+<span class="fc bfc" id="L594" title="All 2 branches covered.">			for (Card possiblePlay : players[currentPlayer].getHand()) {</span>
+				//Set left bauer's trump to the same color so logically it acts as its same color rather than its face suit.
+<span class="fc bfc" id="L596" title="All 4 branches covered.">				if (possiblePlay.getSuit() == sameColor(currentTrump) &amp;&amp; possiblePlay.getValue() == 11) {</span>
+<span class="fc" id="L597">					possiblePlay.setSuit(sameColor(possiblePlay.getSuit()));</span>
+					//Check that left bauer isn't in hand if trump is to be followed
+<span class="fc bfc" id="L599" title="All 2 branches covered.">					if (possiblePlay.getSuit() == follow) {</span>
+<span class="fc" id="L600">						result = false;</span>
+					}
+<span class="fc" id="L602">					possiblePlay.setSuit(sameColor(possiblePlay.getSuit()));</span>
+<span class="fc" id="L603">				}</span>
+				//Check that none of the cards in hand are the same suit as first played
+<span class="fc bfc" id="L605" title="All 2 branches covered.">				else if (possiblePlay.getSuit() == follow) {</span>
+<span class="fc" id="L606">					result = false;</span>
+				}
+				
+			}
+			
+			// Logic to allow you to play the left bauer in the case of following trump
+<span class="fc bfc" id="L612" title="All 6 branches covered.">			if (cardSelected.getSuit() == sameColor(currentTrump) &amp;&amp; cardSelected.getValue() == 11 &amp;&amp; follow == currentTrump) {</span>
+<span class="fc" id="L613">				result = true;</span>
+			}
+
+		}
+<span class="fc" id="L617">		return result;</span>
 	}
 	
 	/******************************************************************
@@ -552,23 +626,23 @@ public class EuchreModel {
 	 * 			   same color as.
 	 * @return The suit that is the same color as the inputted suit.
 	 *****************************************************************/
-	private SUIT sameColor(SUIT suit) {
-<span class="pc bpc" id="L556" title="4 of 5 branches missed.">		switch(suit) {</span>
+	private SUIT sameColor(final SUIT suit) {
+<span class="pc bpc" id="L630" title="1 of 5 branches missed.">		switch (suit) {</span>
 		/* If the suit is clubs, return spades */
 		case CLUB:
-<span class="nc" id="L559">			return SUIT.SPADE;</span>
+<span class="fc" id="L633">			return SUIT.SPADE;</span>
 		/* If the suit is spades, return clubs */
 		case SPADE:
-<span class="nc" id="L562">			return SUIT.CLUB;</span>
+<span class="fc" id="L636">			return SUIT.CLUB;</span>
 		/* If the suit is hearts, return diamonds */
 		case HEART:
-<span class="nc" id="L565">			return SUIT.DIAMOND;</span>
+<span class="fc" id="L639">			return SUIT.DIAMOND;</span>
 		/* If the suit is diamonds, return hearts */
 		case DIAMOND:
-<span class="fc" id="L568">			return SUIT.HEART;</span>
+<span class="fc" id="L642">			return SUIT.HEART;</span>
 		/* Default should never be hit, but if it is, return spades */
 		default:
-<span class="nc" id="L571">			return SUIT.SPADE;</span>
+<span class="nc" id="L645">			return SUIT.SPADE;</span>
 		}
 	}
 	
@@ -579,14 +653,16 @@ public class EuchreModel {
 	private void fillDeck() {
 		
 		/* Make sure the deck is empty before re-filling it */
-<span class="fc" id="L582">		deck.clear();</span>
+<span class="fc" id="L656">		deck.clear();</span>
 		
 		/* Add all cards to the deck, starting with 9 up to Ace for
 		 * each of the four suits */
-<span class="fc bfc" id="L586" title="All 2 branches covered.">		for(int value = 9; value &lt; 15; value++)</span>
-<span class="fc bfc" id="L587" title="All 2 branches covered.">			for(SUIT suit : SUIT.values()) </span>
-<span class="fc" id="L588">				deck.add(new Card(value,suit));</span>
-<span class="fc" id="L589">	}</span>
+<span class="fc bfc" id="L660" title="All 2 branches covered.">		for (int value = 9; value &lt; 15; value++) {</span>
+<span class="fc bfc" id="L661" title="All 2 branches covered.">			for (SUIT suit : SUIT.values()) {</span>
+<span class="fc" id="L662">				deck.add(new Card(value, suit));</span>
+			}
+		}
+<span class="fc" id="L665">	}</span>
 	
 	/******************************************************************
 	 * Bot trump selection function for selecting trump.
@@ -595,8 +671,15 @@ public class EuchreModel {
 	 * 		   or not.
 	 *****************************************************************/
 	private BOTCODE botSelectTrump() {
-<span class="nc" id="L598">		playerPassed();</span>
-<span class="nc" id="L599">		return BOTCODE.TRUMP_NOTSELECTED;</span>
+<span class="fc bfc" id="L674" title="All 2 branches covered.">		for (SUIT s: SUIT.values()) {</span>
+<span class="fc bfc" id="L675" title="All 2 branches covered.">			if (evalHandPotential(s) &gt; 100) {</span>
+<span class="fc" id="L676">				setTrump(s);</span>
+<span class="fc" id="L677">				setCurrentPlayerFirst();</span>
+<span class="fc" id="L678">				return BOTCODE.TRUMP_SELECTED;</span>
+			}	
+		}
+<span class="fc" id="L681">		playerPassed();</span>
+<span class="fc" id="L682">		return BOTCODE.TRUMP_NOTSELECTED;</span>
 	}
 	
 	/******************************************************************
@@ -607,8 +690,29 @@ public class EuchreModel {
 	 * 		   as trump or not.
 	 *****************************************************************/
 	private BOTCODE botSelectKitty() {
-<span class="nc" id="L610">		playerPassed();</span>
-<span class="nc" id="L611">		return BOTCODE.HITKITTY_NOHIT;</span>
+		/*Because dealer has already incremented at this point if this condition is
+		true then the kitty will not be going to the current players team */
+<span class="fc bfc" id="L695" title="All 2 branches covered.">		if (players[getDealer()].getTeam() == players[currentPlayer].getTeam()) {</span>
+			//Never have opposing team pick up bauers
+<span class="fc bfc" id="L697" title="All 2 branches covered.">			if (getTopKitty().getValue() == 11) {</span>
+<span class="fc" id="L698">				playerPassed();</span>
+<span class="fc" id="L699">				return BOTCODE.HITKITTY_NOHIT;</span>
+			}
+			
+			else {
+<span class="pc bpc" id="L703" title="1 of 2 branches missed.">				if (evalHandPotential(getTopKitty().getSuit()) &gt; 130) {</span>
+<span class="nc" id="L704">					return BOTCODE.HITKITTY_HIT;</span>
+				}		
+			}
+		}
+		else {
+<span class="fc bfc" id="L709" title="All 2 branches covered.">			if (evalHandPotential(getTopKitty().getSuit()) &gt; 70) {</span>
+<span class="fc" id="L710">				return BOTCODE.HITKITTY_HIT;</span>
+			}	
+		}
+			
+<span class="fc" id="L714">		playerPassed();</span>
+<span class="fc" id="L715">		return BOTCODE.HITKITTY_NOHIT;</span>
 	}
 	
 	/******************************************************************
@@ -618,13 +722,25 @@ public class EuchreModel {
 	 * 
 	 * @return A botcode stating that the swap occurred (there is no 
 	 * 		   reason the swap would not occur successfully).
-	 */
+	 ******************************************************************/
 	private BOTCODE botSwapWithKitty() {
-		/* Choose a random card in the bots hand */
-<span class="nc" id="L624">		int randCard = (int)(Math.random() * 5);</span>
-		/* Swap the random card with the kitty */
-<span class="nc" id="L626">		swapWithTopKitty(randCard);</span>
-<span class="nc" id="L627">		return BOTCODE.SWAP_SUCCESSFUL;</span>
+		
+		//Find the index of the lowest off suit card in hand
+<span class="fc" id="L729">		int lowestOffSuit = 0;</span>
+<span class="fc bfc" id="L730" title="All 2 branches covered.">		for (int i = 1; i &lt; 5; i++) {</span>
+<span class="fc bfc" id="L731" title="All 2 branches covered.">			if (players[currentPlayer].getCardFromHand(i).getSuit() == currentTrump) {</span>
+<span class="fc" id="L732">				break;</span>
+			}
+<span class="fc bfc" id="L734" title="All 4 branches covered.">			else if (players[currentPlayer].getCardFromHand(i).getSuit() == sameColor(currentTrump) &amp;&amp; players[currentPlayer].getCardFromHand(i).getValue() == 11) {</span>
+<span class="fc" id="L735">				break;</span>
+			}
+<span class="fc bfc" id="L737" title="All 2 branches covered.">			else if (players[currentPlayer].getCardFromHand(i).getValue() &lt; players[currentPlayer].getCardFromHand(lowestOffSuit).getValue()) {</span>
+<span class="fc" id="L738">				lowestOffSuit = i;</span>
+			}
+		}
+<span class="fc" id="L741">		swapWithTopKitty(lowestOffSuit);</span>
+
+<span class="fc" id="L743">		return BOTCODE.SWAP_SUCCESSFUL;</span>
 	}
 	
 	/******************************************************************
@@ -638,30 +754,50 @@ public class EuchreModel {
 		
 		/* Check each card to see if it is a valid move (i.e. it
 		 * follows suit) */
-<span class="nc bnc" id="L641" title="All 2 branches missed.">		for(Card card : players[currentPlayer].getHand())</span>
-<span class="nc bnc" id="L642" title="All 2 branches missed.">			if(isValidMove(players[currentPlayer].getHand().indexOf(card))) {</span>
+<span class="pc bpc" id="L757" title="1 of 2 branches missed.">		for (Card card : players[currentPlayer].getHand()) {</span>
+<span class="fc bfc" id="L758" title="All 2 branches covered.">			if (isValidMove(players[currentPlayer].getHand().indexOf(card))) {</span>
 				/* If there is a valid move, make the mode */
-<span class="nc" id="L644">				makeMove(players[currentPlayer].getHand().indexOf(card));</span>
+<span class="fc" id="L760">				makeMove(players[currentPlayer].getHand().indexOf(card));</span>
 				/* If all cards in trick have been played, 
 				 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
-<span class="nc bnc" id="L647" title="All 2 branches missed.">				if(playedCards.size() &gt;= 4) {</span>
-<span class="nc" id="L648">					return BOTCODE.PLAY_TRICKFINISHED;</span>
+<span class="fc bfc" id="L763" title="All 2 branches covered.">				if (playedCards.size() &gt;= 4) {</span>
+<span class="fc" id="L764">					return BOTCODE.PLAY_TRICKFINISHED;</span>
 				}				
 				/* If not all cards in trick have been played, 
 				 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
-<span class="nc" id="L652">				return BOTCODE.PLAY_TRICKNOTFINISHED;</span>
+<span class="fc" id="L768">				return BOTCODE.PLAY_TRICKNOTFINISHED;</span>
 			}
-		
-		/* If no valid moves available, play the first card in hand */
-<span class="nc" id="L656">		makeMove(0);</span>
-		/* If all cards in trick have been played, 
-		 * return the BOTCODE.PLAY_TRICKFINISHED botcode */
-<span class="nc bnc" id="L659" title="All 2 branches missed.">		if(playedCards.size() &gt;= 4) {</span>
-<span class="nc" id="L660">			return BOTCODE.PLAY_TRICKFINISHED;</span>
 		}	
-		/* If not all cards in trick have been played, 
-		 * return the BOTCODE.PLAY_TRICKNOTFINISHED botcode */
-<span class="nc" id="L664">		return BOTCODE.PLAY_TRICKNOTFINISHED;		</span>
-	}	
+<span class="nc" id="L771">		return BOTCODE.DEFAULT;</span>
+	}
+	
+	/******************************************************************
+	 * Evaluates the score of a hand given the current trump.
+	 * 
+	 * @param trump
+	 * @return Integer value attempting to estimate the potential of a
+	 * 			hand.
+	 ******************************************************************/
+	private int evalHandPotential(final SUIT trump) {
+		
+<span class="fc" id="L783">		int result = 0;</span>
+		
+<span class="fc bfc" id="L785" title="All 2 branches covered.">		for (Card card : players[currentPlayer].getHand()) {</span>
+<span class="fc bfc" id="L786" title="All 4 branches covered.">			if (card.getSuit() == trump &amp;&amp; card.getValue() == 11) {</span>
+<span class="fc" id="L787">				result += 30;</span>
+<span class="fc" id="L788">			}</span>
+<span class="fc bfc" id="L789" title="All 4 branches covered.">			else if (card.getSuit() == sameColor(trump) &amp;&amp; card.getValue() == 11) {</span>
+<span class="fc" id="L790">				result += 29;</span>
+<span class="fc" id="L791">			}</span>
+<span class="fc bfc" id="L792" title="All 2 branches covered.">			else if (card.getSuit() == trump) {</span>
+<span class="fc" id="L793">				result += card.getValue() * 2;</span>
+<span class="fc" id="L794">			}</span>
+			else {
+<span class="fc" id="L796">				result += card.getValue();</span>
+			}
+		}
+<span class="fc" id="L799">		return result;</span>
+	}
+	
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 13, 2020 11:57:50 AM)</div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span>Merged (Jul 30, 2020 1:12:25 PM)</div></body></html>
